@@ -15,7 +15,7 @@
 \usepackage[francais]{babel}
 \usepackage[utf8]{inputenc}
 %\title{Requêtes probabilistes et pondérées en logique d'arbre de calcul %\includegraphics[width=0.25\linewidth]{fibeamer/logo/mu/storm}
-\title{Vérification pour les Processus Décisionnels de Markov pondérés
+\title{Vérification des Processus Décisionnels de Markov pondérés
 } %% that will be typeset on the
 %\subtitle{Presentation Subtitle} %% title page.
 \author{Florent Delgrange}
@@ -40,7 +40,10 @@
 \usepackage{graphicx}
 \usepackage{minted}
 \usepackage{biblatex}
+\usepackage{mathtools}
 \frenchspacing
+
+\definecolor{DarkOrange}{HTML}{FF8C00}
 
 \bibliography{bib}
 \begin{document}
@@ -87,7 +90,8 @@ Un \textit{système de transition} (noté TS, pour \textit{transition system}) e
 
 
 \begin{frame}{Système de Transition}{Exemple}
-    \includegraphics[width=\linewidth]{resources/TS.eps}
+    \centering
+    \includegraphics[width=0.7\linewidth]{resources/TS.eps}
     \captionof{figure}{Distributeur de boissons \protect \cite{PMC}}% \protect \cite{DBLP:books/daglib/0020348}}
     \scriptsize
     \begin{columns}
@@ -105,6 +109,7 @@ Un \textit{système de transition} (noté TS, pour \textit{transition system}) e
     \end{columns}
 \end{frame}
 
+\subsection{Chemins et Traces de TS}
 \begin{frame}{Chemins}
 Un chemin d'un système de transition est une succession d'état possible résultant de l'exécution de ce système.
 \begin{itemize}
@@ -112,10 +117,11 @@ Un chemin d'un système de transition est une succession d'état possible résul
     chemins infinis.
 \end{itemize}
 \begin{definition}[Chemin d'un TS]
-  Soit $\mathcal{T} = (S, A, \rightarrow, AP, L)$, un TS.
-  $\pi = s_0 s_1 s_2 s_3 \dots$ est un \textit{chemin de $\mathcal{T}$} ssi
+  Soit $\mathcal{T} = (S, A, \rightarrow, AP, L)$, un TS. \\
+  $\pi = s_0 s_1 s_2 s_3 \dots$ est un \textit{chemin} (infini) de $\mathcal{T}$ ssi
   pour tout $i \in \mathbb{N}$, il existe une action $\alpha \in A$ telle que
-  $s_i \xrightarrow{\alpha} s_{i+1}$, avec $s_i, s_{i+1} \in S$. \\
+  $s_i \xrightarrow{\alpha} s_{i+1}$, avec $s_i, s_{i+1} \in S$% et $(s_i, \alpha, s_{i+1}) \in \rightarrow$
+  . \\
   L'ensemble des chemins (infinis) $\pi = s_0s_1\dots$ commençant en l'état $s$ (i.e., tels que $s_0 = s$) est dénoté par $Paths(s)$.
 
 \end{definition}
@@ -133,13 +139,577 @@ Un chemin d'un système de transition est une succession d'état possible résul
 \end{frame}
 
 \begin{frame}{Chemins et Traces}{Exemple}
-    \includegraphics[width=\linewidth]{resources/TS.eps}
+    \centering
+    \includegraphics[width=0.7\linewidth]{resources/TS.eps}
     \captionof{figure}{Distributeur de boissons \protect \cite{PMC}}% \protect \cite{DBLP:books/daglib/0020348}}
     \scriptsize
     \begin{itemize}
       \item $\pi = pay\; select \; soda \; pay \; select \; beer \; \dots \in Paths(pay)$
-      \item $\{paid\}\{drink\}\{paid\}\{drink\} \dots = trace(\pi) \in Traces(paid)$
+      \item $\emptyset\{paid\}\{paid, \, drink\}\emptyset\{paid\}\{paid, \, drink\} \dots = trace(\pi) \in Traces(paid)$
     \end{itemize}
+\end{frame}
+
+\section{LTL}
+\subsection{Intuition}
+\begin{frame}{Logique temporelle linéaire (LTL)}
+\begin{itemize}
+  \item L'exactitude des systèmes réactifs dépend des exécutions + de l'équité du système
+  \item La logique {\color{fibeamer@orange}temporelle} permet de traiter ces aspects
+  \begin{itemize}
+    \item[$\rightarrow$] \textit{temps ``réel''} (discret!)
+  \end{itemize}
+  \item Temps linéaire $\implies$ logique basée sur les {\color{fibeamer@orange}chemins du système}
+    \begin{itemize}
+      \item[$\rightarrow$] \`a chaque étape, un seul successeur est possible
+    \end{itemize}
+    \item[$\rightarrow$] \textbf{\color{fibeamer@orange}LTL} $\approx$ langage qui a pour but de vérifier des propriétés sur les exécutions d'un système% à l'aide d'{\color{fibeamer@orange}opérateurs temporels}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Logique temporelle linéaire (LTL) : intuition}
+  \vspace{-0.04\linewidth}
+  \footnotesize
+  Soit $\mathcal{T} = (S, A, \rightarrow, AP, L)$,
+  LTL est formée par ...
+  \begin{enumerate}
+    \item des propositions atomiques $a \in AP$,
+    \item des combinaisons booléennes de formules :
+    $
+      \neg \phi, \; \phi \wedge \psi, \, \phi \vee \psi
+    $
+     et
+    \item des opérateurs temporels : soit $\pi = s_0s_1s_2s_3\dots \in Paths(\mathcal{T})$
+    \begin{center}
+      \includegraphics[width=0.8\linewidth]{resources/LTL}
+    \end{center}
+  \end{enumerate}
+\end{frame}
+
+\subsection{Syntaxe}
+\begin{frame}
+\begin{block}{Syntaxe}
+Soit $AP$, un ensemble de propositions atomiques, les \textit{\color{fibeamer@orange}formules} LTL sont formées selon la {\color{fibeamer@orange}grammaire} suivante :
+\[
+  \phi ::= true \; | \; a \; | \; \phi \wedge \psi \; | \; \neg \phi \; | \; \bigcirc \phi \; | \; \phi U \psi
+\]
+où $a \in AP$
+\end{block}
+  \alert{Note : $\phi U \psi$ requiert l'apparition de $\psi$ dans le chemin; $\phi$ indéfiniment n'est pas suffisant !}
+
+\end{frame}
+
+\begin{frame}{Syntaxe}{}
+\vspace{-0.05\linewidth}
+{\color{fibeamer@orange}Opérateurs dérivés : \\ }
+\vspace{-0.03\linewidth}
+\begin{columns}
+  \begin{column}{0.3\linewidth}
+    eventually\\
+    always \\
+  \end{column}
+  \begin{column}{0.3\linewidth}
+    $ \Diamond \phi \equiv true\, U\, \psi$ \\
+    $ \Box \phi \equiv \neg \Diamond \neg \phi $ \\
+  \end{column}
+\end{columns}
+{\vspace{0.02\linewidth}\color{fibeamer@orange}Ordre de précédence: \\ }
+\vspace{-0.05\linewidth}
+\begin{enumerate}
+  \item parenthèses
+  \item opérations unaires $\big(\, \neg, \, \bigcirc\, \big)$
+  \item opérations binaires :
+    \begin{enumerate}
+      \item $U \; \big($assosiatif par la droite,
+      e.g., $\phi_1 U \phi_2 U \phi_3 \equiv \phi_1 U (\phi_2 U \phi_3) \, \big)$
+      \item $\wedge$
+    \end{enumerate}
+\end{enumerate}
+{\color{fibeamer@orange}Combinaisons de modalités temporelles :}
+\begin{itemize}
+  \item $\Box\Diamond \phi \quad \quad $ ``infiniment souvent $\phi$''
+  \item $\Diamond\Box \phi \quad \quad $ ``éventuellement toujours $\phi$''
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Combinaisons de modalités temporelles}{Exemple (infiniment souvent)}
+    \centering
+    \includegraphics[width=0.7\linewidth]{resources/TS.eps}
+    \captionof{figure}{Distributeur de boissons \protect \cite{PMC}}% \protect \cite{DBLP:books/daglib/0020348}}
+    \begin{itemize}
+      \item Pour toute trace de l'éxécution du système depuis $pay$, i.e., $\forall \sigma \in
+        Traces(pay)$, pour toute position dans $\sigma$, le label $drink$ doit apparaître dans le futur. \\
+      $\leadsto \Box\Diamond drink$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Combinaisons de modalités temporelles}{Exemple (éventuellement toujours)}
+  \centering
+  \includegraphics[width=0.45\linewidth]{resources/LTL_example2}
+    \captionof{figure}{\protect \cite{MRV}}% \protect \cite{DBLP:books/daglib/0020348}}
+  \begin{itemize}
+    \item $\forall \sigma \in Traces(s)$, il y a toujours un moment où on voit toujours $a$, mais plus $b$ \\
+    $\leadsto \Diamond\Box(a \wedge \neg b)$
+  \end{itemize}
+\end{frame}
+
+\subsection{Sémantique}
+\begin{frame}{Sémantique}
+\small
+Soient $\mathcal{T} = (S, A, \rightarrow, AP, L)$ et $\phi$, une formule LTL sur $AP$, la propriété LT induite par $\phi$ est le langage de mots
+\[
+  Words(\phi) = \{ \sigma = A_0A_1A_2\dots \in (2^{AP})^\omega \; | \; \sigma \models \phi \}
+\]
+où $\models$ est la plus petite relation satisfaisant
+\begin{align*}
+  & \sigma \models true &&& \\
+  & \sigma \models a && \text{ssi } a \in A_0& \\
+  & \sigma \models \phi \wedge \psi && \text{ssi } \sigma \models \phi \text{ et } \sigma \models \psi& \\
+  & \sigma \models \neg\phi && \text{ssi } \sigma \not\models \phi&\\
+  & \sigma \models \bigcirc \, \phi && \text{ssi } \sigma[1:] = A_1A_2\dots \models \phi&\\
+  & \sigma \models \phi U \psi && \text{ssi } \exists j \geq 0, \; \sigma[j:] \models \psi \text{ et } \forall 0 \leq i < j, \; \sigma[i:] \models \phi
+\end{align*}
+\end{frame}
+
+\begin{frame}{Sémantique}
+\small
+Soit $s \in S$,
+\begin{itemize}
+  \item $\forall \pi \in Paths(s)$, $\pi \models \phi$ ssi $trace(\pi) \models \phi$
+  \item $s \models \phi$ ssi $\forall \pi \in Paths(s)$, $\pi \models \phi$
+\end{itemize}
+
+\textit{\color{gray}Exemple}
+\vspace{-0.02\linewidth}
+\begin{center}
+\includegraphics[width=0.4\linewidth]{resources/LTL_example2}
+\captionof{figure}{\protect \cite{MRV}}% \protect \cite{DBLP:books/daglib/0020348}}
+\end{center}
+\begin{itemize}
+  \item $s \models \Diamond\Box (a \wedge \neg b)$
+\end{itemize}
+\end{frame}
+
+\section{CTL}
+\subsection{Intuition}
+
+\begin{frame}{Logique d'arbre de calculs (CTL)}
+\begin{itemize}
+  \item Notion d'\textbf{\color{fibeamer@orange}arbre d'exécution = arbre de calcul}
+  \item[$\leadsto$] Dépliage infini du système considérant toutes les possibilités de branchement
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Arbre de calculs}
+\small
+\begin{center}
+  \includegraphics[width=0.35\linewidth]{resources/CTL_unfolding1}
+\end{center}
+  Arbre de calculs depuis l'état $s_0$ ? \\
+\begin{columns}
+\begin{column}{0.6\linewidth}
+  \centering
+  \includegraphics[width=0.6\linewidth]{resources/CTL_unfolding2}
+\end{column}
+\begin{column}{0.5\linewidth}
+  Est-ce que toutes les exécutions ont toujours la possibilité d'atteindre
+  éventuellement {\color{DarkOrange}$\{b\}$} ? \\
+  %$\rightarrow$ \alert{non}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Quantificateurs}
+\begin{itemize}
+  \item \textbf{\color{fibeamer@orange}LTL} : $s\models\phi$ signifie que tous les chemins commençant en $s$ satisfont $\phi$
+  \begin{itemize}
+    \item Quantification explicite !
+    \item $s \models \forall \phi$
+  \end{itemize}
+  \item \textbf{\color{fibeamer@orange}CTL} : on peut considérer seulement certains chemins
+  \begin{itemize}
+    \item Existe-t-il un chemin satisfaisant $\phi$ commençant en $s$ ?
+    \item $s \models \exists \phi \iff \underbrace{s \not\models \forall \neg \phi}_{\text{LTL : }s \not \models \neg \phi}$
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Quantificateurs}{Motivation}
+\small
+\begin{columns}
+\begin{column}{0.6\linewidth}
+  \centering
+  \includegraphics[width=0.6\linewidth]{resources/CTL_unfolding2}
+\end{column}
+\begin{column}{0.5\linewidth}
+  Est-ce que \alert{toutes} les exécutions ont toujours \alert{la possibilité} d'atteindre
+  éventuellement {\color{DarkOrange}$\{b\}$} ? \\
+  %$\rightarrow$ \alert{non}
+\end{column}
+\end{columns}
+\begin{itemize}
+  \item \textbf{\color{fibeamer@orange}LTL} :
+  \begin{itemize}
+    \item $s_0 \models \Box\Diamond b$ \alert{ne fonctionne pas !}
+    \item requiert que \alert{tous les chemins du système de transition} atteignent
+      {\color{DarkOrange}$\{b\}$}
+    \item[$\leadsto$] On ne parle pas de possibilité d'atteindre
+      {\color{DarkOrange}$\{b\}$}
+  \end{itemize}
+  \alert{
+  \item Pas expressible en LTL
+  }
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Quantificateurs}{Motivation}
+\small
+\begin{columns}
+\begin{column}{0.6\linewidth}
+  \centering
+  \includegraphics[width=0.6\linewidth]{resources/CTL_unfolding2}
+\end{column}
+\begin{column}{0.5\linewidth}
+  Est-ce que \alert{toutes} les exécutions ont toujours \alert{la possibilité} d'atteindre
+  éventuellement {\color{DarkOrange}$\{b\}$} ? \\
+  %$\rightarrow$ \alert{non}
+\end{column}
+\end{columns}
+\begin{itemize}
+  \item[$\rightarrow$] Besoin de quantificateurs
+  \item \textbf{\color{fibeamer@orange}CTL} :
+  \begin{itemize}
+    \item $s_0 \models \forall\Box\exists\Diamond b$
+    \item Pour tout chemin commençant en $s_0$, à chaque étape, il existe un chemin qui peut atteindre $b$.
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{CTL vs LTL}{Comparaison intuitive}
+  \begin{itemize}
+    \item \textbf{\color{fibeamer@orange}LTL : }
+    \begin{itemize}
+      \item chemins + traces
+      \item temps linéaire
+      \item chaque point a un seul futur possible
+    \end{itemize}
+    \item \textbf{\color{fibeamer@orange}CTL : }
+    \begin{itemize}
+      \item arbre de calculs + comportement des branchements
+      \item temps en branchements
+      \item chaque noeud de l'arbre a plusieurs futurs possibles
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{CTL}{Intuition}
+\begin{itemize}
+  \item Formules d'états
+  \item[=] Assertions de propositions atomiques dans des états ainsi que leur structure de branchement
+  \begin{itemize}
+    \item propositions atomiques $a \in AP$
+    \item combinaisons booléennes de formules :
+      $\neg \Phi, \, \Phi \wedge \Psi, \, \Phi \vee \Psi$
+    \item quantification de chemins via des {\color{fibeamer@orange} formules de chemins}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{CTL}{Intuition}
+\vspace{-0.05\linewidth}
+\begin{itemize}
+  \item Formules de chemins \\
+\end{itemize}
+\vspace{0.05\linewidth}
+\centering
+\begin{columns}
+  \begin{column}{0.5\linewidth}
+    \includegraphics[width=\linewidth]{resources/ctl_path_formulae}
+  \end{column}
+  \begin{column}{0.5\linewidth}
+    \includegraphics[width=\linewidth]{resources/ctl_path_formulae2}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Formules de chemins}
+  Formules LTL $\neq$ formules de chemin CTL ! \\
+  En effet, les formules de chemin CTL...
+  \begin{itemize}
+    \item ne peuvent pas être combinées avec des connecteurs booléens
+    \item ne permettent pas l'imbrication des modalités temporelles \\
+    \textit{\color{gray}Exemple : }\\
+    \begin{align*}
+      &s \models \forall \Box\exists\Diamond b && \text{\color{green}correct}& \\
+      &s \models \forall \Box\Diamond b && \text{\alert{incorrect}}&
+    \end{align*}
+  \end{itemize}
+\end{frame}
+
+\subsection{Syntaxe}
+\begin{frame}
+  \begin{block}{Syntaxe}
+    Soit $AP$, un ensemble de propositions atomiques.
+    \begin{itemize}
+      \item Les \textit{\color{fibeamer@orange}formules d'états} CTL sont formées selon la
+    grammaire suivante :
+    \[
+      \Phi ::= true \; | \; a \; | \; \Phi \wedge \Psi \; | \; \neg \Phi \; | \; \exists \phi \; | \; \forall \phi
+    \]
+    où $a \in AP$ et $\phi$ est une formule de chemin.
+      \item Les \textit{\color{fibeamer@orange}formules de chemins} CTL sont formées selon la grammaire suivante :
+      \[
+        \phi ::= \bigcirc\,\Phi \; | \; \Phi U \Psi
+      \]
+      où $\Phi$ et $\Psi$ sont des formules d'états.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\subsection{Sémantique}
+\begin{frame}{Sémantique}
+  Soient $\mathcal{T} = (S, A, \rightarrow, AP, L)$, un TS et $s \in S$, un {\color{fibeamer@orange}état}
+  de $\mathcal{T}$. \\
+  $s \models \Phi$ ssi la formule $\Phi$ tient dans l'état $s$, i.e.,
+  \begin{align*}
+    &s \models true &&&\\
+    &s \models a &\text{ ssi }& a \text{ est un label de $s$, i.e., } a \in L(s)&\\
+    &s \models \Phi \wedge \Psi&\text{ ssi }& s \models \Phi \text{ et } s \models \Psi&\\
+    &s \models \neg \Phi &\text{ ssi }& s \not\models \Phi&\\
+    &s \models \exists \phi &\text{ ssi }& \exists \pi \in Paths(s), \, \pi \models \phi&\\
+    &s \models \forall \phi &\text{ ssi }& \forall \pi \in Paths(s), \, \pi \models \phi&
+  \end{align*}
+\end{frame}
+
+\begin{frame}{Sémantique}
+  Soient $\mathcal{T} = (S, A, \rightarrow, AP, L)$, un TS et $\pi = s_0s_1s_2\dots \in Paths(s)$, un {\color{fibeamer@orange}chemin}.\\
+  $\pi \models \phi$ ssi $\pi$ satisfait $\phi$, i.e.,
+  \begin{align*}
+  &\pi \models \Phi&\text{ ssi }&s_0 \models \Phi&\\
+  &\pi \models \bigcirc\, \Phi&\text{ ssi }&s_1 \models \Phi&\\
+  &\pi \models \Phi U \Psi &\text{ ssi }& \exists j \in \mathbb{N},\, s_j \models \Psi
+    \text{ et } \forall 0 \leq i < j, \, s_i \models \Phi&\\
+  & \pi \models \Diamond \Phi&\text{ ssi }& \exists j \in \mathbb{N}, \, s_j \models \Phi&\\
+  & \pi \models \Box \Phi&\text{ ssi }& \forall j \in \mathbb{N}, \, s_j \models \Phi&
+  \end{align*}
+\end{frame}
+
+%\subsection{Satisfiabilité}
+
+\begin{frame}{Satisfiabilité}
+  \begin{definition}[Ensemble de satisfaction]
+    Soient $\mathcal{T} = (S, A, \rightarrow, AP, L)$, un TS et
+    $\Phi$, une formule d'état CTL sur $AP$. L'ensemble
+    de satisfaction du TS $\mathcal{T}$ est donné par
+    \[
+      Sat_\mathcal{T}(\Phi) = \{s \in S \; | \; s \models \Phi \}
+    \]
+  \end{definition}
+\end{frame}
+
+% \begin{frame}{Caractérisation de Sat}
+%   Soient $\mathcal{T}=(S, A, \rightarrow, AP, L)$, un TS et les formules d'états CTL $\Phi$, $\Psi$ sur $AP$.
+%   \begin{itemize}
+%     \item $Sat_\mathcal{T}(true)=S$
+%     \item $Sat_\mathcal{T}(a) = \{s \in S \; | \; a \in L(s)\}$, avec $a \in AP$
+%     \item $Sat_\mathcal{T}(\Phi \wedge \Psi) = Sat_\mathcal{T}(\Phi) \cap Sat_\mathcal{T}(\Psi)$
+%     \item $Sat_\mathcal{T}(\neg \Phi) = S \setminus Sat_\mathcal{T}(\Phi)$
+%     \item $Sat_\mathcal{T}(\exists \bigcirc \Phi) = \{ s \in S \; | \; Succ(s) \cap Sat_\mathcal{T}(\Phi) \neq \emptyset \}$
+%   \end{itemize}
+% \end{frame}
+
+\subsection{LTL vs CTL}
+\begin{frame}{LTL vs CTL}
+\textbf{\alert{\large LTL et CTL sont incomparables !}} \\
+\textit{Exprimable en ...}
+\begin{itemize}
+  \item CTL mais pas LTL :\\
+    $\forall\Box\exists\Diamond a$ {\color{gray}(voir exemple)}
+  \item LTL mais pas CTL : \\
+  $\Diamond\Box a$
+\end{itemize}
+En effet, \alert{$\Diamond\Box a \not \equiv \forall \Diamond \forall \Box a$ !}
+\begin{itemize}
+  \item $\Diamond\Box a$ assure que $a$ sera atteint éventuellement en tout point.
+  \item $\forall\Diamond\forall\Box a$ affirme que pour toute exécution, un état
+    $s$ est éventuellement atteint, tel que $s \models \forall \Box a$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{LTL vs CTL}{Exemple}
+\vspace{-0.05\linewidth}
+\begin{itemize}
+  \item AP = {\color{DarkOrange}$\{a\}$}
+\end{itemize}
+\begin{center}
+  \includegraphics[width=0.4\linewidth]{resources/ctl_vs_ltl}
+\end{center}
+\vspace{-0.05\linewidth}
+\begin{itemize}
+  \item $s_0$ satisfait la formule LTL $\Diamond \Box a$ car
+  chaque chemin commençant en $s_0$ reste éventuellement toujours en $s_0$ ou en
+  $s_2$, tous les deux étiquettés avec $a$.
+  \item $s_0$ \alert{\textbf{ne satisfait pas}} la formule CTL $\forall \Diamond \forall
+  \Box a$.\\
+  Prenons le chemin $s_0^\omega$. \\$s_0^\omega \not\models \Diamond \forall \Box a$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{LTL vs CTL}{Exemple}
+\small
+\vspace{-0.08\linewidth}
+\[
+  s_0^\omega \not \models \Diamond \forall \Box a
+\]
+\vspace{-0.05\linewidth}
+\begin{itemize}
+  \item $\pi = s_0s_1\dots \models \Diamond \Phi \iff \exists j \in \mathbb{N}
+  , \, s_j \models \Phi$
+  \item $s \models \forall \Box a \iff \forall \pi = s_0s_1s_2\dots \in Paths(s), \,
+  a \in L(s_i) \; \forall i \in \mathbb{N} $
+\end{itemize}
+\begin{columns}
+\begin{column}{0.6\linewidth}
+  \centering
+  \includegraphics[width=0.6\linewidth]{resources/CTL_counter_example_unfolding}
+\end{column}
+\begin{column}{0.5\linewidth}
+  Le chemin {\color{fibeamer@orange}\[s_0^*s_1s_2^\omega\]} passe par un état $\neg a$ \\(i.e., par $s_1$).
+\end{column}
+\end{columns}
+\vspace{0.01\linewidth}
+\begin{itemize}
+  \item[$\rightarrow$] Il n'existe pas d'états dans le chemin $s_0^\omega$ qui va satisfaire $\forall \Box a$ car $s_0 \not \models \forall \Box a$
+  %\item[$\implies$] $s_0 \not \models \forall \Diamond \forall \Box a$
+\end{itemize}
+\end{frame}
+
+\section{MC}
+\subsection{}
+\begin{frame}
+  \small
+  \begin{definition}[Chaîne de Markov à temps discret]
+  	Une \textit{chaîne de Markov à temps discret}, notée \textbf{MC} (pour \textit{Markov Chain}), est un modèle probabiliste défini par un tuple  $\mathcal{M} = (S, \Delta, AP, L)$ où :
+  	\begin{itemize}
+  		\item $S$ est un ensemble dénombrable d'états,
+  		\item $\Delta: S \times S \rightarrow [0,1] \cap \mathbb{Q}$ est une \textit{fonction de transition} telle que \[\forall s \in S, \sum_{s' \in S}\Delta(s, s')= 1\]
+  		%\item $d_0:S \rightarrow [0,1]$ est la distribution initiale telle que \[\sum_{s \in S}d_0(s)= 1\] (à noter que dans le cadre de ce document, la distribution initiale peut être omise, et dans ce cas, $\forall s \in S, d_0(s) = \frac{1}{|S|}$).
+  		où $\Delta(s, s')$ est la probabilité de passer de l'état $s$ à l'état $s'$,
+      \item $AP$ est un ensemble de propositions atomiques et
+      \item $L: S \rightarrow 2^{AP}$ est une fonction d'étiquetage.
+  	\end{itemize}
+  \end{definition}
+\end{frame}
+
+\begin{frame}{Chaînes de Markov}
+  \normalsize
+  \begin{itemize}
+    \item Les MCs sont des modèles \textbf{\color{fibeamer@orange}déterministes}
+    \item L'idée des chemins d'une MC est la même que pour les TSs :
+  \end{itemize}
+  \begin{definition}[Chemin dans une MC]
+      Un {\color{fibeamer@orange}chemin} (infini) $\pi = s_0 s_1 s_2 \dots \in S^\omega$ est une séquence d'états de la MC
+      $\mathcal{M} = (S, \Delta, AP, L)$ où $\forall i \in \mathbb{N}$, $\Delta(s_i, s_{i+1}) > 0$. \\
+      $Paths(s)$ est l'ensemble des chemins de $\mathcal{M}$ qui commencent
+      en l'état $s \in S$.
+  \end{definition}
+\end{frame}
+
+\section{PCTL}
+\normalsize
+\subsection{Intuition}
+\begin{frame}{Logique en arbre de calculs probabiliste (PCTL)}
+  \begin{itemize}
+    \item CTL probabiliste
+    \item Logique temporelle en branchements pour exprimer les {\color{fibeamer@orange}propriétés d'états} des MCs.
+    \item Logique proche de CTL pour les systèmes probabilistes.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{CTL vs PCTL}
+\begin{itemize}
+  \item \textbf{\color{fibeamer@orange}CTL :} \\
+  Chemins quantifiés en utilisant $\forall$ et $\exists$
+  \item \textbf{\color{fibeamer@orange}PCTL :} \\
+  Chemins quantifiés en utilisant leur probabilité, avec $\mathcal{P}_J(\phi)$ où $J \subseteq [0, 1]$ et $\phi$ est une formule de chemin
+\end{itemize}
+\[ s \models \mathcal{P}_J(\phi) \text{ ssi } \mathbb{P}_s(\{\pi \in Paths(s) \; | \; \pi \models \phi \}) \in J\]
+  \begin{itemize}
+    \item[+] PCTL inclus additionnellement le \textit{until borné} $U^{\leq n}$
+  \end{itemize}
+\end{frame}
+
+\subsection{Syntaxe}
+\begin{frame}{}
+  \begin{block}{Syntaxe}
+    Soit $AP$, un ensemble de propositions atomiques.
+    \begin{itemize}
+      \item Les \textit{\color{fibeamer@orange}formules d'états} PCTL sont formées selon la
+    grammaire suivante :
+    \[
+      \Phi ::= true \; | \; a \; | \; \Phi \wedge \Psi \; | \; \neg \Phi \; | \; \mathcal{P}_J(\phi)
+    \]
+    où $a \in AP$, $J \subseteq [0, 1]$ et $\phi$ est une formule de chemin.
+      \item Les \textit{\color{fibeamer@orange}formules de chemins} PCTL sont formées selon la grammaire suivante :
+      \[
+        \phi ::= \bigcirc\,\Phi \; | \; \Phi U \Psi \; | \; \Phi U^{\leq n} \Psi
+      \]
+      où $\Phi$ et $\Psi$ sont des formules d'états et $n \in \mathbb{N}$.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\subsection{Sémantique}
+\begin{frame}{Sémantique}
+  Soient $\mathcal{M} = (S, A, \Delta, AP, L)$, une MC et $s \in S$, un {\color{fibeamer@orange}état}
+  de $\mathcal{M}$. \\
+  $s \models \Phi$ ssi la formule $\Phi$ tient dans l'état $s$, i.e.,
+  \begin{align*}
+    &s \models true &&&\\
+    &s \models a &\text{ ssi }& a \text{ est un label de $s$, i.e., } a \in L(s)&\\
+    &s \models \Phi \wedge \Psi&\text{ ssi }& s \models \Phi \text{ et } s \models \Psi&\\
+    &s \models \neg \Phi &\text{ ssi }& s \not\models \Phi&\\
+    &s \models \mathcal{P}_J(\phi) &\text{ ssi }& \mathbb{P}_s(\phi) \in J&\\
+  \end{align*}
+
+    \vspace{-0.05\linewidth}
+
+    où $\mathbb{P}_s(\phi) = \mathbb{P}_s(\{\pi \in Paths(s) \; | \; \pi \models \phi\})$ et $\mathbb{P}_s$ est la mesure de probabilité sur le $\sigma$-algèbre dont les résultats sont les chemins commençant en $s$, i.e.,
+    $Paths(s)$
+\end{frame}
+
+\begin{frame}{Sémantique}
+  Soient $\mathcal{M} = (S, A, \Delta, AP, L)$, une MC et $\pi = s_0s_1s_2\dots \in Paths(s)$, un {\color{fibeamer@orange}chemin}.\\
+  $\pi \models \phi$ ssi $\pi$ satisfait $\phi$, i.e.,
+  \begin{align*}
+  &\pi \models \Phi&\text{ ssi }&s_0 \models \Phi&\\
+  &\pi \models \bigcirc\, \Phi&\text{ ssi }&s_1 \models \Phi&\\
+  &\pi \models \Phi U \Psi &\text{ ssi }& \exists j \in \mathbb{N},\, s_j \models \Psi
+    \text{ et } \forall 0 \leq i < j, \, s_i \models \Phi&\\
+  &\pi \models \Phi U^{\leq n} \Psi &\text{ ssi }& \exists 0 \leq j \leq n ,\, s_j \models \Psi
+    \text{ et } \forall 0 \leq i < j, \, s_i \models \Phi&\\
+  & \pi \models \Diamond \Phi&\text{ ssi }& \exists j \in \mathbb{N}, \, s_j \models \Phi&\\
+  & \pi \models \Box \Phi&\text{ ssi }& \forall j \in \mathbb{N}, \, s_j \models \Phi&
+  \end{align*}
+\end{frame}
+
+\begin{frame}{Satisfiabilité}
+  L'ensemble de satisfaction d'une MC est essentiellement défini de la même façon que pour les TSs.
+  \begin{definition}[Ensemble de satisfaction]
+    Soient $\mathcal{M} = (S, A, \Delta, AP, L)$, une MC et
+    $\Phi$, une formule d'état PCTL sur $AP$. L'ensemble
+    de satisfaction de la MC $\mathcal{M}$ est donné par
+    \[
+      Sat_\mathcal{M}(\Phi) = \{s \in S \; | \; s \models \Phi \}
+    \]
+  \end{definition}
+\end{frame}
+
+\subsection{Comparaison de logiques temporelles en branchements}
+\begin{frame}{PCTL vs CTL}
+Pour CTL, on ommet les probabilités sur les transitions.
+\begin{align*}
+  &s \models \mathcal{P}_{=1}(\Diamond \Phi) &\not\implies& s \models \forall \Diamond \Phi&
+\end{align*}
 \end{frame}
 
 \begin{frame}[allowframebreaks]

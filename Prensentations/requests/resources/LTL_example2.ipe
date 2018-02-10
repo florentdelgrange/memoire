@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70206" creator="Ipe 7.2.6">
-<info created="D:20180206224059" modified="D:20180208104729"/>
+<info created="D:20180206224059" modified="D:20180208140101"/>
 <preamble>\usepackage{color}
 \renewcommand{\rmdefault}{\sfdefault}
 \usepackage{sansmathfonts}
+\usepackage{latexsym}
 \usepackage[sfdefault,lf]{carlito}
 %% The &apos;lf&apos; option for lining figures
 %% The &apos;sfdefault&apos; option to make the base font sans serif
@@ -262,51 +263,59 @@ h
 <page>
 <layer name="alpha"/>
 <view layers="alpha" active="alpha"/>
-<path layer="alpha" matrix="1.80861 0 0 1 -180.68 0" stroke="black">
-22.6274 0 0 22.6274 224 736 e
+<path layer="alpha" stroke="black">
+16 0 0 16 96 704 e
 </path>
-<text matrix="1 0 0 1 4.4821 -2.28785" transformations="translations" pos="208 736" stroke="black" type="label" width="24.763" height="8.293" depth="2.76" valign="baseline" size="LARGE">pay</text>
-<path matrix="1.80861 0 0 1 -308.68 -112" stroke="black">
-22.6274 0 0 22.6274 224 736 e
+<path stroke="black">
+16 0 0 16 160 752 e
 </path>
-<text matrix="1 0 0 1 -128.725 -117.852" transformations="translations" pos="208 736" stroke="black" type="label" width="33.102" height="11.728" depth="0.12" valign="baseline" size="LARGE">soda</text>
-<path matrix="1.80861 0 0 1 -180.68 -112" stroke="black">
-22.6274 0 0 22.6274 224 736 e
+<path stroke="black">
+16 0 0 16 160 656 e
 </path>
-<text matrix="1 0 0 1 -4.65109 -117.325" transformations="translations" pos="208 736" stroke="black" type="label" width="40.864" height="11.728" depth="0.12" valign="baseline" size="LARGE">select</text>
-<path matrix="1.80861 0 0 1 -52.68 -112" stroke="black">
-22.6274 0 0 22.6274 224 736 e
+<path stroke="black">
+16 0 0 16 256 752 e
 </path>
-<text matrix="1 0 0 1 126.955 -117.441" transformations="translations" pos="208 736" stroke="black" type="label" width="32.179" height="11.728" depth="0.12" valign="baseline" size="LARGE">beer</text>
-<path stroke="black" arrow="normal/normal">
-224.008 713.374 m
-223.743 646.624 l
+<path stroke="black">
+16 0 0 16 256 656 e
 </path>
 <path stroke="black" arrow="normal/normal">
-265.372 623.835 m
-311.527 623.743 l
+107.986 714.599 m
+144.036 753.071 l
 </path>
 <path stroke="black" arrow="normal/normal">
-183.526 623.778 m
-137.368 623.652 l
+107.028 692.407 m
+144 655.911 l
 </path>
 <path stroke="black" arrow="normal/normal">
-95.7607 646.624 m
-96 736
-183.544 736.692 c
+172.351 762.171 m
+208 784
+246.224 764.666 c
 </path>
 <path stroke="black" arrow="normal/normal">
-351.93 646.626 m
-352 736
-265.329 737.052 c
+243.545 741.956 m
+208 720
+169.655 739.241 c
 </path>
-<text matrix="1 0 0 1 -1.5183 12" transformations="translations" pos="208 576" stroke="darkorange" type="label" width="35.788" height="8.965" depth="2.99" valign="baseline" size="large" style="math">\{paid\}</text>
-<text matrix="1 0 0 1 -340 -36" transformations="translations" pos="400 624" stroke="darkorange" type="label" width="73.033" height="8.965" depth="2.99" valign="baseline" size="large" style="math">\{paid, \, drink\}</text>
-<text matrix="1 0 0 1 -4 0" transformations="translations" pos="236 680" stroke="navy" type="label" width="62.044" height="8.126" depth="1.59" valign="baseline" size="large" style="math">insert\_coin</text>
-<text transformations="translations" pos="352 704" stroke="navy" type="label" width="48.701" height="8.307" depth="2.32" valign="baseline" size="large" style="math">get\_beer</text>
-<text matrix="1 0 0 1 -16 0" transformations="translations" pos="64 704" stroke="navy" type="label" width="49.985" height="8.307" depth="2.32" valign="baseline" size="large" style="math">get\_soda</text>
-<text transformations="translations" pos="280 632" stroke="navy" type="label" width="6.914" height="5.313" depth="0" valign="baseline" size="large" style="math">\tau</text>
-<text matrix="1 0 0 1 -116 0" transformations="translations" pos="280 632" stroke="navy" type="label" width="6.914" height="5.313" depth="0" valign="baseline" size="large" style="math">\tau</text>
-<text matrix="1 0 0 1 -84 -36" transformations="translations" pos="400 624" stroke="darkorange" type="label" width="73.033" height="8.965" depth="2.99" valign="baseline" size="large" style="math">\{paid, \, drink\}</text>
+<path stroke="black" arrow="normal/normal">
+176 655.893 m
+240 656.12 l
+</path>
+<path stroke="black" arrow="normal/normal">
+148.433 644.945 m
+128 624
+160 608
+192 624
+171.824 645.221 c
+</path>
+<path stroke="black" arrow="normal/normal">
+256.124 672 m
+255.701 736.003 l
+</path>
+<text matrix="1 0 0 1 -4 0" transformations="translations" pos="88 728" stroke="darkorange" type="label" width="21.381" height="10.756" depth="3.59" valign="baseline" size="Large" style="math">\{a\}</text>
+<text matrix="1 0 0 1 60 -44" transformations="translations" pos="88 728" stroke="darkorange" type="label" width="21.381" height="10.756" depth="3.59" valign="baseline" size="Large" style="math">\{a\}</text>
+<text matrix="1 0 0 1 60 52" transformations="translations" pos="88 728" stroke="darkorange" type="label" width="21.381" height="10.756" depth="3.59" valign="baseline" size="Large" style="math">\{a\}</text>
+<text matrix="1 0 0 1 156 52" transformations="translations" pos="88 728" stroke="darkorange" type="label" width="35.329" height="10.756" depth="3.59" valign="baseline" size="Large" style="math">\{a, c\}</text>
+<text matrix="1 0 0 1 32 28" transformations="translations" pos="248 624" stroke="darkorange" type="label" width="22.197" height="10.756" depth="3.59" valign="baseline" size="Large" style="math">\{b\}</text>
+<text matrix="1 0 0 1 3.75035 -3.94829" transformations="translations" pos="88 704" stroke="black" type="label" width="7.939" height="7.651" depth="0" valign="baseline" size="LARGE" style="math">s</text>
 </page>
 </ipe>
