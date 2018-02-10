@@ -26,6 +26,7 @@
 \usepackage{ragged2e}  % `\justifying` text
 \usepackage{bbold}
 \usepackage{booktabs}  % Tables
+\usepackage{centernot}
 \usepackage{tabularx}
 \usepackage{tikz}      % Diagrams
 \usetikzlibrary{calc, shapes, backgrounds}
@@ -583,8 +584,9 @@ En effet, \alert{$\Diamond\Box a \not \equiv \forall \Diamond \forall \Box a$ !}
 \end{itemize}
 \end{frame}
 
-\section{MC}
-\subsection{}
+
+\section{PCTL}
+\subsection{MC}
 \begin{frame}
   \small
   \begin{definition}[Chaîne de Markov à temps discret]
@@ -613,8 +615,6 @@ En effet, \alert{$\Diamond\Box a \not \equiv \forall \Diamond \forall \Box a$ !}
       en l'état $s \in S$.
   \end{definition}
 \end{frame}
-
-\section{PCTL}
 \normalsize
 \subsection{Intuition}
 \begin{frame}{Logique en arbre de calculs probabiliste (PCTL)}
@@ -692,6 +692,17 @@ En effet, \alert{$\Diamond\Box a \not \equiv \forall \Diamond \forall \Box a$ !}
   \end{align*}
 \end{frame}
 
+\begin{frame}{Sémantique}{Remarque}
+  Soient $\mathcal{M} = (S, \Delta, AP, L)$, une MC et $T \subseteq S$, un sous-ensemble d'états de $\mathcal{M}$. \\
+  La pseudo-formule de chemin $\Diamond T$ est équivalente à la formule de chemin $\Diamond \Phi$ telle que :
+  \begin{itemize}
+    \item $\exists T_{AP} \subseteq AP$
+    \item $\Phi ::= \bigwedge_{a \in T_{AP}} a$
+    \item $\forall t \in T$, $\forall a \in T_{AP}$, $a \in L(t)$
+    \item $\forall s \not \in T$, $\exists b \in T_{AP}$ telle que $b \not \in L(s)$
+  \end{itemize}
+\end{frame}
+
 \begin{frame}{Satisfiabilité}
   L'ensemble de satisfaction d'une MC est essentiellement défini de la même façon que pour les TSs.
   \begin{definition}[Ensemble de satisfaction]
@@ -706,10 +717,47 @@ En effet, \alert{$\Diamond\Box a \not \equiv \forall \Diamond \forall \Box a$ !}
 
 \subsection{Comparaison de logiques temporelles en branchements}
 \begin{frame}{PCTL vs CTL}
-Pour CTL, on ommet les probabilités sur les transitions.
-\begin{align*}
-  &s \models \mathcal{P}_{=1}(\Diamond \Phi) &\not\implies& s \models \forall \Diamond \Phi&
-\end{align*}
+\[
+  s \models \mathcal{P}_{=1}(\Diamond \Phi) \quad  \centernot\implies \quad s \models \forall \Diamond \Phi
+\]
+\alert{La probabilité que tous les chemins satisfassent une formule de chemin PCTL avec une probabilité de 1 ne signifie pas que tous les chemins satisfassent la formule de chemin CTL correspondante !}
+\[
+  s \models \mathcal{P}_{>0}(\Box \Phi) \quad  \centernot\Longleftarrow \quad s \models \exists \Box \Phi
+\]
+\alert{Le fait qu'un chemin satisfasse une formule de chemin CTL n'implique pas forcément que la probabilité des chemins satisfaisant la formules PCTL correspondante soit non-nulle !}
+\end{frame}
+
+\begin{frame}{PCTL vs CTL}{Exemple}
+  \begin{center}
+    \includegraphics[width=0.5\linewidth]{resources/PCTL_CTL}
+  \end{center}
+  \begin{itemize}
+    \item $s_0 \models \mathcal{P}_{=1}(\Diamond b)$, mais $s \not \models \forall \Diamond b$
+    \item $s_0 \models \exists \Box a$, mais $s \not \models \mathcal{P}_{>0}(\Box a)$
+  \end{itemize}
+\end{frame}
+
+\section{PRCTL}
+\subsection{WMC}
+\begin{frame}{Chaînes de Markov pondérées}
+  \begin{definition}[Chaîne de Markov pondérée]
+    Une \textit{chaîne de Markov pondérée} (WMC, pour \textit{weighted Markov chain}) $\mathcal{M}$ est une chaîne de Markov enrichie par une fonction de poids. $\mathcal{M}$ est définie par le tuple $(S, A, \Delta, AP, L, w)$
+    tel que :
+    \begin{itemize}
+      \item $S, A, \Delta, AP$ et $L$ sont définis comme pour une MC classique et
+      \item $w : S \times S \rightarrow \mathbb{N}^{>0}$ est la fonction
+        de poids associant à chaque transition un coût strictement positif.
+    \end{itemize}
+  \end{definition}
+\end{frame}
+\begin{frame}{Chaînes de Markov pondérées}
+    Soient $\mathcal{M} = (S, A, \Delta, AP, L, w)$, une WMC, $s \in S$, un état
+    de $\mathcal{M}$, $T \subseteq S$, un sous-ensemble d'états cibles et $\pi \in Paths(s)$.
+  \begin{itemize}
+  \item $TS^T(\pi)$, la \textit{\color{fibeamer@orange}somme tronquée de $\pi$}, est le coût du chemin $\pi$ jusqu'à satisfaire {\color{fibeamer@orange}(pour la première fois)} $\Diamond T$
+  \item $\mathbb{E}_s(TS^T)$ est l'espérance de la longueur des chemins (en terme de coût) pour que $s \models \mathcal{P}_{=1}(\Diamond T)$ (pour la première fois)
+  \item $\mathbb{P}_s(\Diamond_{\leq l}T) = \mathbb{P}_s(\{ \pi \in Paths(s) \; | \; TS^T(\pi) \leq l \})$ est la probabilité que les chemins $\pi_{\in Paths(s)} \models \Diamond T$ avec un coût (i.e., une somme tronquée) inférieure à $l \in \mathbb{N}$.
+  \end{itemize}
 \end{frame}
 
 \begin{frame}[allowframebreaks]
