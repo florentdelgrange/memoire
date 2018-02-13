@@ -14,6 +14,7 @@
 \setbeamercolor{section in head/foot}{fg=white, bg=fibeamer@blue}
 \usepackage[francais]{babel}
 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 %\title{Requêtes probabilistes et pondérées en logique d'arbre de calcul %\includegraphics[width=0.25\linewidth]{fibeamer/logo/mu/storm}
 \title{Vérification des Processus Décisionnels de Markov pondérés
 } %% that will be typeset on the
@@ -42,7 +43,12 @@
 \usepackage{minted}
 \usepackage{biblatex}
 \usepackage{mathtools}
+\usepackage{multicol}
 \frenchspacing
+
+\input{prism}
+
+\newtheorem*{exemple}{Exemple}
 
 \definecolor{DarkOrange}{HTML}{FF8C00}
 
@@ -54,10 +60,17 @@
 
   \AtBeginSection[]
     {
-       \begin{frame}<beamer>
-       \frametitle{Plan}
-       \tableofcontents[currentsection]
-       \end{frame}
+      %  \begin{frame}<beamer>
+      %  \frametitle{Plan}
+      %  \tableofcontents[currentsection]
+      %  \end{frame}
+      \begin{frame}{\contentsname}
+      \vspace{-0.05\linewidth}
+      \footnotesize
+      \begin{multicols}{2}
+      \tableofcontents[currentsection]
+      \end{multicols}
+      \end{frame}
     }
 
 \section{Préliminaires}
@@ -741,25 +754,296 @@ En effet, \alert{$\Diamond\Box a \not \equiv \forall \Diamond \forall \Box a$ !}
 \subsection{WMC}
 \begin{frame}{Chaînes de Markov pondérées}
   \begin{definition}[Chaîne de Markov pondérée]
-    Une \textit{chaîne de Markov pondérée} (WMC, pour \textit{weighted Markov chain}) $\mathcal{M}$ est une chaîne de Markov enrichie par une fonction de poids. $\mathcal{M}$ est définie par le tuple $(S, A, \Delta, AP, L, w)$
+    Une \textit{chaîne de Markov pondérée} (WMC, pour \textit{weighted Markov chain}) $\mathcal{M}$ est une chaîne de Markov enrichie par une fonction de poids. $\mathcal{M}$ est définie par le tuple $(S, \Delta, AP, L, w)$
     tel que :
     \begin{itemize}
-      \item $S, A, \Delta, AP$ et $L$ sont définis comme pour une MC classique et
+      \item $S, \Delta, AP$ et $L$ sont définis comme pour une MC classique et
       \item $w : S \times S \rightarrow \mathbb{N}^{>0}$ est la fonction
         de poids associant à chaque transition un coût strictement positif.
     \end{itemize}
   \end{definition}
 \end{frame}
+
+\begin{frame}{Chaînes de Markov pondérées}{Exemple}
+\begin{figure}
+  \includegraphics[width=0.8\linewidth]{resources/weather}
+  \caption{Système équipé de panneaux solaires produisant de l'énergie en fonction du climat.}
+\end{figure}
+\end{frame}
+
 \begin{frame}{Chaînes de Markov pondérées}
-    Soient $\mathcal{M} = (S, A, \Delta, AP, L, w)$, une WMC, $s \in S$, un état
+    Soient $\mathcal{M} = (S, \Delta, AP, L, w)$, une WMC, $s \in S$, un état
     de $\mathcal{M}$, $T \subseteq S$, un sous-ensemble d'états cibles et $\pi \in Paths(s)$.
   \begin{itemize}
-  \item $TS^T(\pi)$, la \textit{\color{fibeamer@orange}somme tronquée de $\pi$}, est le coût du chemin $\pi$ jusqu'à satisfaire {\color{fibeamer@orange}(pour la première fois)} $\Diamond T$
-  \item $\mathbb{E}_s(TS^T)$ est l'espérance de la longueur des chemins (en terme de coût) pour que $s \models \mathcal{P}_{=1}(\Diamond T)$ (pour la première fois)
+  \item $TS^T(\pi)$, la \textit{\color{fibeamer@orange}somme tronquée de $\pi$}, est le coût du chemin $\pi$ jusqu'à satisfaire {(pour la première fois)} $\Diamond T$
+  \item $\mathbb{E}_s(TS^T) = \mathbb{E}_s(\{ TS^T(\pi) \; | \; \pi \in Paths(s)  \})$ est l'espérance de la longueur des chemins (en terme de coût) pour que $s \models \mathcal{P}_{=1}(\Diamond T)$ (pour la première fois)
   \item $\mathbb{P}_s(\Diamond_{\leq l}T) = \mathbb{P}_s(\{ \pi \in Paths(s) \; | \; TS^T(\pi) \leq l \})$ est la probabilité que les chemins $\pi_{\in Paths(s)} \models \Diamond T$ avec un coût (i.e., une somme tronquée) inférieure à $l \in \mathbb{N}$.
   \end{itemize}
 \end{frame}
 
+\begin{frame}{Chaînes de Markov pondérées}{Exemple}
+  \begin{columns}
+    \begin{column}{0.5\linewidth}
+      \includegraphics[width=\linewidth]{resources/weather}
+    \end{column}
+    \begin{column}{0.5\linewidth}
+        \begin{align*}
+          &TS^{\{Fn\}}(E \cdot Ln \cdot Ln \cdot Mn \cdot Fn\, \dots)& \\
+          &= 5+3+3+2 = 13&
+        \end{align*}
+    \end{column}
+  \end{columns}
+  \begin{itemize}
+    \item $\mathbb{E}_{E}(TS^{\{Fn\}}) = 25 Kj$
+    \item $1 - \mathbb{P}_{E}(\Diamond_{\leq 7}\{Fn\}) =
+      \mathbb{P}_{E}(\Diamond_{> 8}\{Fn\}) = 1 - 0.14 = 0.86 $
+  \end{itemize}
+\end{frame}
+
+\subsection{Intuition}
+\begin{frame}{PRCTL}{Intuition}
+  \begin{itemize}
+    \item PCTL + Espérence des ``rewards'' ($\approx$coûts) des chemins.
+    \item Inclus un until borné par le coûts des chemins en terme de somme tronquée.
+  \end{itemize}
+\end{frame}
+
+\subsection{Syntaxe}
+\begin{frame}{}
+  \small
+  \begin{block}{Syntaxe}
+    Soit $AP$, un ensemble de propositions atomiques.
+    \begin{itemize}
+      \item Les \textit{\color{fibeamer@orange}formules d'états} PRCTL sont formées selon la
+    grammaire suivante :
+    \[
+      \Phi ::= true \; | \; a \; | \; \Phi \wedge \Psi \; | \; \neg \Phi \; | \; \mathcal{P}_J(\phi) \; | \; \mathcal{E}_R (\Phi)
+    \]
+    où $a \in AP$, $J \subseteq [0, 1]$, $R \in [0, +\infty[ \cap \mathbb{N}$ (bornes d'espérances du coût des chemins) et $\phi$ est une formule de chemin.
+      \item Les \textit{\color{fibeamer@orange}formules de chemins} PRCTL sont formées selon la grammaire suivante :
+      \[
+        \phi ::= \bigcirc\,\Phi \; | \; \Phi U \Psi \; | \; \Phi U^{\leq n} \Psi
+        \; | \; \Phi U_{\leq r} \Psi
+      \]
+      où $\Phi$ et $\Psi$ sont des formules d'états et $n, r \in \mathbb{N}$.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\subsection{Sémantique}
+\begin{frame}{Sémantique}
+\small
+Soient $\mathcal{M} = (S, A, \Delta, AP, L)$, une MC, $s \in S$, un {\color{fibeamer@orange}état}
+  de $\mathcal{M}$ et $\pi = s_0s_1s_2\dots \in Paths(s)$, un {\color{fibeamer@orange}chemin} de $\mathcal{M}$.\\
+La sémantique de PRCTL est la même que celle de PCTL, à l'exception que
+\begin{itemize}
+  \item $s \models \Phi$ ssi la formule $\Phi$ tient dans l'état $s$, i.e.,
+    \begin{align*}
+      & s \models \mathcal{E}_R(\Phi) & \text{ ssi } & \mathbb{E}_s\big(TS^{Sat_\mathcal{M}(\Phi)}\big) \in R&
+    \end{align*}
+  \item $\pi \models \phi$ ssi $\pi$ satisfait $\phi$, i.e.,
+  \begin{align*}
+  &\pi \models \Phi U_{\leq r} \Psi &\text{ ssi }& \exists j \in \mathbb{N} ,\, s_j \models \Psi
+    , \;  \forall 0 \leq i < j, \, s_i \models \Phi \text{ et }&\\
+  & & & TS^{Sat_\mathcal{M}(\Psi)} \leq r &
+  \end{align*}
+\end{itemize}
+\textit{\color{gray}Note : la définition de l'ensemble de satisfaction d'une WMC PRCTL est identique à celle de PCTL}
+\end{frame}
+
+\subsection{MDP et stratégies}
+\begin{frame}{Processus Décisionnel de Markov et Stratégie}
+  \vspace{-0.05\linewidth}
+  \begin{itemize}
+    \item Un \textit{\color{fibeamer@blue}processus décisionnel de Markov} (MDP, pour \textit{Markov decision process}) est un modèle probabiliste \textbf{\color{fibeamer@orange}non-déterministe}.
+    \item $\mathcal{M} = (S, A, \Delta, AP, L, w)$
+    \begin{itemize}
+      \item Actions : $A$
+      \item Fonction de transition : $\Delta : S \times A \times S \rightarrow [0, 1] \cap \mathbb{Q}$
+    \end{itemize}
+    \item \textit{\color{fibeamer@blue}Chemins} de $\mathcal{M}$ : $\pi = s_0 \xrightarrow{\alpha_0}s_1\xrightarrow{\alpha_1} s_2\xrightarrow{\alpha_2} s_3 \dots$
+      \begin{itemize}
+        \item $s_i \xrightarrow{\alpha_i} s_{i+1}$% et $(s_i, \alpha, s_{i+1}) \in \rightarrow$
+        pour tout $i \in \mathbb{N}$
+        \item $\mathcal{H}(\mathcal{M})$ : histoires de $\mathcal{M}$, i.e., l'ensemble des préfixes des chemins de $\mathcal{M}$
+      \end{itemize}
+    \item \textit{\color{fibeamer@blue}Stratégies} de $\mathcal{M}$, $\sigma : \mathcal{H}(\mathcal{M}) \rightarrow A$
+    \item Les décisions d'un MDP $\mathcal{M}$, régulées par une stratégie
+      $\sigma$, induisent une MC $\mathcal{M}^\sigma$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Processus Décisionnel de Markov}{Exemple}
+  \footnotesize
+      \begin{columns}
+        \begin{column}[t]{0.5\textwidth}
+          \begin{figure}
+            \includegraphics[width=\linewidth]{resources/strat-simple-pdm}
+          \end{figure}
+        \end{column}
+        \begin{column}[t]{0.5\textwidth}
+          \begin{itemize}
+            \item $\mathcal{M} = (S, A, \Delta, w)$
+            \item {\color{fibeamer@orange}$\sigma$}$: S \rightarrow A$,
+            \begin{itemize}
+              \item {\color{fibeamer@orange}$\sigma$}$(s)=\beta$
+              \item {\color{fibeamer@orange}$\sigma$}$(t)=${\color{fibeamer@orange}$\sigma$}$(u) = \gamma$
+            \end{itemize}
+          \end{itemize}
+        \end{column}
+      \end{columns}
+        \begin{figure}
+          \includegraphics[width=0.5\textwidth]{resources/inducted-markov1}
+        \end{figure}
+      \begin{center}
+    	$ \pi = s \xrightarrow{\beta} t \xrightarrow{\gamma} s \xrightarrow{\beta} u \xrightarrow{\gamma}\dots \in Paths(s)$ \\
+        $\pi = s\,t\,s\,u\,{\dots} \in Paths(s)$ est un chemin de {\color{fibeamer@orange}$\mathcal{M}^\sigma$}
+      \end{center}
+\end{frame}
+
+\begin{frame}{Processus Décisionnel de Markov}
+    Soient $\mathcal{M} = (S, A, \Delta, AP, L, w)$, un MDP, $s \in S$, un état
+    de $\mathcal{M}$ et $T \subseteq S$, un sous-ensemble d'états cibles.
+\begin{itemize}
+  \item {\color{fibeamer@orange}$\mathbb{E}_s^{\min}(TS^T)$ est l'espérance minimale de la longueur des chemins commençant en $s$ (en terme de coût) de $\mathcal{M}$}
+  \begin{itemize}
+    \item i.e., l'espérance de la longueur des chemins commençant en $s$ dans la MC induite par la stratégie qui minimise l'espérance de la longueur des chemins de $\mathcal{M}$.
+  \end{itemize}
+  \item {\color{fibeamer@orange}$\mathbb{P}_s^{\max}(\Diamond_{\leq l} T)$ est la probabilité maximale d'atteindre $T$ avec un coût inférieur à $l$ dans $\mathcal{M}$}
+  \begin{itemize}
+    \item i.e., la probabilité d'atteindre $T$ avec un coût inférieure à $l$ dans la MC induite par la stratégie qui maximise cette probabilité dans $\mathcal{M}$.
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\subsection{PRCTL pour les MDPs}
+\begin{frame}{PRCTL pour les MDPs}
+  Pour se référer aux MCs induites par ces stratégies, la syntaxe de PRCTL est essentiellement identique, à l'exception des formules d'états suivantes :
+  \begin{itemize}
+    \item $\mathcal{P}_J(\phi)$ devient $\mathcal{P}_J^{\max}(\phi)$
+    \item $\mathcal{E}_R(\phi)$ devient $\mathcal{E}_R^{\min}(\phi)$
+  \end{itemize}
+    où $J \subseteq [0, 1]$, $R \in [0, +\infty[ \cap \mathbb{N}$ et $\phi$ est une formule de chemin.
+\end{frame}
+
+\subsection{PRCTL dans Storm}
+\begin{frame}{PRCTL dans Storm}{Exemple}
+\begin{columns}
+  \begin{column}{0.35\linewidth}
+\lstinputlisting[language={Prism},
+    numbers=left,
+    rulesepcolor=\color{black}, rulecolor=\color{black}, breaklines=true,
+    breakatwhitespace=true, firstnumber=1, firstline=1, lastline=25]{resources/simple_mdp.prism}
+  \end{column}
+  \begin{column}{0.65\linewidth}
+    \begin{center}
+      \includegraphics[width=\linewidth]{resources/simple_mdp}
+    \end{center}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{PRCTL dans Storm}{Exemple}
+%  \begin{center}
+%    \includegraphics[width=0.65\linewidth]{resources/simple_mdp}
+%  \end{center}
+\vspace{-0.05\linewidth}
+  \[
+    \mathcal{E}_{\leq 10}^{\min}(s_0 \models \Diamond t)
+  \]
+  {\tiny
+  \begin{verbatim}
+>> storm --prism resources/simple_mdp.prism --prop "Rmin<=10 [F \"t\"]"
+
+Storm 1.2.0
+
+--------------------------------------------------------------
+Model type: 	MDP (sparse)
+States: 	3
+Transitions: 	5
+Choices: 	4
+Reward Models:  weights
+State Labels: 	3 labels
+   * deadlock -> 0 item(s)
+   * init -> 1 item(s)
+   * t -> 1 item(s)
+Choice Labels: 	none
+--------------------------------------------------------------
+
+Model checking property R[exp]min<=10 [F "t"] ...
+Result (for initial states): true
+
+Time for model checking: 0.008s.
+  \end{verbatim}
+  }
+\end{frame}
+
+\begin{frame}[fragile]{PRCTL dans Storm}{Exemple (requête)}
+%  \begin{center}
+%    \includegraphics[width=0.65\linewidth]{resources/simple_mdp}
+%  \end{center}
+\vspace{-0.05\linewidth}
+  \[
+    \mathcal{E}_{=?}^{\min}(s_0 \models \Diamond t)
+  \]
+  {\tiny
+  \begin{verbatim}
+>> storm --prism resources/simple_mdp.prism --prop "Rmin=? [F \"t\"]"
+
+Storm 1.2.0
+
+--------------------------------------------------------------
+Model type: 	MDP (sparse)
+States: 	3
+Transitions: 	5
+Choices: 	4
+Reward Models:  weights
+State Labels: 	3 labels
+   * deadlock -> 0 item(s)
+   * init -> 1 item(s)
+   * t -> 1 item(s)
+Choice Labels: 	none
+--------------------------------------------------------------
+
+Model checking property R[exp]min=? [F "t"] ...
+Result (for initial states): 8
+Time for model checking: 0.007s.
+  \end{verbatim}
+  }
+\end{frame}
+
+\begin{frame}[fragile]{PRCTL dans Storm}{Exemple}
+%  \begin{center}
+%    \includegraphics[width=0.65\linewidth]{resources/simple_mdp}
+%  \end{center}
+\vspace{-0.05\linewidth}
+  \[
+    \mathcal{P}_{\geq 0.7}^{\max}(s_0 \models \Diamond_{\leq 8} t)
+  \]
+  {\tiny
+  \begin{verbatim}
+>> storm --prism resources/simple_mdp.prism --prop "Pmax>=0.7 [F{\"weights\"}<=8 \"t\"]"
+
+Model checking property Pmax>=7/10 [true Urew{"weights"}<=8 "t"] ...
+Result (for initial states): true
+Time for model checking: 0.000s.
+  \end{verbatim}
+  }
+  \[
+    \mathcal{P}_{=?}^{\max}(s_0 \models \Diamond_{\leq 8} t)
+  \]
+  {\tiny
+  \begin{verbatim}
+>> storm --prism resources/simple_mdp.prism --prop "Pmax=? [F{\"weights\"}<=8 \"t\"]"
+
+Model checking property Pmax=? [true Urew{"weights"}<=8 "t"] ...
+Result (for initial states): 0.75
+Time for model checking: 0.010s.s.
+  \end{verbatim}
+  }
+\end{frame}
+
+\subsection{}
 \begin{frame}[allowframebreaks]
         \frametitle{References}
       \printbibliography
