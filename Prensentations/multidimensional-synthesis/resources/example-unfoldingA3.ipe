@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70206" creator="Ipe 7.2.6">
-<info created="D:20180215123956" modified="D:20180218113434"/>
+<info created="D:20180215123956" modified="D:20180219143155"/>
 <preamble>\usepackage{color}
 \renewcommand{\rmdefault}{\sfdefault}
 \usepackage{sansmathfonts}
@@ -345,23 +345,13 @@ h
 179.708 671.218 m
 187.934 666.816 l
 </path>
-<text matrix="1 0 0 1 136.237 -70.309" transformations="translations" pos="56 740" stroke="red" type="label" width="10.821" height="4.432" depth="1.49" valign="baseline" style="math">\alpha_1</text>
-<text matrix="1 0 0 1 232 -112" transformations="translations" pos="56 740" stroke="red" type="label" width="10.821" height="4.432" depth="1.49" valign="baseline" style="math">\alpha_2</text>
+<text matrix="1 0 0 1 136.237 -70.309" transformations="translations" pos="56 740" stroke="red" type="label" width="10.821" height="4.432" depth="1.49" valign="baseline" style="math">\alpha_0</text>
 <text matrix="1 0 0 1 4 -4" transformations="translations" pos="144 648" stroke="black" type="label" width="6.096" height="8.502" depth="3.51" valign="baseline" style="math">\frac{7}{8}</text>
 <text matrix="1 0 0 1 4 16" transformations="translations" pos="144 648" stroke="black" type="label" width="6.096" height="8.502" depth="3.51" valign="baseline" style="math">\frac{1}{8}</text>
-<path matrix="1 0 0 1 288 -128" stroke="black" fill="green" opacity="30%">
+<path matrix="1 0 0 1 352 -128" stroke="black" fill="green" opacity="30%">
 16 0 0 16 64 720 e
 </path>
-<text matrix="1 0 0 1 316.578 -126.59" transformations="translations" pos="24 716" stroke="black" type="label" width="22.413" height="6.535" depth="1.49" valign="baseline" style="math">s_3, 12</text>
-<path stroke="black" arrow="normal/normal">
-235.895 645.299 m
-340.127 602.726 l
-</path>
-<path stroke="black" arrow="normal/normal">
-235.975 645.388 m
-287.725 624.129 l
-</path>
-<use name="mark/disk(sx)" pos="287.983 624.024" size="normal" stroke="black"/>
+<text matrix="1 0 0 1 380.578 -126.59" transformations="translations" pos="24 716" stroke="black" type="label" width="22.413" height="6.535" depth="1.49" valign="baseline" style="math">s_3, 12</text>
 <path matrix="0.658611 0 0 0.679029 104.85 241.594" stroke="black" arrow="normal/small">
 299.37 763.257 m
 320 784
@@ -371,15 +361,15 @@ h
 </path>
 <use name="mark/disk(sx)" pos="326.142 751.984" size="normal" stroke="black"/>
 <text matrix="1 0 0 1 -4 0" transformations="translations" pos="336 752" stroke="black" type="label" width="10.821" height="4.432" depth="1.49" valign="baseline" style="math">\alpha_4</text>
-<path matrix="0.658611 0 0 0.679029 168.924 81.5902" stroke="black" arrow="normal/small">
+<path matrix="0.658611 0 0 0.679029 232.924 81.5902" stroke="black" arrow="normal/small">
 299.37 763.257 m
 320 784
 352 752
 320 720
 300.034 741.455 c
 </path>
-<use matrix="1 0 0 1 64.0744 -160.004" name="mark/disk(sx)" pos="326.142 751.984" size="normal" stroke="black"/>
-<text matrix="1 0 0 1 60.0744 -160.004" transformations="translations" pos="336 752" stroke="black" type="label" width="10.821" height="4.432" depth="1.49" valign="baseline" style="math">\alpha_4</text>
+<use matrix="1 0 0 1 128.074 -160.004" name="mark/disk(sx)" pos="326.142 751.984" size="normal" stroke="black"/>
+<text matrix="1 0 0 1 124.074 -160.004" transformations="translations" pos="336 752" stroke="black" type="label" width="10.821" height="4.432" depth="1.49" valign="baseline" style="math">\alpha_4</text>
 <path matrix="0.658611 0 0 0.679029 -23.3257 113.28" stroke="black" arrow="normal/small">
 299.37 763.257 m
 320 784
@@ -389,5 +379,21 @@ h
 </path>
 <use matrix="1 0 0 1 -128.176 -128.314" name="mark/disk(sx)" pos="326.142 751.984" size="normal" stroke="black"/>
 <text matrix="1 0 0 1 -132.176 -128.314" transformations="translations" pos="336 752" stroke="black" type="label" width="10.821" height="4.432" depth="1.49" valign="baseline" style="math">\alpha_4</text>
+<text matrix="1 0 0 1 232 -112" transformations="translations" pos="56 740" stroke="red" type="label" width="10.821" height="4.432" depth="1.49" valign="baseline" style="math">\alpha_2</text>
+<path stroke="black" arrow="normal/normal">
+235.975 645.388 m
+287.725 624.129 l
+</path>
+<use name="mark/disk(sx)" pos="287.983 624.024" size="normal" stroke="black"/>
+<path stroke="black" arrow="normal/normal">
+277.437 628.538 m
+316.88 612.625
+337.931 604.132
+363.916 593.648
+368 592
+374.558 592
+384.322 592
+400 592.083 c
+</path>
 </page>
 </ipe>

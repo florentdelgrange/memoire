@@ -43,11 +43,14 @@
 \usepackage{biblatex}
 \usepackage{mathtools}
 \usepackage{multicol}
+\usepackage{bbold}
 \frenchspacing
 
 \input{prism}
 
 \definecolor{DarkOrange}{HTML}{FF8C00}
+\theoremstyle{theorem}%{3pt}{3pt}{\slshape}{}{\bfseries}{.}{.5em}{}
+\newtheorem{theoreme}{Théorème}
 
 \bibliography{bib}
 \begin{document}
@@ -423,13 +426,13 @@ $\mathbb{A}(s, v)$ peut être calculé récursivement :
     \only<1>{\[ \leadsto \mathbb{E}^{\min}_s(\Diamond \{ (s_3, v) \; | \; v \leq 12\}) = ? \]}
     \only<2>{\vspace{-0.02\linewidth}
     \[ \leadsto \mathbb{E}^{\min}_s(\Diamond \{ (s_3, v) \; | \; v \leq 12\}) = \frac{7}{8} \cdot 4 + \frac{1}{8} \cdot 12 = 5 \]}
-    \only<1>{\includegraphics[width=0.96\linewidth]{resources/example-unfoldingA2}}
-    \only<2>{\includegraphics[width=0.96\linewidth]{resources/example-unfoldingA3}}
+    \only<1>{\includegraphics[width=0.95\linewidth]{resources/example-unfoldingA2}}
+    \only<2>{\includegraphics[width=0.95\linewidth]{resources/example-unfoldingA3}}
 \end{frame}
 
 \begin{frame}{SSP-WE}{Exemple}
     \vspace{-0.05\linewidth}
-    \[ \mathbb{E}^{\sigma}_s(\Diamond \text{ sommeil}) \leq l \wedge \mathbb{P}^\sigma_s(\Diamond_{\leq 12} \text{ sommeil}) = 1 \]
+    \[ \mathbb{E}^{\sigma}_s(\Diamond \text{ sommeil}) \leq 5 \wedge \mathbb{P}^\sigma_s(\Diamond_{\leq 12} \text{ sommeil}) = 1 \]
     \begin{center}
       \includegraphics[width=0.6\linewidth]{resources/main-mdp3}
     \end{center}
@@ -549,23 +552,233 @@ $\mathbb{A}(s, v)$ peut être calculé récursivement :
       \end{center}
 \end{frame}
 
-\begin{frame}{Requêtes percentiles dans les MDP multi-dimensionnels}{Note}
-Il est également possible de résoudre ce problème à l'aide d'une stratégie \textit{\color{fibeamer@orange}sans mémoire}, \alert{\textbf{mais}} qui nécessitent de l'\textit{\color{fibeamer@orange}aléatoire} :
-\[
-  \sigma : A \rightarrow \mathcal{D}(S)
-\]
-où $\mathcal{D}$ est une distribution de probabilité sur $S$
-
-\end{frame}
 
 \subsection{Définition}
 \begin{frame}{SSP-PQ}
+  \footnotesize
+% \begin{definition}[SSP-PQ]
+%   Soient $\mathcal{M} = (S, A, \Delta, w)$, un MDP multidimensionnel tel que
+%   $w: A \rightarrow \mathbb{N}_0^d$, $s \in S$, un état de $\mathcal{M}$ et $q \in \mathbb{N}$
+%   contraintes percentiles. \\
+%   Ces contraintes percentiles sont décrites par les ensembles d'états cibles
+%   $T_i \subseteq S$, les dimensions $k_i \in \{1, \dots, d\}$, les seuils
+%   de longueur $l_i \in \mathbb{N}$ et les seuils de probabilité $\alpha_i \in
+%   [0, 1] \cap \mathbb{Q}$, pour tout $i \in \{1, \dots, q\}$. \\
+%   Le problème \textit{\color{fibeamer@orange}SSP-PQ} consiste à décider s'il existe une stratégie $\sigma$ pour laquelle la propriété
+%   \[
+%     \bigwedge_{i \in \{1, \dots, q\}} \mathbb{P}_s^\sigma(\Diamond_{k_i\, : \, \leq l_i} T_i) \geq \alpha_i
+%   \]
+%   où $\Diamond{k_i:\leq l_i}T_i$ dénote l'ensemble des chemins satisfaisant $\Diamond_{\leq l_i} T_i$ sur la dimensions $k_i$
+% \end{definition}
   \begin{definition}[SSP-PQ]
-    Soient $\mathcal{M} = (S, A, \Delta, w)$, un MDP multidimensionnel tel que
-    $w: A \rightarrow \mathbb{N}_0^d$, $s \in S$, un état de $\mathcal{M}$ et $q \in \mathbb{N}$
-    contraintes percentiles  par un ensemble d'états cibles
+    Soient {\color{fibeamer@orange}$\mathcal{M} = (S, A, \Delta, w)$}, un MDP multidimensionnel tel que
+    {\color{fibeamer@orange}$w: A \rightarrow \mathbb{N}_0^d$}, {\color{fibeamer@orange}$s \in S$}, un état de $\mathcal{M}$ et {\color{fibeamer@orange}$q \in \mathbb{N}$
+    contraintes percentiles}. \\
+    Ces contraintes percentiles sont décrites par les ensembles d'états cibles
+    {\color{fibeamer@orange}$T_i \subseteq S$}, les {\color{fibeamer@orange}dimensions $k_i \in \{1, \dots, d\}$}, les seuils
+    de longueur {\color{fibeamer@orange}$l_i \in \mathbb{N}$} et les seuils de probabilité {\color{fibeamer@orange}$\alpha_i \in
+    [0, 1] \cap \mathbb{Q}$}, pour tout $i \in \{1, \dots, q\}$. \\
+    Le problème \textit{\color{fibeamer@orange}SSP-PQ} consiste à décider s'il existe une stratégie {\color{fibeamer@orange}$\sigma$} pour laquelle la requête suivante est satisfaite : {\color{fibeamer@orange}
+    \[
+      \mathcal{Q} := \bigwedge_{i \in \{1, \dots, q\}} \mathbb{P}_s^\sigma(\Diamond_{k_i\, : \, \leq l_i} T_i) \geq \alpha_i
+    \]}
+    où $\Diamond_{k_i:\leq l_i}T_i$ dénote l'ensemble des chemins satisfaisant $\Diamond_{\leq l_i} T_i$ sur la dimension $k_i$
+  \end{definition}
+  \begin{itemize}
+    \item peut être décidé en \alert{temps exponentiel}
+    \item \alert{PSPACE-difficile}
+  \end{itemize}
+\end{frame}
+
+\subsection{Algorithme}
+\begin{frame}{SSP-PQ}{Algorithme}
+  \begin{enumerate}
+    \item Construire $\mathcal{M}_l$, le MDP déplié de $\mathcal{M}$, de la même
+      façon que pour le problème SSP-P, mais tel que $l = \max_i l_i$.
+      \begin{itemize}
+        \item $S_{l} \in S \times (\{ 0, \dots, l \} \cup \{ \bot \})^d$
+        \item un chemin n'est écarté que lorsque le coût du chemin courant, pour chacune de ses dimensions $j$, excède $\max_i l_i$,\\ { \footnotesize avec
+          $i \in \{ 1, \dots, q \; | \; \mathcal{Q}_i := \mathbb{P}_s^\sigma(\Diamond_{k_i\, : \, \leq l_i} T_i) \geq \alpha_i \, \wedge \, k_i = j \}$}
+        \item certains chemins peuvent dépasser le seuil de longueur d'une requête
+        tout en restant intéressants pour la stratégie
+        \item en effet, on ne cherche pas forcément à atteindre un état qui satisfait toutes les contraintes de coûts à la fois !
+        \item[$\leadsto$] notion de \textbf{\color{fibeamer@orange}compromis}
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{SSP-PQ}{Algorithme}
+  \begin{enumerate}
+    \small
+    \item Construire $\mathcal{M}_l$, le MDP déplié de $\mathcal{M}$, de la même
+      façon que pour le problème SSP-P, mais tel que $l = \max_i l_i$.
+    \item Pour chaque requête $i \in \{1, \dots, q\}$, on calcule un ensemble
+      d'états cibles $R_i$ dans $M_l$ pour lequel tous les états contenus dans
+      cet ensemble satisfont la contrainte liée au coût de cette requête.
+    \item Résoudre le \textit{\color{fibeamer@orange}problème d'accessibilité \textbf{multiple}} aux différent ensembles $R_i$, pour chaque requête $i \in \{1, \dots, q\}$.
+    On recherche donc une stratégie $\sigma_l$ qui assure au système d'atteindre les ensembles $R_i$ depuis $(s, 0, \dots, 0)$ avec une probabilité $\alpha_i$
+    \begin{itemize}
+      \item[$\leadsto$] peut être répondu en temps \alert{polynomial en $|\mathcal{M}_{l}|$} ...
+      \item[$\leadsto$] ... mais \alert{exponentiel en $|R_i|$, i.e., $q$}
+    \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{SSP-PQ}{Algorithme : exemple}
+    \begin{columns}
+      \begin{column}{0.3\linewidth}
+        \includegraphics[width=\linewidth]{resources/mdmdp2}
+      \end{column}
+      \begin{column}{0.7\linewidth}{\small
+        \begin{itemize}
+          \item $Q_1 := \mathbb{P}^{\color{red}\sigma}_{s_0}(\Diamond_{1\, :\, \leq 4} \text{ sommeil}) \geq 0.8$
+          \item $Q_2 := \mathbb{P}^{\color{red}\sigma}_{s_0}(\Diamond_{2\, :\, \leq 700} \text{ sommeil}) \geq 0.9$
+        \end{itemize}
+        }
+      \end{column}
+    \end{columns}
+  \vspace{0.04\linewidth}
+  {\small \textbf{\color{fibeamer@orange}Idée clé : } il est nécessaire qu'il y ait une possibilité pour que les labels {\color{DarkOrange}$q_1$} \textbf{et} {\color{DarkOrange}$q_2$} apparaissent au moins une fois dans le futur, en tout état de $\mathcal{M}^{\color{red}\sigma}$}
+  \vspace{-0.02\linewidth}
+  \begin{center}
+    \includegraphics[width=\linewidth]{resources/SSP-PQ-unfolding}
+  \end{center}
+\end{frame}
+
+\begin{frame}{SSP-PQ : stratégies}
+\footnotesize
+\begin{definition}[Stratégie aléatoire]
+Une stratégie aléatoire sans mémoire est une stratégie $\sigma$ telle que
+\[
+  \sigma : S \rightarrow \mathcal{D}(A)
+\]
+où $\mathcal{D}$ est une distribution de probabilité sur $A$.
+Les stratégies aléatoires à mémoire sont définies d'une façon similaire.
+\end{definition}
+
+\begin{theoreme}
+  Les stratégies qui résolvent le problème SSP-PQ ont besoin à la fois de mémoire (sans mémoire dans $\mathcal{M}_{l}$) et d'aléatoire (pour résoudre le problème d'accessibilité multiple  dans $\mathcal{M}_l$)
+\end{theoreme}
+
+\end{frame}
+
+\begin{frame}{SSP-PQ : stratégies}
+  \begin{itemize}
+    \item La construction d'une stratégie requiert de résoudre le problème
+    d'\textit{\color{fibeamer@orange}accessibilité multiple  G-SR} dans le MDP déplié jusque $l$, i.e., $\mathcal{M}_l$
+    \item Le problème d'accessibilité multiple  est une généralisation du problème SR dans les MDP.
+    \item Comment construire une telle stratégie ?
+  \end{itemize}
+\end{frame}
+
+\subsection{G-SR}
+
+\begin{frame}{Problème d'accessibilité multiple }
+  \begin{definition}[G-SR]
+  \small
+    Soient {\color{fibeamer@orange}$\mathcal{M} = (S, A, \Delta)$}, un MDP, {\color{fibeamer@orange}$s \in S$}, un état de $\mathcal{M}$ et {\color{fibeamer@orange}$q \in \mathbb{N}$
+    contraintes}. \\
+    Ces contraintes sont décrites par les ensembles d'états cibles
+    {\color{fibeamer@orange}$T_i \subseteq S$} et les seuils de probabilité {\color{fibeamer@orange}$\alpha_i \in
+    [0, 1] \cap \mathbb{Q}$}, pour tout $i \in \{1, \dots, q\}$. \\
+    Le problème \textit{\color{fibeamer@orange}G-SR} est une généralisation du problème SR qui consiste à décider s'il existe une stratégie {\color{fibeamer@orange}$\sigma$} pour laquelle la requête suivante est satisfaite : {\color{fibeamer@orange}
+    \[
+      \mathcal{Q} := \bigwedge_{i \in \{1, \dots, q\}} \mathbb{P}_s^\sigma(\Diamond T_i) \geq \alpha_i
+    \]}
   \end{definition}
 \end{frame}
+
+\begin{frame}{Nettoyer un MDP}
+\footnotesize
+  Soient $\mathcal{M} = (S, A, \Delta)$, un MDP et $q \in \mathbb{N}$ contraintes d'accessibilité. On défini l'ensemble $T$ comme étant l'ensemble des états cibles qui décrivent les $q$ contraintes, i.e., $T = \bigcup_{i \in \{1, \dots, q \}} T_i$. {\color{fibeamer@blue}Nettoyer $\mathcal{M}$ consiste à créer un nouveau MDP $\mathcal{M}_c = (S_c, A_c, \Delta_c)$ tel que}
+  \begin{itemize}
+    \item $A_c = A \cup \{\alpha_T, {\color{gray}\alpha_{dead}}\}$
+    \item Les états de $T$ sont absorbants, i.e., $\forall t \in T, \,
+      \Delta(t, \alpha_T, t) = 1$ et $A_c(t) = \{\alpha_T\}$
+    \item $S_c = (S \setminus S_0) {\color{gray}\cup \{s_{dead}\}}$, avec
+    $S_0 = \{ s \in S \; | \; \forall \sigma, \, \mathbb{P}^\sigma_s(\Diamond T) = 0 \}$
+    \begin{itemize}
+      \item {\scriptsize Pour chaque état $s \in S \setminus T$, on peut facilement vérifier si $\exists \sigma$ tel que
+    $\mathbb{P}_s^\sigma (\Diamond T) > 0$ (si il existe un chemin de $s$ à $T$ dans le graphe sous-jacent de $\mathcal{M}$)}
+    \end{itemize}
+    \item[$\leadsto$] On a retiré les \textit{mauvais états de $S$}, i.e., on crée un état \alert{$s_{dead}$ invisible absorbant}
+    \begin{itemize}{\scriptsize
+      \item[$\implies$] $\forall s \in S, \, \sum_{\alpha \in A(s)} \Delta(s, \alpha, s') \leq 1$
+      \item[$\leadsto$] \textbf{\color{fibeamer@orange}Transition invisible : }$\Delta(s, \alpha_{dead}, s_{dead}) = 1 - \sum_{s' \in Succ(\alpha, s')} \Delta(s, \alpha, s')$
+      }
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{G-SR}{Programme Linéaire multi-objectif}
+  \footnotesize
+  Supposons que le MDP est nettoyé. Le MOLP se définit comme suit : \\
+    $\textbf{Objectifs } i \in \{ 1, \dots, q\} \; : \;
+   \max \sum_{t \in T_i} y_t$ \\
+    sous les contraintes
+  \begin{flalign*}
+    \sum_{s' \in Pred(t) \setminus T} \sum_{\alpha'\in A(s')} \Delta(s', \alpha', t) \cdot y_{s', \alpha'} &= y_t && \forall t \in T \\
+     \mathbb{1}(s) +
+      \sum_{s' \in Pred(s)} \sum_{\alpha' \in A(s')} \Delta(s', \alpha', s) \cdot y_{s', \alpha'} &= \sum_{\alpha \in A(s)} y_{s, \alpha} && \forall s \in S \setminus T \\
+      y_t &\geq 0 && \forall t \in T_i \\
+      y_{s, \alpha} &\geq 0 && \forall s \in S \setminus T \text{ et } \alpha \in A(s)
+  \end{flalign*}
+  \vspace{-0.05\linewidth}
+  \begin{itemize}
+    \item $\mathbb{1}(s) = 1$ ssi $s \in S$ est l'état pour lequel on cherche à satisfaire $\bigwedge_{i \in \{1, \dots, q\}} \mathbb{P}^\sigma_s(\Diamond T_i) \geq \alpha_i$
+    \item Ce MOLP est dérivé du LP dual de celui du problème SR pour lequel la solution optimale est $x^*_s = \max_{\sigma} \mathbb{P}_s^\sigma(\Diamond T)$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{G-SR}{MOLP}
+    \small
+    \vspace{-0.05\linewidth}
+    \begin{equation*}
+       \mathbb{1}(s) +
+        \sum_{s' \in Pred(s)} \sum_{\alpha' \in A(s')} \Delta(s', \alpha', s) \cdot y_{s', \alpha'} = \sum_{\alpha \in A(s)} y_{s, \alpha} \quad \forall s \in S \setminus T
+    \end{equation*}
+    $y_{s, \alpha} = $ \textit{ espérance du nombre de fois que l'état $s$ est visité et que l'action $\alpha \in A(s)$ est choisie} \\
+    $\sum_{\alpha \in A(s)} y_{s, \alpha} = $ \textit{ espérance du nombre de fois que l'état $s$ est visité}
+  \begin{center}
+    \includegraphics[width=0.7\linewidth]{resources/MOLP2}
+  \end{center}
+\end{frame}
+
+\begin{frame}{G-SR}{MOLP}
+  \small
+    \vspace{-0.05\linewidth}
+    \only<1>{
+    \begin{equation*}
+      y_t = \sum_{s' \in Pred(t) \setminus T} \sum_{\alpha'\in A(s')} \Delta(s', \alpha', t) \cdot y_{s', \alpha'} \quad \forall t \in T
+    \end{equation*}
+    $y_t = $ \textit{espérance du nombre de fois qu'une transition atteint $t$ {\color{fibeamer@orange}pour la première fois}} \\
+    $\leadsto$ il s'agit d'une autre façon de formuler la probabilité d'atteindre éventuellement $t$
+    }
+    \only<2>{
+\begin{center}
+{\color{fibeamer@blue}$\leadsto$} Si une solution du MOLP $y'$ existe, alors
+\[
+  \sum_{t \in T_i} y'_t \geq \alpha_i \quad \forall i \in \{1, \dots, q\}
+\]
+\end{center}
+}
+  \begin{center}
+    \includegraphics[width=0.7\linewidth]{resources/MOLP1}
+  \end{center}
+\end{frame}
+
+\begin{frame}{G-SR}{MOLP}
+\end{frame}
+
+% \begin{frame}{G-SR}
+%   \begin{block}{Proposition}
+%     Soient $\mathcal{M} = (S, A, \Delta)$, un MDP nettoyé et $q \in \mathbb{N}$
+%     contraintes de probabilité. Il existe une stratégie sans mémoire $\sigma$ aléatoire telle que $\bigwedge_{i=1}^q \mathbb{P}_s^\sigma (\Diamond T_i) \geq \alpha_i$ ssi
+%     il existe une stratégie $\sigma'$ telle que \[\bigwedge_{i=1}^q \mathbb{P}_s^{\sigma'}(\Diamond T_i) \geq \alpha_i \wedge
+%     \mathbb{P}_s^{\sigma'}(\Diamond T) > 0\] avec $T = \bigcup_i T_i$
+%   \end{block}
+%   Cela vient du fait que le MDP est nettoyé. Il est donc toujours possible d'accéder à $T$.
+% \end{frame}
 
 \begin{frame}[allowframebreaks]
         \frametitle{Références}
