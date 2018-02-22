@@ -24,8 +24,10 @@
 \date{\today}
 %% These additional packages are used within the document:
 \usepackage{ragged2e}  % `\justifying` text
+\usepackage{cancel}
 \usepackage{bbold}
 \usepackage{booktabs}  % Tables
+\usepackage{slashed}
 \usepackage{centernot}
 \usepackage{tabularx}
 \usepackage{tikz}      % Diagrams
@@ -51,6 +53,7 @@
 \definecolor{DarkOrange}{HTML}{FF8C00}
 \theoremstyle{theorem}%{3pt}{3pt}{\slshape}{}{\bfseries}{.}{.5em}{}
 \newtheorem{theoreme}{Théorème}
+\newtheorem{lemme}{Lemme}
 
 \bibliography{bib}
 \begin{document}
@@ -192,7 +195,7 @@ de chemin d'au plus $l$ :
   \begin{itemize}
     \item $\mathbb{C}(s, k)$ correspond au plus court chemin de $s \in S$ à $T$ après \alert{au plus} $k$ étapes, i.e., après avoir traversé \alert{au plus} $k$ états.
     \item \`A chaque étape, le plus court chemin résulte du choix des actions minimisant, à chaque étape, le coût de la transition menant au \textit{pire} successeur (i.e., celui dont le chemin pour atteindre $T$ est le plus long) est choisit.
-    \item Cycle depuis un état $\iff$ on ne peut pas atteindre $T$
+    \item Cycle depuis un état $\implies$ on ne peut pas atteindre $T$
     { \color{fibeamer@blue}
     \item $\forall k \in \mathbb{N}, \; \mathbb{C}(s, k-1) \geq \mathbb{C}(s, k)\quad$ pour tout $s \in S$
     %\item Dans le pire cas, le plus court chemin de $s$ à $T$ est celui où tous
@@ -638,7 +641,7 @@ $\mathbb{A}(s, v)$ peut être calculé récursivement :
       \end{column}
     \end{columns}
   \vspace{0.04\linewidth}
-  {\small \textbf{\color{fibeamer@orange}Idée clé : } il est nécessaire qu'il y ait une possibilité pour que les labels {\color{DarkOrange}$q_1$} \textbf{et} {\color{DarkOrange}$q_2$} apparaissent au moins une fois dans le futur, en tout état de $\mathcal{M}^{\color{red}\sigma}$}
+  {\small \textbf{\color{fibeamer@orange}Idée clé : } il est nécessaire qu'il y ait une possibilité pour que les labels {\color{DarkOrange}$q_1$} \textbf{et} {\color{DarkOrange}$q_2$} apparaissent au moins une fois dans le futur dans $\mathcal{M}^{\color{red}\sigma}$}
   \vspace{-0.02\linewidth}
   \begin{center}
     \includegraphics[width=\linewidth]{resources/SSP-PQ-unfolding}
@@ -671,8 +674,8 @@ Les stratégies aléatoires à mémoire sont définies d'une façon similaire.
   \end{itemize}
 \end{frame}
 
-\subsection{G-SR}
-
+\section{G-SR}
+\subsection{Définition}
 \begin{frame}{Problème d'accessibilité multiple }
   \begin{definition}[G-SR]
   \small
@@ -688,6 +691,7 @@ Les stratégies aléatoires à mémoire sont définies d'une façon similaire.
   \end{definition}
 \end{frame}
 
+\subsection{Préliminaires}
 \begin{frame}{Nettoyer un MDP}
 \footnotesize
   Soient $\mathcal{M} = (S, A, \Delta)$, un MDP et $q \in \mathbb{N}$ contraintes d'accessibilité. On défini l'ensemble $T$ comme étant l'ensemble des états cibles qui décrivent les $q$ contraintes, i.e., $T = \bigcup_{i \in \{1, \dots, q \}} T_i$. {\color{fibeamer@blue}Nettoyer $\mathcal{M}$ consiste à créer un nouveau MDP $\mathcal{M}_c = (S_c, A_c, \Delta_c)$ tel que}
@@ -707,6 +711,43 @@ Les stratégies aléatoires à mémoire sont définies d'une façon similaire.
       \item[$\leadsto$] \textbf{\color{fibeamer@orange}Transition invisible : }$\Delta(s, \alpha_{dead}, s_{dead}) = 1 - \sum_{s' \in Succ(\alpha, s')} \Delta(s, \alpha, s')$
       }
     \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Courbe de Pareto}
+  \small
+  \begin{itemize}
+    \item Quel est l'ensemble des vecteurs $p$ de {\color{fibeamer@orange}points $p_1, \dots, p_q$ réalisables} qui satisfont les contraintes de probabilités $\alpha_i$, i.e., $p \geq \alpha$ {\color{fibeamer@orange}tel qu'il n'existe pas de vecteur $p'$ qui domine $p$}, i.e., tel que $\neg {\exists} p', \, p \leq p'$ ?
+    \item $U_\mathcal{Q} = \{ p \in [0, 1]^q \cap \mathbb{Q} \; | \; \exists \sigma, \, t^\sigma \geq p \; \wedge \; p \geq \alpha \}$, avec $t^\sigma = \mathbb{P}_s^\sigma(\Diamond T_i)$
+    \begin{itemize}
+      \item[$\leadsto$] Trop coûteux à calculer !
+      \item[$\leadsto$] Notion de courbe de Pareto
+    \end{itemize}
+    \item $\mathcal{P} \subseteq U_\mathcal{Q}$, la \textit{\color{fibeamer@orange}courbe de Pareto de $U_\mathcal{Q}$}, contient tous les vecteurs $p$ \textit{\color{fibeamer@orange}Pareto optimaux} $\approx$ \textit{courbe des compromis}.
+    \item $p \in U_\mathcal{Q}$ est Pareto-optimal ssi $\neg \exists p' (p'\in U_\mathcal{Q} \wedge p \leq p' \wedge p \neq p')$
+    \item La courbe de Pareto est en général une surface polyhèdrale de taille superpolynomiale
+  \end{itemize}
+\end{frame}
+
+\subsection{MOLP}
+\begin{frame}{Programme Linéaire multi-objectif}
+\footnotesize
+  On résout le problème G-SR via un \textit{\color{fibeamer@orange}programme linéaire à objectifs multiples}.
+  \begin{itemize}
+    \item Un programme linéaire à objectifs multiples (MOLP) se définit de la même façon qu'un LP classique à l'exception du fait qu'on cherche à satistfaire \alert{simultanément} plusieurs fonctions objectifs.
+    \item Si les objectifs sont non-triviaux, \alert{il n'existe pas de solution unique qui optimise tous les objectifs simultanément}
+    \begin{itemize}{ \scriptsize
+      \item[$\leadsto$] compromis
+      \item[$\leadsto$] pas de solution optimale
+      }
+    \end{itemize}
+    \item Une solution acceptable d'un MOLP est une solution \textit{non-dominante}
+    \begin{itemize} { \scriptsize
+      \item[$\leadsto$] aucune fonction objectif ne peut être optimisée sans dégrader la valeur d'une autre fonction objectif.
+      }
+    \end{itemize}
+    \item Soit $V$, l'ensemble des solutions qui satisfont toutes les
+      contraintes du MOLP. L'ensemble des solutions acceptables du MOLP est la courbe de pareto $\mathcal{P} \subseteq V$
   \end{itemize}
 \end{frame}
 
@@ -737,7 +778,8 @@ Les stratégies aléatoires à mémoire sont définies d'une façon similaire.
        \mathbb{1}(s) +
         \sum_{s' \in Pred(s)} \sum_{\alpha' \in A(s')} \Delta(s', \alpha', s) \cdot y_{s', \alpha'} = \sum_{\alpha \in A(s)} y_{s, \alpha} \quad \forall s \in S \setminus T
     \end{equation*}
-    $y_{s, \alpha} = $ \textit{ espérance du nombre de fois que l'état $s$ est visité et que l'action $\alpha \in A(s)$ est choisie} \\
+    $y_{s, \alpha} = $ \textit{ espérance du nombre de fois
+    que la transition $s\xrightarrow{\alpha}$ est empreintée} \\
     $\sum_{\alpha \in A(s)} y_{s, \alpha} = $ \textit{ espérance du nombre de fois que l'état $s$ est visité}
   \begin{center}
     \includegraphics[width=0.7\linewidth]{resources/MOLP2}
@@ -747,27 +789,86 @@ Les stratégies aléatoires à mémoire sont définies d'une façon similaire.
 \begin{frame}{G-SR}{MOLP}
   \small
     \vspace{-0.05\linewidth}
-    \only<1>{
     \begin{equation*}
       y_t = \sum_{s' \in Pred(t) \setminus T} \sum_{\alpha'\in A(s')} \Delta(s', \alpha', t) \cdot y_{s', \alpha'} \quad \forall t \in T
     \end{equation*}
     $y_t = $ \textit{espérance du nombre de fois qu'une transition atteint $t$ {\color{fibeamer@orange}pour la première fois}} \\
     $\leadsto$ il s'agit d'une autre façon de formuler la probabilité d'atteindre éventuellement $t$
-    }
-    \only<2>{
-\begin{center}
-{\color{fibeamer@blue}$\leadsto$} Si une solution du MOLP $y'$ existe, alors
-\[
-  \sum_{t \in T_i} y'_t \geq \alpha_i \quad \forall i \in \{1, \dots, q\}
-\]
-\end{center}
-}
   \begin{center}
     \includegraphics[width=0.7\linewidth]{resources/MOLP1}
   \end{center}
 \end{frame}
 
 \begin{frame}{G-SR}{MOLP}
+\begin{center}
+\[ \sum_{t \in T_i} y_t \]
+Correspond donc à la probabilité d'atteindre $T_i$ \\
+{\color{fibeamer@blue}$\leadsto$} Si une solution acceptable du MOLP $y'$ existe, alors il reste à vérifier que
+\[
+  \sum_{t \in T_i} y'_t \geq \alpha_i \quad \forall i \in \{1, \dots, q\}
+\]
+\end{center}
+\end{frame}
+
+\begin{frame}{G-SR}
+  \vspace{-0.05\linewidth}
+  \begin{theoreme}
+    \footnotesize
+    Soient $\mathcal{M} = (S, A, \Delta)$, un MDP nettoyé, $s \in S$, un état de $\mathcal{M}$ et $q \in \mathbb{N}$
+    contraintes décrites par les ensembles d'états cibles $T_i \subseteq S$ et
+    les seuils de probabilités $\alpha_i \in [0, 1] \cap \mathbb{Q}$, pour tout $i \in \{1, \dots, q\}$. Les propositions suivantes sont équivalentes :
+    \begin{enumerate}
+      \item[$(1.)$] Il existe une stratégie aléatoire sans mémoire telle que
+        \[
+          \bigwedge_{i=1}^q \mathbb{P}_s^\sigma (\Diamond T_i) \geq \alpha_i
+        \]
+      \item[$(2.)$] Il existe une solution acceptable $y'$ au MOLP telle que
+        \[
+          \bigwedge_{i=1}^q \sum_{t \in T_i} y'_{t} \geq \alpha_i
+        \]
+    \end{enumerate}
+  \end{theoreme}
+\end{frame}
+
+\subsection{Stratégie}
+\begin{frame}{G-SR}{Construction de la stratégie}
+\footnotesize
+  Supposons que $y'$ est une solution acceptable du MOLP tel que
+  \begin{equation}
+    \sum_{t \in T_i} y'_t \geq \alpha_i > 0 \quad \forall i \in \{ 1, \dots, q \} \label{eqmolp}
+  \end{equation}
+  Soit $V = \{s \in S \setminus T \; | \; \sum_{\alpha \in A(s) y'_{s, \alpha}} y'_{s, \alpha} > 0\}$, les états par lesquels on passe afin de satisfaire (\ref{eqmolp}), alors
+  $\forall s_v \in V$, $\alpha \in A(s_v)$
+  \begin{align*}
+    \sigma(s_v)(\alpha) &:= \frac{y'_{s_v, \alpha}}{\sum_{\alpha' \in A(s_v)} y'_{s_v, \alpha'}} \\
+     &:= \frac{\mathbb{E}_s(\text{\# transition }s_v\xrightarrow{\alpha} \text{ est empreintée})}{\mathbb{E}_s(\text{\# visite de l'état }s_v)}
+  \end{align*}
+  \textit{Note : } Vu que $\sum_{\alpha \in A(s_v)} y'_{s_v, \alpha} > 0$, $\sigma(s_v)$ est une distribution de probabilité sur $A(s_v)$,i.e., $\mathcal{D}(A(s_v))$. Pour les autres états $s' \not \in V$, $\sigma(s')$ est une distribution de probabilité aléatoire sur $A(s')$, i.e., $\mathcal{D}(A(s'))$
+\end{frame}
+
+\begin{frame}{G-SR}{Stratégie et problème de flots}
+  \small
+  \begin{lemme}
+    \centering
+    La stratégie $\sigma$, construite de cette manière, satisfait $\bigwedge_{i=1}^q \mathbb{P}_s^\sigma (\Diamond T_i) \geq \alpha_i$
+  \end{lemme}
+  \textbf{\color{fibeamer@orange}Idée : } $y'$, une solution acceptable du MOLP, défini un \textbf{\color{fibeamer@orange}flot stochastique} dont la {\color{fibeamer@orange}source} est $s$ et dont les {\color{fibeamer@orange}puits} sont les états de $T$.
+  \begin{itemize}
+    \item Par conservation de flots, les états de $s \in S \setminus T$ qui ont un nombre de flots sortants positifs ($\#_{\alpha \in A(s)} s\xrightarrow{\alpha}$) $-$ et donc un nombre de flots entrants positifs
+    \begin{itemize}
+      \item doivent être tous accessibles depuis la source
+      \item doivent tous atteindre $T$
+      \item ne peuvent pas accéder aux états avec un flot nul
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{G-SR}{Stratégie et problème de flots}
+  \begin{itemize}
+    \item $\sigma$ est obtenue en normalisant les flots sortant de chaque action vers les états avec un nombre de flots sortants positif.
+    \item En utilisant $\sigma$ définie de cette façon, l'espérance du nombre de fois que $\alpha \in A(s)$ est choisie alors que le système se trouve en l'état $s$ est donné par $y'_{s, \alpha}$.
+    \item Par conséquent, vu que les transitions vers un état $t \in T$ depuis un état de $S \setminus T$ sont employées pour atteindre $t$ une \textbf{unique fois}, alors, les contraintes définissant $y'_t$ induisent $y'_t = \mathbb{P}_s^\sigma(\Diamond \{t\})$
+  \end{itemize}
 \end{frame}
 
 % \begin{frame}{G-SR}
@@ -781,6 +882,7 @@ Les stratégies aléatoires à mémoire sont définies d'une façon similaire.
 % \end{frame}
 
 \begin{frame}[allowframebreaks]
+        \nocite{*}
         \frametitle{Références}
       \printbibliography
 \end{frame}
