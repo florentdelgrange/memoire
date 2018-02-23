@@ -389,8 +389,8 @@ $\mathbb{A}(s, v)$ peut être calculé récursivement :
 
 \begin{frame}{SSP-WE}{Algorithme}
   \begin{itemize}
-    \item La taille de l'ensemble $\mathbb{A}_i$ est croissant en $i$, i.e., \\
-      $|\mathbb{A}_{i}| \geq |\mathbb{A}_{i+1}| \quad \forall i \in \mathbb{N}$ par définition
+    \item La taille de l'ensemble $\mathbb{A}_i$ est croissante en $i$, i.e., \\
+      $|\mathbb{A}_{i}| \geq |\mathbb{A}_{i+1}| \quad \forall i \in \mathbb{N}$ par construction de $\mathbb{A}$
     \item Le dépliage du MDP résulte en un DAG
     \begin{itemize}
       \item[$\implies$] pas de cycle !
@@ -410,7 +410,7 @@ $\mathbb{A}(s, v)$ peut être calculé récursivement :
 
 \subsection{Exemple}
 \begin{frame}{SSP-WE}{Exemple}
-    \[ \overset{?}{\exists} \sigma \; \mathbb{E}^{\sigma}_s(\Diamond \text{ sommeil}) \leq l \wedge \mathbb{P}^\sigma_s(\Diamond_{\leq 12} \text{ sommeil}) = 1 \]
+    \[ \overset{?}{\exists} \sigma \; \mathbb{E}^{\sigma}_{s_0}(\Diamond \text{ sommeil}) \leq l \wedge \mathbb{P}^\sigma_{s_0}(\Diamond_{\leq 12} \text{ sommeil}) = 1 \]
     {\footnotesize Avec $l$, l'espérance minimale pour laquelle le noeud $n_0$ est assuré d'envoyer les données au noeud $n_2$ en moins de $12 ms$ (afin d'assurer un \textit{dutty cycle de $12 ms$}).}
     \begin{center}
       \includegraphics[width=0.6\linewidth]{resources/main-mdp3}
@@ -418,7 +418,7 @@ $\mathbb{A}(s, v)$ peut être calculé récursivement :
 \end{frame}
 
 \begin{frame}{SSP-WE}{Exemple}
-    \[ \overset{?}{\exists} \sigma \; \mathbb{E}^{\sigma}_s(\text{ sommeil}) \leq l \wedge \mathbb{P}^\sigma_s(\Diamond_{\leq 12} \text{ sommeil}) = 1 \]
+    \[ \overset{?}{\exists} \sigma \; \mathbb{E}^{\sigma}_{s_0}(\Diamond\text{ sommeil}) \leq l \wedge \mathbb{P}^\sigma_{s_0}(\Diamond_{\leq 12} \text{ sommeil}) = 1 \]
       \only<1>{\includegraphics[width=\linewidth]{resources/example-unfolding}}
       \only<2>{
         \includegraphics[width=\linewidth]{resources/example-unfoldingA}
@@ -426,7 +426,7 @@ $\mathbb{A}(s, v)$ peut être calculé récursivement :
 \end{frame}
 
 \begin{frame}{SSP-WE}{Exemple}
-    \only<1>{\[ \leadsto \mathbb{E}^{\min}_s(\Diamond \{ (s_3, v) \; | \; v \leq 12\}) = ? \]}
+    \only<1>{\[ \leadsto \mathbb{E}^{\min}_{s_0, 0}(\Diamond \{ (s_3, v) \; | \; v \leq 12\}) = ? \]}
     \only<2>{\vspace{-0.02\linewidth}
     \[ \leadsto \mathbb{E}^{\min}_s(\Diamond \{ (s_3, v) \; | \; v \leq 12\}) = \frac{7}{8} \cdot 4 + \frac{1}{8} \cdot 12 = 5 \]}
     \only<1>{\includegraphics[width=0.95\linewidth]{resources/example-unfoldingA2}}
@@ -435,7 +435,7 @@ $\mathbb{A}(s, v)$ peut être calculé récursivement :
 
 \begin{frame}{SSP-WE}{Exemple}
     \vspace{-0.05\linewidth}
-    \[ \mathbb{E}^{\sigma}_s(\Diamond \text{ sommeil}) \leq 5 \wedge \mathbb{P}^\sigma_s(\Diamond_{\leq 12} \text{ sommeil}) = 1 \]
+    \[ \mathbb{E}^{\sigma}_{s_0}(\Diamond \text{ sommeil}) \leq 5 \wedge \mathbb{P}^\sigma_{s_0}(\Diamond_{\leq 12} \text{ sommeil}) = 1 \]
     \begin{center}
       \includegraphics[width=0.6\linewidth]{resources/main-mdp3}
     \end{center}
@@ -443,6 +443,87 @@ $\mathbb{A}(s, v)$ peut être calculé récursivement :
     \begin{itemize}
       \item \textbf{\color{fibeamer@orange}Stratégie optimale $\sigma$} : tester une fois un envoi direct et passer par le noeud $n_1$ si l'envoi direct est un échec.
     \end{itemize}
+\end{frame}
+
+\begin{frame}{SSP-WE}{Exemple dans Storm}
+  \scriptsize
+  \begin{columns}
+    \begin{column}{0.5\linewidth}
+  \lstinputlisting[language={Prism},
+      numbers=left,
+      rulesepcolor=\color{black}, rulecolor=\color{black}, breaklines=true,
+      breakatwhitespace=true, firstnumber=1, firstline=1, lastline=25]{resources/sensors.prism}
+    \end{column}
+    \begin{column}{0.5\linewidth}
+      \begin{center}
+        \includegraphics[width=\linewidth]{resources/main-mdp3}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{SSP-WE}{Exemple dans Storm}
+    \vspace{-0.05\linewidth}
+    \[ \overset{?}{\exists} \sigma \; \mathbb{E}^{\sigma}_{s_0}(\Diamond \text{ sommeil}) \leq 5 \wedge \mathbb{P}^\sigma_{s_0}(\Diamond_{\leq 12} \text{ sommeil}) = 1 \]
+  {\fontsize{4}{5}
+  \begin{verbatim}
+storm --prism resources/sensors.prism --prop "multi(Rmin<=5 [F \"sleep\"], Pmax>=1 [F{\"time\"}<=12 \"sleep\"])"
+Storm 1.2.0
+
+Command line arguments: --prism resources/sensors.prism --prop multi(Rmin<=5 [F "sleep"], Pmax>=1 [F{"time"}<=12 "sleep"])
+
+Time for model construction: 0.305s.
+
+--------------------------------------------------------------
+Model type: 	MDP (sparse)
+States: 	4
+Transitions: 	6
+Choices: 	5
+Reward Models:  time
+State Labels: 	3 labels
+   * deadlock -> 0 item(s)
+   * init -> 1 item(s)
+   * sleep -> 1 item(s)
+Choice Labels: 	none
+--------------------------------------------------------------
+
+Model checking property multi(R[exp]min<=5 [F "sleep"], Pmax>=1 [true Urew{"time"}<=12 "sleep"]) ...
+Result (for initial states): true
+Time for model checking: 0.038s.
+  \end{verbatim}
+  }
+\end{frame}
+
+\begin{frame}[fragile]{SSP-WE}{Exemple dans Storm (requête)}
+    \vspace{-0.05\linewidth}
+    \[ \min_{\sigma \; | \;  \mathbb{P}^\sigma_{s_0}(\Diamond_{\leq 12} \text{ sommeil}) = 1} \, \mathbb{E}^{\sigma}_{s_0}(\Diamond \text{ sommeil}) \]
+  {\fontsize{4}{5}
+  \begin{verbatim}
+storm --prism resources/sensors.prism --prop "multi(Rmin=? [F \"sleep\"], Pmax>=1 [F{\"time\"}<=12 \"sleep\"])"
+Storm 1.2.0
+
+Command line arguments: --prism resources/sensors.prism --prop multi(Rmin=? [F "sleep"], Pmax>=1 [F{"time"}<=12 "sleep"])
+
+Time for model construction: 0.348s.
+
+--------------------------------------------------------------
+Model type: 	MDP (sparse)
+States: 	4
+Transitions: 	6
+Choices: 	5
+Reward Models:  time
+State Labels: 	3 labels
+   * deadlock -> 0 item(s)
+   * init -> 1 item(s)
+   * sleep -> 1 item(s)
+Choice Labels: 	none
+--------------------------------------------------------------
+
+Model checking property multi(R[exp]min=? [F "sleep"], Pmax>=1 [true Urew{"time"}<=12 "sleep"]) ...
+Result (for initial states): 5
+Time for model checking: 0.035s.
+  \end{verbatim}
+  }
 \end{frame}
 
 \section{SSP-PQ}
@@ -694,12 +775,12 @@ Les stratégies aléatoires à mémoire sont définies d'une façon similaire.
 \subsection{Préliminaires}
 \begin{frame}{Nettoyer un MDP}
 \footnotesize
-  Soient $\mathcal{M} = (S, A, \Delta)$, un MDP et $q \in \mathbb{N}$ contraintes d'accessibilité. On défini l'ensemble $T$ comme étant l'ensemble des états cibles qui décrivent les $q$ contraintes, i.e., $T = \bigcup_{i \in \{1, \dots, q \}} T_i$. {\color{fibeamer@blue}Nettoyer $\mathcal{M}$ consiste à créer un nouveau MDP $\mathcal{M}_c = (S_c, A_c, \Delta_c)$ tel que}
+  Soient $\mathcal{M} = (S, A, \Delta)$, un MDP et $q \in \mathbb{N}$ contraintes d'accessibilité. On défini l'ensemble $T$ comme étant l'ensemble des états cibles qui décrivent les $q$ contraintes, i.e., $T = \bigcup_{i \in \{1, \dots, q \}} T_i$. {\color{fibeamer@blue}Nettoyer $\mathcal{M}$ consiste à créer un nouveau MDP $\mathcal{M}_T = (S_T, A_T, \Delta_T)$ tel que}
   \begin{itemize}
-    \item $A_c = A \cup \{\alpha_T, {\color{gray}\alpha_{dead}}\}$
+    \item $A_T = A \cup \{\alpha_T, {\color{gray}\alpha_{dead}}\}$
     \item Les états de $T$ sont absorbants, i.e., $\forall t \in T, \,
-      \Delta(t, \alpha_T, t) = 1$ et $A_c(t) = \{\alpha_T\}$
-    \item $S_c = (S \setminus S_0) {\color{gray}\cup \{s_{dead}\}}$, avec
+      \Delta_T(t, \alpha_T, t) = 1$ et $A_T(t) = \{\alpha_T\}$
+    \item $S_T = (S \setminus S_0) {\color{gray}\cup \{s_{dead}\}}$, avec
     $S_0 = \{ s \in S \; | \; \forall \sigma, \, \mathbb{P}^\sigma_s(\Diamond T) = 0 \}$
     \begin{itemize}
       \item {\scriptsize Pour chaque état $s \in S \setminus T$, on peut facilement vérifier si $\exists \sigma$ tel que
@@ -707,17 +788,21 @@ Les stratégies aléatoires à mémoire sont définies d'une façon similaire.
     \end{itemize}
     \item[$\leadsto$] On a retiré les \textit{mauvais états de $S$}, i.e., on crée un état \alert{$s_{dead}$ invisible absorbant}
     \begin{itemize}{\scriptsize
-      \item[$\implies$] $\forall s \in S, \, \sum_{\alpha \in A(s)} \Delta(s, \alpha, s') \leq 1$
-      \item[$\leadsto$] \textbf{\color{fibeamer@orange}Transition invisible : }$\Delta(s, \alpha_{dead}, s_{dead}) = 1 - \sum_{s' \in Succ(\alpha, s')} \Delta(s, \alpha, s')$
+      \item[$\implies$] $\forall s \in S, \, \sum_{\alpha \in A(s)} \Delta_T(s, \alpha, s') \leq 1$
+      \item[$\leadsto$] \textbf{\color{fibeamer@orange}Transition invisible : }$\Delta_T(s, \alpha, s_{dead}) = 1 - \sum_{s' \in Succ(s, \alpha)} \Delta_T(s, \alpha, s')$
       }
     \end{itemize}
   \end{itemize}
 \end{frame}
 
+\begin{frame}{Nettoyer un MDP}{Exemple}
+  \includegraphics[width=\linewidth]{resources/clean-up}
+\end{frame}
+
 \begin{frame}{Courbe de Pareto}
   \small
   \begin{itemize}
-    \item Quel est l'ensemble des vecteurs $p$ de {\color{fibeamer@orange}points $p_1, \dots, p_q$ réalisables} qui satisfont les contraintes de probabilités $\alpha_i$, i.e., $p \geq \alpha$ {\color{fibeamer@orange}tel qu'il n'existe pas de vecteur $p'$ qui domine $p$}, i.e., tel que $\neg {\exists} p', \, p \leq p'$ ?
+    \item Ensemble des vecteurs $p$ de {\color{fibeamer@orange}points $p_1, \dots, p_q$ réalisables} qui satisfont les contraintes de probabilités $\alpha_i$, i.e., $p \geq \alpha$ {\color{fibeamer@orange}tel qu'il n'existe pas de vecteur $p'$ qui domine $p$}, i.e., tel que $\neg {\exists} p', \, p \leq p'$
     \item $U_\mathcal{Q} = \{ p \in [0, 1]^q \cap \mathbb{Q} \; | \; \exists \sigma, \, t^\sigma \geq p \; \wedge \; p \geq \alpha \}$, avec $t^\sigma = \mathbb{P}_s^\sigma(\Diamond T_i)$
     \begin{itemize}
       \item[$\leadsto$] Trop coûteux à calculer !
@@ -729,7 +814,6 @@ Les stratégies aléatoires à mémoire sont définies d'une façon similaire.
   \end{itemize}
 \end{frame}
 
-\subsection{MOLP}
 \begin{frame}{Programme Linéaire multi-objectif}
 \footnotesize
   On résout le problème G-SR via un \textit{\color{fibeamer@orange}programme linéaire à objectifs multiples}.
@@ -750,6 +834,15 @@ Les stratégies aléatoires à mémoire sont définies d'une façon similaire.
       contraintes du MOLP. L'ensemble des solutions acceptables du MOLP est la courbe de pareto $\mathcal{P} \subseteq V$
   \end{itemize}
 \end{frame}
+
+\begin{frame}{Courbe de Pareto}
+  \begin{figure}
+    \includegraphics[width=\linewidth]{resources/pareto}
+    \caption{MDP avec deux objectifs, $\Diamond P_1$ et $\Diamond P_2$, ainsi que la courbe de Pareto associée \cite{KYV}}
+  \end{figure}
+\end{frame}
+
+\subsection{MOLP}
 
 \begin{frame}{G-SR}{Programme Linéaire multi-objectif}
   \footnotesize
@@ -802,7 +895,7 @@ Les stratégies aléatoires à mémoire sont définies d'une façon similaire.
 \begin{frame}{G-SR}{MOLP}
 \begin{center}
 \[ \sum_{t \in T_i} y_t \]
-Correspond donc à la probabilité d'atteindre $T_i$ \\
+correspond donc à la probabilité d'atteindre $T_i$ \\
 {\color{fibeamer@blue}$\leadsto$} Si une solution acceptable du MOLP $y'$ existe, alors il reste à vérifier que
 \[
   \sum_{t \in T_i} y'_t \geq \alpha_i \quad \forall i \in \{1, \dots, q\}
@@ -871,6 +964,99 @@ Correspond donc à la probabilité d'atteindre $T_i$ \\
   \end{itemize}
 \end{frame}
 
+\subsection{Exemple dans storm}
+\begin{frame}{SSP-PQ et GSR}{Exemple dans Storm}
+  \scriptsize
+  \begin{columns}
+    \begin{column}{0.5\linewidth}
+  \lstinputlisting[language={Prism},
+    	basicstyle=\fontsize{4}{5}\color{red}\ttfamily, % small true type font (like courier)
+      numbers=left,
+      rulesepcolor=\color{black}, rulecolor=\color{black}, breaklines=true,
+      breakatwhitespace=true, firstnumber=1]{resources/sensors_pq.prism}
+    \end{column}
+    \begin{column}{0.5\linewidth}
+      \begin{center}
+        \includegraphics[width=\linewidth]{resources/mdmdp2}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{SSP-PQ et GSR}{Exemple dans Storm}
+    \vspace{-0.05\linewidth}
+    \[
+    \overset{?}{\exists} \sigma, \; \mathbb{P}^{\sigma}_{s_0}(\Diamond_{1\, :\, \leq 4} \text{ sommeil}) \geq 0.8 \, \wedge \,
+              \mathbb{P}^{\sigma}_{s_0}(\Diamond_{2\, :\, \leq 700} \text{ sommeil}) \geq 0.9
+    \]
+  {\fontsize{4}{5}
+  \begin{verbatim}
+storm --prism ../../models/sensors.prism --prop "multi(Pmax>=0.8 [F{\"time\"}<=4 \"sleep\"], Pmax>=0.9 [F{\"energy\"}<=700 \"sleep\"])"
+Storm 1.2.0
+
+Command line arguments: --prism ../../models/sensors.prism
+                        --prop multi(Pmax>=0.8 [F{"time"}<=4 "sleep"], Pmax>=0.9 [F{"energy"}<=700 "sleep"])
+
+Time for model construction: 0.302s.
+
+--------------------------------------------------------------
+Model type: 	MDP (sparse)
+States: 	4
+Transitions: 	6
+Choices: 	5
+Reward Models:  time, energy
+State Labels: 	3 labels
+   * deadlock -> 0 item(s)
+   * init -> 1 item(s)
+   * sleep -> 1 item(s)
+Choice Labels: 	none
+--------------------------------------------------------------
+
+Model checking property multi(Pmax>=4/5 [true Urew{"time"}<=4 "sleep"], Pmax>=9/10 [true Urew{"energy"}<=700 "sleep"]) ...
+Result (for initial states): true
+
+Time for model checking: 0.003s.
+  \end{verbatim}
+  }
+\end{frame}
+
+\begin{frame}[fragile]{SSP-PQ et GSR}{Exemple dans Storm}
+    \vspace{-0.05\linewidth}
+    \[
+    \max_\sigma \big(\mathbb{P}^{\sigma}_{s_0}(\Diamond_{1\, :\, \leq 4} \text{ sommeil}), \;
+              \mathbb{P}^{\sigma}_{s_0}(\Diamond_{2\, :\, \leq 700} \text{ sommeil}) \big)
+    \]
+  {\fontsize{4}{5}
+  \begin{verbatim}
+storm --prism ../../models/sensors.prism --prop "multi(Pmax=? [F{\"time\"}<=4 \"sleep\"], Pmax=? [F{\"energy\"}<=700 \"sleep\"])"
+Storm 1.2.0
+
+Command line arguments: --prism ../../models/sensors.prism
+                        --prop multi(Pmax=? [F{"time"}<=4 "sleep"], Pmax=? [F{"energy"}<=700 "sleep"])
+
+Time for model construction: 0.452s.
+
+Model checking property multi(Pmax=? [true Urew{"time"}<=4 "sleep"], Pmax=? [true Urew{"energy"}<=700 "sleep"]) ...
+Result (for initial states):
+Underapproximation of achievable values: Polytope with 2 Halfspaces:
+   (         1,          0) * x <= 0.875
+   (         0,          1) * x <= 1
+
+Overapproximation of achievable values: Polytope with 2 Halfspaces:
+   (         1,          0) * x <= 0.875
+   (         0,          1) * x <= 1
+
+1 pareto optimal points found
+(Note that these points are safe, i.e., contained in the underapproximation, but there is no guarantee for optimality):
+   (     0.875,          1 )
+
+
+Time for model checking: 0.040s.
+  \end{verbatim}
+  }
+\end{frame}
+
+
 % \begin{frame}{G-SR}
 %   \begin{block}{Proposition}
 %     Soient $\mathcal{M} = (S, A, \Delta)$, un MDP nettoyé et $q \in \mathbb{N}$
@@ -881,6 +1067,7 @@ Correspond donc à la probabilité d'atteindre $T_i$ \\
 %   Cela vient du fait que le MDP est nettoyé. Il est donc toujours possible d'accéder à $T$.
 % \end{frame}
 
+\subsection{}
 \begin{frame}[allowframebreaks]
         \nocite{*}
         \frametitle{Références}
