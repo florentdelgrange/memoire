@@ -839,13 +839,13 @@ La sémantique de PRCTL est la même que celle de PCTL, à l'exception que
 \begin{itemize}
   \item $s \models \Phi$ ssi la formule $\Phi$ tient dans l'état $s$, i.e.,
     \begin{align*}
-      & s \models \mathcal{E}_R(\Phi) & \text{ ssi } & \mathbb{E}_s\big(TS^{Sat_\mathcal{M}(\Phi)}\big) \in R&
+      & s \models \mathcal{E}_R(\Phi) & \text{ ssi } & \mathbb{E}_s(\Diamond \Phi) \in R&
     \end{align*}
   \item $\pi \models \phi$ ssi $\pi$ satisfait $\phi$, i.e.,
   \begin{align*}
   &\pi \models \Phi U_{\leq r} \Psi &\text{ ssi }& \exists j \in \mathbb{N} ,\, s_j \models \Psi
     , \;  \forall 0 \leq i < j, \, s_i \models \Phi \text{ et }&\\
-  & & & TS^{Sat_\mathcal{M}(\Psi)} \leq r &
+  & & & TS^{Sat_\mathcal{M}(\Psi)}(\pi) \leq r &
   \end{align*}
 \end{itemize}
 \textit{\color{gray}Note : la définition de l'ensemble de satisfaction d'une WMC PRCTL est identique à celle de PCTL}
@@ -905,13 +905,13 @@ La sémantique de PRCTL est la même que celle de PCTL, à l'exception que
     Soient $\mathcal{M} = (S, A, \Delta, AP, L, w)$, un MDP, $s \in S$, un état
     de $\mathcal{M}$ et $T \subseteq S$, un sous-ensemble d'états cibles.
 \begin{itemize}
-  \item {\color{fibeamer@orange}$\mathbb{E}_s^{\min}(TS^T)$ est l'espérance minimale de la longueur des chemins commençant en $s$ (en terme de coût) de $\mathcal{M}$}
+  \item {\color{fibeamer@blue}$\mathbb{E}_s^{\min}(\Diamond T)$ est l'espérance minimale de la longueur des chemins commençant en $s$ (en terme de somme tronquée) de $\mathcal{M}$}
   \begin{itemize}
-    \item i.e., l'espérance de la longueur des chemins commençant en $s$ dans la MC induite par la stratégie qui minimise l'espérance de la longueur des chemins de $\mathcal{M}$.
+    \item i.e., l'espérance de la longueur des chemins commençant en $s$ dans la MC induite par la {\color{fibeamer@orange}stratégie qui minimise l'espérance de la longueur des chemins de $\mathcal{M}$}.
   \end{itemize}
-  \item {\color{fibeamer@orange}$\mathbb{P}_s^{\max}(\Diamond_{\leq l} T)$ est la probabilité maximale d'atteindre $T$ avec un coût inférieur à $l$ dans $\mathcal{M}$}
+  \item {\color{fibeamer@blue}$\mathbb{P}_s^{\max}(\Diamond_{\leq l} T)$ est la probabilité maximale d'atteindre $T$ depuis $s$ avec un coût inférieur à $l$ dans $\mathcal{M}$}
   \begin{itemize}
-    \item i.e., la probabilité d'atteindre $T$ avec un coût inférieure à $l$ dans la MC induite par la stratégie qui maximise cette probabilité dans $\mathcal{M}$.
+    \item i.e., la probabilité d'atteindre $T$ avec un coût inférieure à $l$ dans la MC induite par la {\color{fibeamer@orange}stratégie qui maximise cette probabilité dans $\mathcal{M}$}.
   \end{itemize}
 \end{itemize}
 \end{frame}
@@ -920,8 +920,8 @@ La sémantique de PRCTL est la même que celle de PCTL, à l'exception que
 \begin{frame}{PRCTL pour les MDPs}
   Pour se référer aux MCs induites par ces stratégies, la syntaxe de PRCTL est essentiellement identique, à l'exception des formules d'états suivantes :
   \begin{itemize}
-    \item $\mathcal{P}_J(\phi)$ devient $\mathcal{P}_J^{\max}(\phi)$
-    \item $\mathcal{E}_R(\phi)$ devient $\mathcal{E}_R^{\min}(\phi)$
+    \item On ne parle plus de $\mathcal{P}_J(\phi)$, mais plutot de $\mathcal{P}_J^{\max}(\phi)$
+    \item On ne parle plus de $\mathcal{E}_R(\phi)$, mais plutot de $\mathcal{E}_R^{\min}(\phi)$
   \end{itemize}
     où $J \subseteq [0, 1]$, $R \in [0, +\infty[ \cap \mathbb{N}$ et $\phi$ est une formule de chemin.
 \end{frame}
@@ -949,7 +949,7 @@ La sémantique de PRCTL est la même que celle de PCTL, à l'exception que
 %  \end{center}
 \vspace{-0.05\linewidth}
   \[
-    \mathcal{E}_{\leq 10}^{\min}(s_0 \models \Diamond t)
+    s_0 \models \mathcal{E}_{\leq 10}^{\min}(\Diamond t)
   \]
   {\tiny
   \begin{verbatim}
@@ -984,7 +984,7 @@ Time for model checking: 0.008s.
 %  \end{center}
 \vspace{-0.05\linewidth}
   \[
-    \mathcal{E}_{=?}^{\min}(s_0 \models \Diamond t)
+    s_0 \models \mathcal{E}_{=?}^{\min}(\Diamond t)
   \]
   {\tiny
   \begin{verbatim}
@@ -1018,7 +1018,7 @@ Time for model checking: 0.007s.
 %  \end{center}
 \vspace{-0.05\linewidth}
   \[
-    \mathcal{P}_{\geq 0.7}^{\max}(s_0 \models \Diamond_{\leq 8} t)
+    s_0 \models \mathcal{P}_{\geq 0.7}^{\max}(\Diamond_{\leq 8} t)
   \]
   {\tiny
   \begin{verbatim}
@@ -1030,7 +1030,7 @@ Time for model checking: 0.000s.
   \end{verbatim}
   }
   \[
-    \mathcal{P}_{=?}^{\max}(s_0 \models \Diamond_{\leq 8} t)
+    s_0 \models \mathcal{P}_{=?}^{\max}(\Diamond_{\leq 8} t)
   \]
   {\tiny
   \begin{verbatim}
