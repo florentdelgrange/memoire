@@ -769,7 +769,7 @@ En effet, \alert{$\Diamond\Box a \not \equiv \forall \Diamond \forall \Box a$ !}
 \begin{frame}{Chaînes de Markov pondérées}{Exemple}
 \begin{figure}
   \includegraphics[width=0.8\linewidth]{resources/weather}
-  \caption{Système équipé de panneaux solaires produisant de l'énergie ($J$) en fonction du climat.}
+  \caption{Système équipé de panneaux solaires produisant de l'énergie ($kJ$) en fonction du climat.}
 \end{figure}
 \end{frame}
 
@@ -777,9 +777,9 @@ En effet, \alert{$\Diamond\Box a \not \equiv \forall \Diamond \forall \Box a$ !}
     Soient $\mathcal{M} = (S, \Delta, AP, L, w)$, une WMC, $s \in S$, un état
     de $\mathcal{M}$, $T \subseteq S$, un sous-ensemble d'états cibles et $\pi \in Paths(s)$.
   \begin{itemize}
-  \item $TS^T(\pi)$, la \textit{\color{fibeamer@orange}somme tronquée de $\pi$}, est le coût du chemin $\pi$ jusqu'à atteindre {(pour la première fois)} un état de $T$, i.e., le coût de $s \models \mathcal{P}_{=1} \Diamond T$ (en d'autres cas, cette espérance est infinie)
+  \item $TS^T(\pi)$, la \textit{\color{fibeamer@orange}somme tronquée de $\pi$}, est le coût du chemin $\pi$ jusqu'à atteindre {(pour la première fois)} un état de $T$
   \item $\mathbb{E}_s(\Diamond T) = \mathbb{E}_s(\{ TS^T(\pi) \; | \; \pi \in Paths(s)  \})$ est l'espérance de la longueur des chemins (en terme de coût) pour que $s \models \mathcal{P}_{=1}(\Diamond T)$
-  \item $\mathbb{P}_s(\Diamond_{\leq l}T) = \mathbb{P}_s(\{ \pi \in Paths(s) \; | \; TS^T(\pi) \leq l \})$ est la probabilité que les chemins $\pi_{\in Paths(s)} \models \Diamond T$ avec un coût (i.e., une somme tronquée) inférieure à $l \in \mathbb{N}$.
+, i.e., le coût de $s \models \mathcal{P}_{=1} \Diamond T$ (en d'autres cas, cette espérance est infinie)  \item $\mathbb{P}_s(\Diamond_{\leq l}T) = \mathbb{P}_s(\{ \pi \in Paths(s) \; | \; TS^T(\pi) \leq l \})$ est la probabilité que les chemins $\pi_{\in Paths(s)} \models \Diamond T$ avec un coût (i.e., une somme tronquée) inférieure à $l \in \mathbb{N}$.
   \end{itemize}
 \end{frame}
 
@@ -796,9 +796,9 @@ En effet, \alert{$\Diamond\Box a \not \equiv \forall \Diamond \forall \Box a$ !}
     \end{column}
   \end{columns}
   \begin{itemize}
-    \item $\mathbb{E}_{E}(TS^{\{Fn\}}) = 25 Kj$
+    \item $\mathbb{E}_{E}(\Diamond{\{Fn\}}) = 25 kJ$
     \item $1 - \mathbb{P}_{E}(\Diamond_{\leq 7}\{Fn\}) =
-      \mathbb{P}_{E}(\Diamond_{> 8}\{Fn\}) = 1 - 0.14 = 0.86 $
+      \mathbb{P}_{E}(\Diamond_{\geq 8}\{Fn\}) = 1 - 0.14 = 0.86 $
   \end{itemize}
 \end{frame}
 
@@ -838,18 +838,12 @@ En effet, \alert{$\Diamond\Box a \not \equiv \forall \Diamond \forall \Box a$ !}
 Soient $\mathcal{M} = (S, A, \Delta, AP, L)$, une MC, $s \in S$, un {\color{fibeamer@orange}état}
   de $\mathcal{M}$ et $\pi = s_0s_1s_2\dots \in Paths(s)$, un {\color{fibeamer@orange}chemin} de $\mathcal{M}$.\\
 La sémantique de PRCTL est la même que celle de PCTL, à l'exception que
-\begin{itemize}
-  \item $s \models \Phi$ ssi la formule $\Phi$ tient dans l'état $s$, i.e.,
     \begin{align*}
-      & s \models \mathcal{E}_R(\Phi) & \text{ ssi } & \mathbb{E}_s(\Diamond \Phi) \in R&
-    \end{align*}
-  \item $\pi \models \phi$ ssi $\pi$ satisfait $\phi$, i.e.,
-  \begin{align*}
+      & s \models \mathcal{E}_R(\Phi) & \text{ ssi } & \mathbb{E}_s(\Diamond \Phi) \in R& \\
   &\pi \models \Phi U_{\leq r} \Psi &\text{ ssi }& \exists j \in \mathbb{N} ,\, s_j \models \Psi
     , \;  \forall 0 \leq i < j, \, s_i \models \Phi \text{ et }&\\
   & & & TS^{Sat_\mathcal{M}(\Psi)}(\pi) \leq r &
   \end{align*}
-\end{itemize}
 \textit{\color{gray}Note : la définition de l'ensemble de satisfaction d'une WMC PRCTL est identique à celle de PCTL}
 \end{frame}
 
