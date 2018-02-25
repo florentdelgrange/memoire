@@ -352,7 +352,7 @@ Soit $s \in S$,
 \begin{columns}
 \begin{column}{0.6\linewidth}
   \centering
-  \includegraphics[width=0.6\linewidth]{resources/CTL_unfolding2}
+  \includegraphics[width=0.5\linewidth]{resources/CTLtree}
 \end{column}
 \begin{column}{0.5\linewidth}
   Est-ce que \alert{toutes} les exécutions ont toujours \alert{la possibilité} d'atteindre
@@ -365,7 +365,7 @@ Soit $s \in S$,
   \begin{itemize}
     \item $s_0 \models \Box\Diamond b$ \alert{ne fonctionne pas !}
     \item requiert que \alert{tous les chemins du système de transition} atteignent
-      {\color{DarkOrange}$\{b\}$}
+      {\color{DarkOrange}$\{b\}$} ($s_0^\omega \not \models \Diamond b$)
     \item[$\leadsto$] On ne parle pas de possibilité d'atteindre
       {\color{DarkOrange}$\{b\}$}
   \end{itemize}
@@ -705,17 +705,6 @@ En effet, \alert{$\Diamond\Box a \not \equiv \forall \Diamond \forall \Box a$ !}
   \end{align*}
 \end{frame}
 
-\begin{frame}{Sémantique}{Remarque}
-  Soient $\mathcal{M} = (S, \Delta, AP, L)$, une MC et $T \subseteq S$, un sous-ensemble d'états de $\mathcal{M}$. \\
-  La pseudo-formule de chemin $\Diamond T$ est équivalente à la formule de chemin $\Diamond \Phi$ telle que :
-  \begin{itemize}
-    \item $\exists T_{AP} \subseteq AP$
-    \item $\Phi ::= \bigwedge_{a \in T_{AP}} a$
-    \item $\forall t \in T$, $\forall a \in T_{AP}$, $a \in L(t)$
-    \item $\forall s \not \in T$, $\exists b \in T_{AP}$ telle que $b \not \in L(s)$
-  \end{itemize}
-\end{frame}
-
 \begin{frame}{Satisfiabilité}
   L'ensemble de satisfaction d'une MC est essentiellement défini de la même façon que pour les TSs.
   \begin{definition}[Ensemble de satisfaction]
@@ -726,6 +715,19 @@ En effet, \alert{$\Diamond\Box a \not \equiv \forall \Diamond \forall \Box a$ !}
       Sat_\mathcal{M}(\Phi) = \{s \in S \; | \; s \models \Phi \}
     \]
   \end{definition}
+\end{frame}
+
+\begin{frame}{Sémantique}{Remarque}
+  Soient $\mathcal{M} = (S, \Delta, AP, L)$, une MC, $T \subseteq S$, un sous-ensemble d'états de $\mathcal{M}$ et $\Phi$ une formule PRCTL. \\
+  La pseudo-formule $\Diamond T$ est équivalente à la formule de chemin $\Diamond \Phi$ telle que
+  \[
+    T = Sat_\mathcal{M}(\Phi)
+  \]
+  \textit{\color{gray}Exemple}: \\
+  Supposons que $AP$ contienne l'ensemble des étiquetages naturels de
+  $\mathcal{M}$, i.e., $S \subseteq AP$ et que
+  $\forall s, s' \in S$ tels que $s \neq s'$, que $s \in L(s)$ et que $s \not \in L(s')$, alors
+  \[\Phi ::= \neg ( \bigwedge_{s \in T} \neg s )\]
 \end{frame}
 
 \subsection{Comparaison de logiques temporelles en branchements}
@@ -767,7 +769,7 @@ En effet, \alert{$\Diamond\Box a \not \equiv \forall \Diamond \forall \Box a$ !}
 \begin{frame}{Chaînes de Markov pondérées}{Exemple}
 \begin{figure}
   \includegraphics[width=0.8\linewidth]{resources/weather}
-  \caption{Système équipé de panneaux solaires produisant de l'énergie en fonction du climat.}
+  \caption{Système équipé de panneaux solaires produisant de l'énergie ($J$) en fonction du climat.}
 \end{figure}
 \end{frame}
 
@@ -775,8 +777,8 @@ En effet, \alert{$\Diamond\Box a \not \equiv \forall \Diamond \forall \Box a$ !}
     Soient $\mathcal{M} = (S, \Delta, AP, L, w)$, une WMC, $s \in S$, un état
     de $\mathcal{M}$, $T \subseteq S$, un sous-ensemble d'états cibles et $\pi \in Paths(s)$.
   \begin{itemize}
-  \item $TS^T(\pi)$, la \textit{\color{fibeamer@orange}somme tronquée de $\pi$}, est le coût du chemin $\pi$ jusqu'à satisfaire {(pour la première fois)} $\Diamond T$
-  \item $\mathbb{E}_s(TS^T) = \mathbb{E}_s(\{ TS^T(\pi) \; | \; \pi \in Paths(s)  \})$ est l'espérance de la longueur des chemins (en terme de coût) pour que $s \models \mathcal{P}_{=1}(\Diamond T)$ (pour la première fois)
+  \item $TS^T(\pi)$, la \textit{\color{fibeamer@orange}somme tronquée de $\pi$}, est le coût du chemin $\pi$ jusqu'à atteindre {(pour la première fois)} un état de $T$, i.e., le coût de $s \models \mathcal{P}_{=1} \Diamond T$ (en d'autres cas, cette espérance est infinie)
+  \item $\mathbb{E}_s(\Diamond T) = \mathbb{E}_s(\{ TS^T(\pi) \; | \; \pi \in Paths(s)  \})$ est l'espérance de la longueur des chemins (en terme de coût) pour que $s \models \mathcal{P}_{=1}(\Diamond T)$
   \item $\mathbb{P}_s(\Diamond_{\leq l}T) = \mathbb{P}_s(\{ \pi \in Paths(s) \; | \; TS^T(\pi) \leq l \})$ est la probabilité que les chemins $\pi_{\in Paths(s)} \models \Diamond T$ avec un coût (i.e., une somme tronquée) inférieure à $l \in \mathbb{N}$.
   \end{itemize}
 \end{frame}
