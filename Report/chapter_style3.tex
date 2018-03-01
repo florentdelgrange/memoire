@@ -1,0 +1,34 @@
+\definecolor{myblue}{HTML}{1C4499}
+
+\makeatletter
+\def\thickhrulefill{\leavevmode \leaders \hrule height 1ex \hfill \kern \z@}
+\def\@makechapterhead#1{%
+  %\vspace*{10\p@}%
+  {\parindent \z@
+    \setstretch{2.0}
+    {\LARGE \raggedleft \reset@font
+      \scshape \@chapapp{} \thechapter\par\nobreak}%
+    \par\nobreak
+    \vspace*{10\p@}
+    \interlinepenalty\@M
+    {\raggedright \Huge \bfseries #1}%
+    \par\nobreak
+    {\color{bordeaux}\hrulefill}
+    \par\nobreak
+    \vskip 30\p@
+  }}
+\def\@makeschapterhead#1{%
+  %\vspace*{10\p@}%
+  {\parindent \z@
+    \setstretch{2.0}
+    {\raggedleft \reset@font
+      \scshape \vphantom{\@chapapp{} \thechapter}\par\nobreak}%
+    \par\nobreak
+    \vspace*{10\p@}
+    \interlinepenalty\@M
+    {\raggedright \Huge \bfseries #1}%
+    \par\nobreak
+    {\color{bordeaux}\hrulefill}
+    \par\nobreak
+    \vskip 30\p@
+  }}
