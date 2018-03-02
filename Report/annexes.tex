@@ -1,4 +1,32 @@
-\chapter*{Annexes}
-\addcontentsline{toc}{chapter}{Annexes}
-\markboth{Annexes}{Annexes}
+\chapter*{Appendix}
+\addcontentsline{toc}{chapter}{Appendix}
+\markboth{Appendix}{Appendix}
 \stepcounter{chapter}
+
+\section{Linear equations systems}
+\subsection{Reachability in a MC}
+Let $\mathcal{M} = (S, \Delta, w, AP, L)$ be a MC, $s \in S$ be a state of $\mathcal{M}$ and $T \subseteq S$ be a set of target states in $\mathcal{M}$.
+We can compute the probability to reach $T$ from $s$ :
+let $(x_s)_{s \in S}$ be a vector of probabilities,
+\begin{itemize}
+	\item if $s$ is not connected to $T$ in the underlying graph of $\mathcal{M}$, then we have $x_s = 0$
+	\item else, if $s \in T$, then we obviously have $x_s = 1$
+	\item else, for all $s \in S \setminus T$  such that $s$ is connected to $T$ in the underlying graph of $\mathcal{M}$,
+		\[
+      x_s = \underbrace{\sum_{s' \in S \setminus T} \Delta(s, s') \cdot x_{s'}}_{\text{reach $T$ via $s' \in S \setminus T$}} + \underbrace{\sum_{t \in T} \Delta(s, t)}_{\text{reach $T$ in one transition}}
+    \]
+\end{itemize}
+This defines a linear equations system. The solution $(x_s)_{s \in S}$ of this linear equations system is unique and $x_s = \mathbb{P}_s(\Diamond T)$ for all $s \in S$.
+
+\subsection{Expected cost of paths of a MC for reachability properties}
+  Let $\mathcal{M} = (S, \Delta, w, AP, L)$, be a MC, $s \in S$, be a state of $\mathcal{M}$ and $T \subseteq$ S, be a set of targets states. $\mathbb{E}_s(\Diamond T)$ can be computed through a linear equations system defined as follow : 
+  %Soient $x_s = \mathbb{E}_s(TS^T)$ %et $S_{=1} = \{s \in S \; | \; \mathbb{P}_s_s(\Diamond T) = 1 \}$
+  let $succ(s) = \{ s' \in S \; | \; \Delta(s, s') > 0 \}$ be the set of successors of $s$,
+  \[ x_s =
+  	\begin{cases}
+  	\infty & \quad \text{if } \mathbb{P}_s(\Diamond T) < 1 \\
+  	0 & \quad \text{if } s \in T \\
+  	\sum_{s' \in succ(s)} \Delta(s, s') \cdot (w(s, s') + x_{s'}) & \quad \text{else}
+  	\end{cases}
+  \]
+The solution $(x_s)_{s \in S}$ of this linear equations system is unique and $x_s = \mathbb{E}_s(\Diamond T)$ for all $s \in S$.

@@ -4,7 +4,7 @@
 %  %DIV=13,
 %  %openright,
 %  ]{scrbook}
-\documentclass[11pt, twoside]{report}
+\documentclass[12pt, twoside]{report}
 
 \usepackage[framemethod=TikZ]{mdframed}
 \usepackage[utf8]{inputenc}
@@ -50,12 +50,12 @@
   \newtheorem{definition}{Definition}[chapter]
   \newtheorem{theorem}{Theorem}[chapter]
   \newtheorem{lemma}{Lemma}[chapter]
+  \newtheorem{corollary}{Corollary}[chapter]
   \newtheorem*{notation}{Notation}
   \newtheorem*{notations}{Notations}
   \newtheorem{property}{Property}[chapter]
   \newtheorem*{proprietes}{Properties}
   \newtheorem{proposition}{Proposition}[chapter]
-  \newtheorem{corollaire}{Corollaire}[chapter]
   \theoremstyle{remark}
   \newtheorem{example}{Example}[chapter]
   \newtheorem{remark}{Remarque}[chapter]
@@ -72,8 +72,6 @@
 \definecolor{umons-gray}{RGB}{150, 150, 150}
 \definecolor{bordeaux}{HTML}{7b002c}
 \definecolor{Nokia}{HTML}{1C4499}
-
-\include{box_style}
 
 \newcommand{\HRule}{\rule{\linewidth}{0.3mm}\\} % Defines a new command for the horizontal lines, change thickness here
 
@@ -115,6 +113,8 @@ font={\fontsize{40}{50}\selectfont}
   \renewcommand{\headrulewidth}{0pt} % remove lines as well
   \renewcommand{\footrulewidth}{0pt}
 }
+
+\setlength{\footskip}{\dimexpr\headsep+2\baselineskip+.4pt}
 
 \makeatletter
 \newcommand{\rightorleftmark}{%
@@ -171,7 +171,7 @@ Multi-objective \\synthesis in Markov \\ Decision Processes
 %\Large
 \large
 \begin{flushright}
-\textit{Master thesis submitted by} Florent Delgrange \textit{in fulfillment of the requirements for the Computer Science Master degree}\par
+\textit{Master thesis submitted by}\\Florent Delgrange\\ \textit{in fulfillment of the requirements for the Computer Science Master degree}\par
 \end{flushright}
 \textit{Directors : } \par $\quad$ Véronique Bruyère\par
 $\quad$ Mickael Randour
