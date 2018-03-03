@@ -1,5 +1,5 @@
-\chapter{Preliminaries}
-\textit{This chapter refers to (and summarizes) my Master 1 project. Concepts and definitions are essentially inspired by the chapter 10 of the book ``Principles of model checking'' \cite{PMC}, the chapter ``Model checking probabilistic systems'' of the Mickael Randour course named ``Formal verification of computer systems'' \cite{MRV} as well as the article ``Variations on the shortest path problem'' \cite{DBLP:journals/corr/RandourRS14a}.} \\
+\chapter{State of the art}
+\textit{This chapter refers to (and summarizes) my Master 1 project. Concepts and definitions are essentially inspired by the chapter 10 of the book ``Principles of model checking'' \cite{PMC}, the chapter ``Model checking probabilistic systems'' of the Mickael Randour course named ``Formal verification of computer systems'' \cite{MRV} as well as the article ``Variations on the stochastic shortest path problem'' \cite{DBLP:journals/corr/RandourRS14a}.} \\
 
 Before studying different multi-objective problems in \textit{Markov decision
 processes} and defining \textit{strategies} that solve such problems, we will introduce some fundamental concepts that define the area of the subject.
@@ -9,6 +9,7 @@ So, first of all, we need to define what are \textit{Markov chains}. Indeed, the
 stochastic models are essential to measure the probability of \textit{paths} of Markov decision processes.
 
 \section{Markov chains}
+Markov chains are transitions system based models that describe the evolution of situations in stochastic environments. The particularity of such systems is that each state inside these models can go to its successors following a probability distribution. That yields that the evolution of a Markov chain being in a state to another only depends on this state.
 \begin{definition}[\textbf{Discrete-time Markov chain}]
   A \textit{(weighted) discrete-time Markov chain} (denoted by \textbf{MC}) is a stochastic model defined by a tuple $\mathcal{M}=(S, \Delta, w, AP, L)$ where
 	\begin{itemize}
@@ -174,4 +175,34 @@ Intuitively, we unfold $\mathcal{M}$ by recording in each state the cost of
 current paths. The new set of target states in the unfolded MC is the set of
 target states in $\mathcal{M}$ that have a current cost less than $l$ (cf.
 appendix for more details). Finnaly, it remains to compute the probability to
-reach these new target states in the unfolded MC.
+reach these new target states in the unfolded MC. \\
+
+Now, we can define what is a Markov decision process and introduce the concept of strategy that is the pillar of resolving objective problems in such models.
+
+\section{Markov decision processes}
+Markov decision processes are systems that modelise situations describing both non-deterministic and stochastic evolution. Indeed, in comparison with Markov chains, Markov decision processes require a decision making to go from a state of the model to its successors. After that, the system evolve following the probability distribution formed by this state and the decision taken.
+
+\begin{definition}[\textbf{Markov decision process}]
+	A \textit{Markov decision process}, (denoted by \textbf{MDP}) is defined by a tuple $\mathcal{M}  = (S, A, \Delta, w, AP, L)$ where
+	\begin{itemize}
+		\item $S$ is a countable set of states,
+		\item $A$ is a countable set of actions ; we denote by $A(s) \in 2^A$  the set of enabled actions when the system is in state $s$ and for all $s \in S$,
+    we have $A(s) \neq \emptyset$,
+		\item $\Delta: S \times A \times S \rightarrow [0, 1] \cap \mathbb{Q}$ is the probability transition function such that
+		\begin{flalign*}
+			&\forall s \in S, \; \forall \alpha \in A(s), \; \sum_{s' \in S} \Delta(s, \alpha, s') = 1 \\
+			\text{and } &\forall s, s' \in S, \; \forall \alpha \in A \setminus A(s), \; \Delta(s, \alpha, s') = 0
+		\end{flalign*}
+
+			where $\Delta(s, \alpha, s')$ defines the probability of going from $s$ to $s'$ when the action $\alpha \in A(s)$ is chosen,
+    \item $w : S \times A \times S \rightarrow \mathbb{N}_0$ %est la fonction
+        %de poids associant à chaque transition un coût strictement positif.
+      is a weight function that links a strictly positive cost to each transition,
+    \item $AP$ is a set of atomic propositions, and
+    \item $L : S \rightarrow 2^{AP}$ is a labeling function.
+	\end{itemize}
+\end{definition}
+
+\begin{property}
+  Let $\mathcal{M} = (S,A, \Delta, w, AP, L)$ be a MDP, $s \in S$ be a state of $\mathcal{M}$ and $\alpha \in A(s)$ be an enabled action of the state $s$. The transition function $\Delta$ defines a probability distribution $\Delta_{s, \alpha} : S \rightarrow [0, 1], \, s' \mapsto \Delta(s, \alpha, s')$ on $S$.
+\end{property}
