@@ -16,10 +16,12 @@ let $(x_s)_{s \in S}$ be a vector of probabilities,
       x_s = \underbrace{\sum_{s' \in S \setminus T} \Delta(s, s') \cdot x_{s'}}_{\text{reach $T$ via $s' \in S \setminus T$}} + \underbrace{\sum_{t \in T} \Delta(s, t)}_{\text{reach $T$ in one transition}}
     \]
 \end{itemize}
-This defines a linear equations system. The solution $(x_s)_{s \in S}$ of this linear equations system is unique and $x_s = \mathbb{P}_s(\Diamond T)$ for all $s \in S$.
+This defines a linear equations system.
+Let $S_{=0}$ be te subset of states of $S$ that can not reach $T$ in the underlying graph of $\mathcal{M}$, $S_{=1} = T$ and $S_{=?} = S \setminus (S_{=0} \cup S_{=1})$.
+The solution $(x_s)_{s \in S_{=?}}$ of this linear equations system is unique and $x_s = \mathbb{P}_s(\Diamond T)$ for all $s \in S$.
 
 \subsection{Expected cost of paths of a MC for reachability properties}
-  Let $\mathcal{M} = (S, \Delta, w, AP, L)$, be a MC, $s \in S$, be a state of $\mathcal{M}$ and $T \subseteq$ S, be a set of targets states. $\mathbb{E}_s(\Diamond T)$ can be computed through a linear equations system defined as follow : 
+  Let $\mathcal{M} = (S, \Delta, w, AP, L)$ be a MC, $s \in S$ be a state of $\mathcal{M}$ and $T \subseteq$ S be a set of targets states. $\mathbb{E}_s(\Diamond T)$ can be computed through a linear equations system defined as follow :
   %Soient $x_s = \mathbb{E}_s(TS^T)$ %et $S_{=1} = \{s \in S \; | \; \mathbb{P}_s_s(\Diamond T) = 1 \}$
   let $succ(s) = \{ s' \in S \; | \; \Delta(s, s') > 0 \}$ be the set of successors of $s$,
   \[ x_s =
@@ -29,4 +31,25 @@ This defines a linear equations system. The solution $(x_s)_{s \in S}$ of this l
   	\sum_{s' \in succ(s)} \Delta(s, s') \cdot (w(s, s') + x_{s'}) & \quad \text{else}
   	\end{cases}
   \]
-The solution $(x_s)_{s \in S}$ of this linear equations system is unique and $x_s = \mathbb{E}_s(\Diamond T)$ for all $s \in S$.
+Let $S_{=?} = \{ s \in S \; | \; \mathbb{P}_s(\Diamond T) = 1 \} \setminus T$. The solution $(x_s)_{s \in S_{=?}}$ of this linear equations system is unique and $x_s = \mathbb{E}_s(\Diamond T)$ for all $s \in S$.
+
+\section{Cost bounded reachability in a MC}
+
+Let $\mathcal{M} = (S, \Delta, w, AP, L)$ be a MC. We denote by $\mathbb{P}^\mathcal{M}_s$ the probability measure $\mathbb{P}_s$ such that $s \in S$ is a state of the MC $\mathcal{M}$.
+Let $s \in S$ be a state of $\mathcal{M}$, $T \subseteq S$ be a set of target states and $l \in \mathbb{N}$, a threshold.
+We can compute $\mathbb{P}_s(\Diamond_{\leq l} T)$ by reduction to the reachability problem on $\mathcal{M}_l = (S_l, \Delta_l)$ to the target states set $T_l \subseteq S_l$ that we build as follow :
+\begin{itemize}
+	\item $S_l$ is composed by states $(s, v)$ such that $s \in S $ and $v \in \mathbb{N} \cup \{ \bot \}$. We consider that $\bot > l$, with $\bot + v = \bot$ for all $v \in \mathbb{N}$. Intuitively, we record in $v$ the cost of paths in $\mathcal{M}$. Target states are states of $T_l = \{ (s, v) \in S_l \; | \; s \in T \wedge v \leq l \}$.
+	\item $\Delta_l: S_l \times S_l \rightarrow [0,1]$ is the probability transition function given by:\\
+	$\forall (s, v), (s', v') \in S_l,$
+	\[
+		\Delta_l((s, v), (s', v')) =
+		\begin{cases}
+		\Delta(s, s') & \text{if $v' = v + w(s, s')$ and $v' \leq b$  or} \\
+		 & \text{if $v' = \bot$ and $v + w(s, s') > b$} \\
+		 0 & \text{else}
+		\end{cases}
+	\]
+\end{itemize}
+\textit{Note} : here, the weight function is ommited in $\mathcal{M}_l$. So, $\mathcal{M}_l$ is unweighted. \\
+Resolving the cost bounded reachability by the threshold $l$ from $s$ to $T$ in $\mathcal{M}$ can be done by resolving the reachbility problem from $(s, 0)$ to $T_l$ in $\mathcal{M}_l$, i.e., $\mathbb{P}^\mathcal{M}_s(\Diamond_{\leq l} T) = \mathbb{P}^{\mathcal{M}_l}_{(s, 0)}(\Diamond T_l)$

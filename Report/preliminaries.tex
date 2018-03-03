@@ -1,5 +1,5 @@
 \chapter{Preliminaries}
-\textit{This chapter refers to (and summarizes) my Master 1 project. Concepts and definitions are essentially inspired by the chapter 10 of the book ``Principles of model checking'' \cite{PMC}, the chapter ``Model checking probabilistic systems'' of the Mickael Randour course called ``Formal verification of computer systems'' \cite{MRV} as well as the article ``Variations on the shortest path problem'' \cite{DBLP:journals/corr/RandourRS14a}.} \\
+\textit{This chapter refers to (and summarizes) my Master 1 project. Concepts and definitions are essentially inspired by the chapter 10 of the book ``Principles of model checking'' \cite{PMC}, the chapter ``Model checking probabilistic systems'' of the Mickael Randour course named ``Formal verification of computer systems'' \cite{MRV} as well as the article ``Variations on the shortest path problem'' \cite{DBLP:journals/corr/RandourRS14a}.} \\
 
 Before studying different multi-objective problems in \textit{Markov decision
 processes} and defining \textit{strategies} that solve such problems, we will introduce some fundamental concepts that define the area of the subject.
@@ -31,7 +31,7 @@ stochastic models are essential to measure the probability of \textit{paths} of 
 
 We can represent a MC $\mathcal{M} = (S, \Delta, w, AP, L)$ with a directed graph, where vertices represent the states
 of the MC and where all edge $(s, s') \in S^2$ that links two states is labeled with the transition probability to go from $s$ to $s'$, i.e., $\Delta(s, s')$, as well as the cost of this transition, i.e., $w(s, s')$. Additionally, the labels of each
-states can be represented next to it.
+states can be represented next to it. We name this graph the \textit{underlying graph of} $\mathcal{M}$.
 
 \begin{example}[\textit{Production of solar pannels according to weather}]\label{solar-pannel}
   Let $\mathcal{M}_{sp} = (S, \Delta, w, AP, L)$ be the MC of the figure \ref{MCexample}. This system modelises the production of eneregy (in $kJ$) of
@@ -83,7 +83,7 @@ We can express all events with this formulation. For example, the event that con
 Any event defined using complementation or countable union of cylinder sets are also measurable.
 \end{corollary}
 
-\begin{example}[\textit{Probability of paths in a MC modeling a solar pannel}]
+\begin{example}[\textit{Probability of paths in a MC modeling a solar pannel system}]
   Let $\mathcal{M}_{sp} = (S, \Delta, w, AP, L)$ be the MC of the example \ref{solar-pannel}. The probability of sunny weather four days in a row starting on a sunny day is given
   by $\mathbb{P}_{s_0}(Cyl(s_0s_0s_0s_0)) = (\frac{1}{2})^3 = \frac{1}{8}$
 \end{example}
@@ -95,12 +95,11 @@ of completing an objective in a MC. The first one that we will tackle is the rea
 %\subsubsection{Reachability problem}
 \begin{definition}[\textbf{Reachability event}]
   Let $\mathcal{M} = (S, \Delta, w, AP, L)$ be a MC and $T \subseteq S$ be a set of target states. The event of reaching $T$, denoted by $\Diamond T$,
-  is defined as a finite union of cylinder sets. Indeed, let $s \in S$ be a state of $\mathcal{M}$ and $Paths_{fin}^T(s)$ be the set of finite paths $\hat{\pi} = s_0 \dots s_n \in Paths_{fin}(s)$, $n \in \mathbb{N}$, such that $\forall i \in \{0, \dots, n-1 \}, \, s_i \not \in T$ and $s_n \in T$,
+  is defined as a finite union of cylinder sets. Indeed, let $s \in S$ be a state of $\mathcal{M}$ and $Paths_{fin}^T(s)$ be the set of finite paths $\hat{\pi} = s_0 \dots s_n \in Paths_{fin}(s)$, such that for all $i \in \{0, \dots, n-1 \}, \, s_i \not \in T$ and $s_n \in T$,
   \[ \Diamond T = \bigcup_{s_0 \dots s_n \in Paths_{fin}^T(s)} Cyl(s_0 \dots s_n) \]
   As all cylinders of the set $Paths_{fin}^T(s)$ are disjoint (their prefixes are different), we can measure the probability of $\Diamond T$ with :
   \[
-    \mathbb{P}_s(\Diamond T) = \sum_{s_0 \dots s_n \in Paths_{fin}^T(s)} %Cyl(s_0 \dots s_n)
-    \prod_{i=0}^{n-1} \Delta(s_i, s_{i+1})
+    \mathbb{P}_s(\Diamond T) = \sum_{s_0 \dots s_n \in Paths_{fin}^T(s)}  \mathbb{P}_s(Cyl(s_0 \dots s_n))
   \]
 \end{definition}
 It remains to compute this probability.
@@ -109,6 +108,11 @@ It remains to compute this probability.
 Computing $\mathbb{P}_s(\Diamond T)$ for all $s \in S$ can be done in polynomial
 time through a linear equations system (cf. appendix for more details).
 \end{theorem}
+
+\begin{example}[\textit{Reachability property in a MC modeling a solar pannel system}]
+  Let $\mathcal{M}_{sp}$ be the MC modeling the system of the example \ref{solar-pannel}.
+   The probability that a cloudy day eventually comes, starting on a sunndy day, is one, i.e., $\mathbb{P}_{s_0}(\Diamond \{s_3\}) = 1$. Indeed, the underlying graph of $\mathcal{M}_{sp}$ is strongly connected, so reaching any state starting from any state has always a probability $1$.
+\end{example}
 
 Now, we will consider the \textit{cost of paths} of a MC. Furthermore, we
 are interrested by the cost of paths to reach $T$. To compute this cost, we use the \textit{truncated sum function}.
@@ -130,7 +134,7 @@ expected cost of paths of a MC to reach a set of targets as well as
 the probability of reaching this target set with a cost bounded.
 
 \begin{definition}[\textbf{Expected cost of paths of a MC for reachablity properties}]
-	Let $\mathcal{M} = (S, \Delta, w, AP, L)$, a MC, $s \in S$, a state of $\mathcal{M}$ and $T \subseteq S$, a set of targets. We define the expected cost to reach $T$, i.e., $\mathbb{E}_s(\Diamond T)$, corresponding to \textit{the expected truncated sum of paths from $s$ to reach $T$} as follow :
+	Let $\mathcal{M} = (S, \Delta, w, AP, L)$ be a MC, $s \in S$ be a state of $\mathcal{M}$ and $T \subseteq S$ be a set of target states. We define the expected cost to reach $T$, i.e., $\mathbb{E}_s(\Diamond T)$, corresponding to \textit{the expected truncated sum of paths from $s$ to reach $T$} as follow :
 	\begin{itemize}
 	\renewcommand{\labelitemi}{\tiny$\bullet$}
 	\item If $\mathbb{P}_s(\Diamond T) < 1$, then $\mathbb{E}_s(\Diamond T) = \infty$.%(par la propriété \ref{prop-ts}).
@@ -150,3 +154,24 @@ with $Paths^T_{fin}(s)$, the set of finite paths $\hat{\pi} = s_0 \dots s_n \in 
 \begin{theorem}
   Computing $\mathbb{E}_s(\Diamond T)$ for all $s \in S$ can be done in polynomial time through a linear equations system (cf. appendix for more details).
 \end{theorem}
+
+The last concept that we will define in MC is the cost bounded reachability.
+
+\begin{definition}[\textbf{Cost bounded reachability probability}]
+	Let $\mathcal{M} = (S, \Delta, w, AP, L)$ be a MC, $s \in S$ be a state of $\mathcal{M}$, $T \subseteq S$ be a set of target states and $l \in \mathbb{N}$, a length threshold.
+  The \textit{probability to reach $T$ from $s$ with a cost bounded} by the threshold $l$ is defined as follow :
+	\[
+    \mathbb{P}_s(\Diamond_{\leq l} T) = \mathbb{P}_s(\{\pi \in Paths(s) \; | \; TS^T(\pi) \leq l \})
+  \]
+\end{definition}
+The event $\{\pi \in Paths(s) \; | \; TS^T(\pi) \leq l \}$ is actually measurable
+in the unfolded MC until $l$.
+\begin{theorem}
+  The probability of the cost bounded reachability to a set of target states $T \subseteq S$ from a state $s \in S$ can be computed in pseudo-polynomial time in the size of $\mathcal{M}$ through an unfolding of $\mathcal{M}$.
+\end{theorem}
+
+Intuitively, we unfold $\mathcal{M}$ by recording in each state the cost of
+current paths. The new set of target states in the unfolded MC is the set of
+target states in $\mathcal{M}$ that have a current cost less than $l$ (cf.
+appendix for more details). Finnaly, it remains to compute the probability to
+reach these new target states in the unfolded MC.
