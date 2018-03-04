@@ -23,7 +23,7 @@ Markov chains are transitions system based models that describe the evolution of
     \item $AP$ is a set of atomic propositions, and
     \item $L : S \rightarrow 2^{AP}$ is a labeling function.
 	\end{itemize}
-  \textit{Note }: $AP$ and $L$ can be ommited. In that case, we will consider that $AP = S$ and $L$ is the natural labeling of each state, i.e., for all $s \in S$, $L(s) = \{s\}$
+  \textit{Note }: $AP$ and $L$ can be ommited. In that case, we consider that $AP = S$ and $L$ is the natural labeling of each state, i.e., for all $s \in S$, $L(s) = \{s\}$
 \end{definition}
 
 \begin{property}
@@ -194,15 +194,47 @@ Markov decision processes are systems that modelise situations describing both n
 			\text{and } &\forall s, s' \in S, \; \forall \alpha \in A \setminus A(s), \; \Delta(s, \alpha, s') = 0
 		\end{flalign*}
 
-			where $\Delta(s, \alpha, s')$ defines the probability of going from $s$ to $s'$ when the action $\alpha \in A(s)$ is chosen,
-    \item $w : S \times A \times S \rightarrow \mathbb{N}_0$ %est la fonction
+			where $\Delta(s, \alpha, s')$ defines the probability of going from $s$ to $s'$ in one transition when the action $\alpha \in A(s)$ is chosen,
+    \item $w : A \rightarrow \mathbb{N}_0$ %est la fonction
         %de poids associant à chaque transition un coût strictement positif.
-      is a weight function that links a strictly positive cost to each transition,
+      is a weight function that links a strictly positive cost to each action,
     \item $AP$ is a set of atomic propositions, and
     \item $L : S \rightarrow 2^{AP}$ is a labeling function.
 	\end{itemize}
+  \textit{Note : }again, $AP$ and $L$ can be ommited. In that case, we consider that $AP=S$ and $L$ is the natural labeling of each state, i.e., for all state $s \in S$, $L(s) = \{s\}$.
 \end{definition}
 
 \begin{property}
   Let $\mathcal{M} = (S,A, \Delta, w, AP, L)$ be a MDP, $s \in S$ be a state of $\mathcal{M}$ and $\alpha \in A(s)$ be an enabled action of the state $s$. The transition function $\Delta$ defines a probability distribution $\Delta_{s, \alpha} : S \rightarrow [0, 1], \, s' \mapsto \Delta(s, \alpha, s')$ on $S$.
 \end{property}
+\begin{property}
+  A MC is essentially a MDP where, for each state $s$, $|A(s)| = 1$.
+\end{property}
+
+We will now introduce some useful notations.
+
+\begin{notation}
+  Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be a MDP,
+  \begin{itemize}
+    \item $Pred(s) = \{ s' \in S \; | \; \exists \alpha \in A(s'), \, \Delta(s', \alpha, s) > 0 \}$ is the set of predecessors of the state $s \in S$ in the the MDP,
+    \item $Succ(s) = \{ s' \in S \; | \; \exists \alpha \in A(s), \, \Delta(s, \alpha, s') > 0 \}$ is the set of successors of the state $s \in S$ in the MDP and
+    \item $Succ(s, \alpha) = \{ s' \in S \; | \; \Delta(s, \alpha, s') > 0 \}$
+      is the set of $\alpha$-successors of the state $s \in S$ in the MDP, i.e., the set of possible successors of $s$ when the action $\alpha$ is taken
+  \end{itemize}
+\end{notation}
+
+%The underlying graph of a MDP $\mathcal{M}$ is a directed graph where vertices are states of $\mathcal{M}$ and each edge starting from a state $s$ to one of its successor $s'$ exists if and only if there exists an enabled action $\alpha$
+%of $s$ such that $\Delta(s, \alpha, s') > 0$. For the other elements of the tuple defining $\mathcal{M}$, the graph is essentially caracterised the same way as for a MC.
+We can represent a MDP with an underlying directed graph of the MDP the same way as for a MC, with the exception that each vertice representing a state $s$ has transitions to the intermediate vertices representing enabled actions of $s$ and, for each enabled action $\alpha$ of $s$, edges go from the vertice reprensenting $\alpha$ to the vertices representing $\alpha$-successors of $s$.
+
+\begin{example}
+  Let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be the MDP of the figure \ref{simple-mdp}. We have that $S = \{s_0, s_1, s_2\}$, $A = \{\alpha, \beta, \gamma\}$ and $AP=\{a, b\}$. If the system currently is in the state $s_0$, labeled with $L(s_0) = \{a\}$, the only action available is $\beta$ (because $A(s_0) = \{\beta\}$).
+  The cost of choosing $\beta$ is $w(\beta) = 3$.
+  So, the system evolve following the probability distribution defined by $\Delta_{s_0, \beta}$ : it has a probability of $\frac{1}{2}$
+  to go to its $\beta$-successor $s_1$ and a same probability to go to its $\beta$-successor $s_2$. Let assume that the system evolves to the state $s_2$, a state with no label ($L(s_2) = \emptyset$). So, in that case, the system has two possible decisions : $\alpha$ or $\gamma$ (because $A(s_2) = \{\alpha, \gamma\}$). If $\alpha$ is chosen, the system returns to $s_2$ with a probability one and a cost of $w(\alpha) = 1$. Else, if $\gamma$ is chosen, the system go to $s_0$ with a probability one and a cost of $w(\gamma) = 2$.
+  \begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.7\linewidth]{resources/simple-mdp}
+    \caption{MDP with $3$ states, $3$ actions and $2$ atomic propositions}\label{simple-mdp}
+  \end{figure}
+\end{example}
