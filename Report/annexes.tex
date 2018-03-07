@@ -53,3 +53,72 @@ We can compute $\mathbb{P}_s(\Diamond_{\leq l} T)$ by reduction to the reachabil
 \end{itemize}
 \textit{Note} : here, the weight function is ommited in $\mathcal{M}_l$. So, $\mathcal{M}_l$ is unweighted. \\
 Resolving the cost bounded reachability by the threshold $l$ from $s$ to $T$ in $\mathcal{M}$ can be done by resolving the reachbility problem from $(s, 0)$ to $T_l$ in $\mathcal{M}_l$, i.e., $\mathbb{P}^\mathcal{M}_s(\Diamond_{\leq l} T) = \mathbb{P}^{\mathcal{M}_l}_{(s, 0)}(\Diamond T_l)$
+
+\section{Linear programs}
+\subsection{SR-problem}
+Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be a MC and $T \subseteq S$ be a set of target states of $\mathcal{M}$. We will resolve the SR-problem by building the strategy $\sigma$ that will maximise the
+probability of reaching $T$ from all $s \in S$. In that case, let $s \in S$ be a state of $\mathcal{M}$, if $\mathbb{P}_s^\sigma(\Diamond T) \geq \alpha$, $\sigma$ obviously resolves the
+SR-problem. Otherwise, no strategy exist to solve the SR-problem. So, we will first compute $\mathbb{P}_s^{\max}(\Diamond T)$ for all $s \in S$. Let $(x_s)_{s \in S}$
+be a probability vector for the following LP :
+\[
+	\min \sum_{s \in S} x_s
+\]
+under the constraints :
+\begin{flalign*}
+	x_s &= 1 \quad &&\forall s \in T, \\
+	x_s &= 0 \quad &&\forall s \not\in T \text{ such that $s$ is not connected to $T$ in $G^\mathcal{M}$}, \\
+	x_s &\geq \sum_{s' \in S} \Delta(s, \alpha, s') \cdot x_{s'}
+	\quad &&\forall \alpha \in A(s) \text{ and } \forall s \not \in T \text{ such
+		that $s$ is connected to $T$ in $G^\mathcal{M}$}. \\
+	0 &\leq x_s \leq 1 && \forall s \in S
+\end{flalign*}
+\textit{Note : we denote by $G^\mathcal{M}$ the underlying graph of $\mathcal{M}$}. \\
+
+The optimal solution $(v_s)_{s \in S}$ of this LP is unique and gives the following result :
+\[
+	v_s = \mathbb{P}_s^{\max}(\Diamond T) \quad \forall s \in S
+\]
+From this result, we can build a memoryless strategy $\sigma$ such that
+$\mathbb{P}^\sigma_s(\Diamond T) = \mathbb{P}^{\max}_s(\Diamond T)$.
+To do that, for each state $s$, we build $A^{\max}(s)$, the set of
+actions $\alpha \in A(s)$ such that
+$
+	v_s = \sum_{s' \in S} \Delta(s, \alpha, s') \cdot v_{s'}
+$. So, as we have $v_s = \mathbb{P}^{\max}_s(\Diamond T)$, actions of $A^{\max}(s)$
+maximise the probability of reaching $T$ from $s$.
+Building a strategy that would arbitrarely choose a state from
+$A^{\max}(s)$ is not sufficient. Indeed, if we take a state $s$
+such that $A^{\max}(s) = \{\alpha, \beta\}$ where $\Delta(s, \beta, t) = 1$
+for a certain $t \in T$ and $\Delta(s, \alpha, s) = 1$, we obviously have
+that choosing $\alpha$ doesn't allow to reach $T$ passing by $s$.
+\\
+
+A selection of action that ensures
+the reachability of $T$ in the
+MC induced by $\sigma$ is required.
+Let $\mathcal{M}^{\max}$ be the MDP that corresponds to $\mathcal{M}$
+where the actions $\beta \in A(s) \setminus A^{\max}(s)$ are deleted from $A(s)$
+for all $s$ connected to $T$.
+By definition, $\mathbb{P}^{\max}_s$ is not affected by this simplification of
+$\mathcal{M}$. \\
+
+For all $s$ such that $s$ is connected to $T$ in the underlying graph of
+$\mathcal{M}^{\max}$, we denote by $||s||$ the length of the \textit{shortest path} of $s$ to any state of $T$ in the underlying graph of
+$\mathcal{M^{\max}}$. Intuitively, computing $||s||$ allow to avoid that $\sigma$ chooses
+actions that prevent $s$ of reaching $T$.
+\begin{itemize}
+	\renewcommand{\labelitemi}{\tiny$\bullet$}
+	\item $||s|| = 0$ iff $s \in T$.
+	\item Let $n \in \mathbb{N}_0$. By induction on $n$, we define
+		$\sigma(s)$ for each $s$ connected to $T$ in the underlying graph of
+		$\mathcal{M^{\max}}$ and such that $||s|| = n$.
+		The strategy chooses an action $\sigma(s) \in A^{\max}(s)$ such that there exists $s' \in Succ(s, \sigma(s))$ where $\Delta(s, \sigma(s), s') > 0$, with $s'$ connected to $T$ in the underlying graph of
+		$\mathcal{M}^{\max}$ and $||s'|| = n - 1$. An action $\sigma(s) \in A(s)$ is chosen
+		arbitrarely for states $s$ that are not connected to $T$ in the underlying graph of $\mathcal{M}$.
+\end{itemize}
+We build $\sigma$ this way : let $s \in S$ be a state of $\mathcal{M}$ and $\mathbb{A}(s) = \{\alpha \in A^{\max}(s) \; | \; \exists s' \in Succ(s,
+	\alpha), \, ||s'|| = ||s|| - 1 \}$,
+\[
+	\sigma(s) = \arg \max_{\alpha \in \mathbb{A}(s)} \sum_{s' \in Succ(s, \alpha)} \Delta(s,
+	\alpha, s') \cdot v_{s'}
+\]
