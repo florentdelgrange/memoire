@@ -1,0 +1,27 @@
+\chapter{Storm overview}
+\textit{This chapter is based on the article named ``A Storm is coming : a modern probabilistic model checker'' \cite{storm1} and on the documentation of the tool.} \\
+
+Storm is a probabilistic model checker recently released. It is able to analyse
+four Markov models featuring discrete-time Markov chains and Markov decision processes. The main aim of this tool is to be competitive in terms of performances, to be updated with the new verification algorithms, to be able to
+deal with a large pannel of modeling languages, etc.
+
+\section{Models}
+As said before, Storm allows to model-check four types of Markov models.
+The first type of models are discrete-time Markov models that are covered in the first chapter, composed by
+discrete time Markov chains and Markov decision processes.
+The second family of models is continuous-time Markov models, composed by continuous time Markov chains and Markov automata.
+\subsubsection*{Continuous time Markov chains}
+These models are similar to discrete time Markov chains but each state is
+characterised by an exit rate.
+The time spent in each state of the system is negatively exponentially distributed with this rate.
+This exit rate and a probability transition function allow to induce a generator
+function with which it is possible to compute the probability
+%to go from one state to another after a certain time.
+that the system is currently in a state $s'$ while the system was in the state $s$, $t$ time units ago. Note that there is no more ``step'' notion in continuous
+Markov model types.
+\subsubsection*{Markov automata}
+This is a continuous nondeterministic Markov model. The key idea is the same that between MCs and MDPs in discrete time. \\
+
+We will not dwell on continuous time models anymore and focus primarily on discrete time models.
+
+\section{Input formats}
