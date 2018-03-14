@@ -2,26 +2,92 @@
 \textit{This chapter is based on the article named ``A Storm is coming : a modern probabilistic model checker'' \cite{storm1} and on the documentation of the tool.} \\
 
 Storm is a probabilistic model checker recently released. It is able to analyse
-four Markov models featuring discrete-time Markov chains and Markov decision processes. The main aim of this tool is to be competitive in terms of performances, to be updated with the new verification algorithms, to be able to
-deal with a large pannel of modeling languages, etc.
+four Markov models, featuring discrete-time Markov chains and Markov decision processes. The main aim of this tool is to be competitive in terms of performances, to be updated with new verification algorithms, to be able to
+deal with a large panel of modeling languages,... This tool provides %many other
+a lot of model checking features, including solvers for problems presented in the previous chapter and
+for multi-objective problems.
 
 \section{Models}
-As said before, Storm allows to model-check four types of Markov models.
-The first type of models are discrete-time Markov models that are covered in the first chapter, composed by
+As mentioned above, Storm allows to model-check four types of Markov models.
+The first family of models contains discrete-time Markov models that are covered in the first chapter, composed by
 discrete time Markov chains and Markov decision processes.
-The second family of models is continuous-time Markov models, composed by continuous time Markov chains and Markov automata.
-\subsubsection*{Continuous time Markov chains}
-These models are similar to discrete time Markov chains but each state is
-characterised by an exit rate.
-The time spent in each state of the system is negatively exponentially distributed with this rate.
+The second family of models contains continuous-time Markov models, composed by continuous time Markov chains and Markov automata.
+\subsubsection*{Continuous time Markov chains (CMC)}
+These models are similar to discrete time Markov chains but each state $s$ is
+characterised by an exit rate $\lambda_s$.
+The time $t$ spent in each state $s$ of the system is negatively exponentially distributed with this rate, i.e., $e^{- \lambda_s t}$.
 This exit rate and a probability transition function allow to induce a generator
 function with which it is possible to compute the probability
 %to go from one state to another after a certain time.
 that the system is currently in a state $s'$ while the system was in the state $s$, $t$ time units ago. Note that there is no more ``step'' notion in continuous
 Markov model types.
-\subsubsection*{Markov automata}
+\subsubsection*{Markov automata (MA)}
 This is a continuous nondeterministic Markov model. The key idea is the same that between MCs and MDPs in discrete time. \\
 
 We will not dwell on continuous time models anymore and focus primarily on discrete time models.
 
 \section{Input formats}
+Storm supports various native input formats, including Prism, Jani, generalised stochastic Petri nets, dynamic fault trees, cpGCL and explicit format.
+We will introduce some of these input languages by presenting how to use them modelize our
+discrete time models.
+\subsection{Prism}
+The Prism language allows to deal with MCs, CMCs and MDPs in Storm.
+It is a state-based language using reactive modules.
+We will not define the complete syntax and semantic of Prism but rather provide a way to
+define our MDPs using this language. Let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be a MDP such that the state space
+$S$ is finite, with $|S| = n$, and $i \in \{0, \dots, n-1\}$ such that $s_i \in S$ is the $i^{\text{th}}$ state of $S$ from which events that we are
+interested to measure start. \\
+
+In Prism, a \textit{module} represents a system. Thus, we just need a single module to
+define $\mathcal{M}$. A module allows to characterise $S$, $A$ and $\Delta$. We begin by enumerating states of $\mathcal{M}$ :
+\[
+  s: [0\, ..\, n-1] \; \text{init} \; i;
+\]
+In this manner, we express that for all $j \in \{0, \dots, n-1\}$, $s_j \in S$
+is the $j^{\text{th}}$ state of $S$ and $s_i$ is the initial state from which events start. In prism, $s$ is considered as a \textit{variable} of the model.
+Since $s$ is a variable, it is possible to form predicates $\Phi$ with the following  syntax :
+\[ \Phi ::= true \; | \; s \varphi x \; | \; (\Phi_1) \& (\Phi_2) \; | \; (\Phi_1) || (\Phi_2) \]
+where $\varphi \in \{<, \leq, >, \geq, =, \neq\}$
+and $x \in \mathbb{N}$. Thus, we have that the predicate
+\begin{itemize}
+  \item $\Phi = true$ is true,
+  \item $\Phi = s \varphi x$ is true iff $s \in \{ s_k \in S \; | \; k \varphi x \}$,
+  \item $\Phi = (\Phi_1) \& (\Phi_2)$ is true iff
+    $\Phi_1$ and $\Phi_2$ are true and
+  \item $\Phi = (\Phi_1) || (\Phi_2)$ is true iff $\Phi_1$ is true or $\Phi_2$ is true
+\end{itemize}
+Otherwise, $\Phi$ is false. Variables also allow to generate subsets $\phi$ of $S$ with the following syntax :
+\[
+  \phi ::= s' \varphi x \; | \; s' \xi x \; | \; s'=\zeta(\phi_1, \phi_2)
+  \; | \; (\phi_1) \& (\phi_2)
+\]
+where $\varphi \in \{<, \leq, >, \geq, =, \neq\}$,
+$\xi \in \{+, -\}$, $\zeta \in \{\min, \max \}$ and $x \in \mathbb{N}$.
+Let assume that the system is currently in the $j^\text{th}$ state of $S$, i.e.,
+in the state $s_j$. The subsets formed by $\phi$ are defined as follows :
+\begin{itemize}
+  \item $\phi = s' \varphi x = \{ s_k \in S \; | \; k \varphi x \}$,
+  \item $\phi = s' \xi x = \{ s_k \in S \; | \; k = j \xi x \}$,
+  \item $\phi = \zeta(\phi_1, \phi_2) = $
+\end{itemize}
+
+Then, transitions of $\mathcal{M}$ are described as follows :
+let $s_j$ be the $j^{\text{th}}$ state of $S$, for all enabled actions $\alpha \in A(s_j)$ of $s_j$,
+\[
+  [\alpha] \; s=j \rightarrow \delta_0 : s'=j_0 + \dots + \delta_{m-1} :  s'=j_{m-1};
+\]
+where $s_{j_0}, \dots, s_{j_{m-1}}$ are $\alpha$-successors of $s_j$ and $\delta_k = \Delta(s_j, \alpha, s_{j_k})$,
+with  $m=|Succ(s_j,\alpha)|$, $k \in \{0, \dots, m-1\}$, $j_k \in \{0, \dots, n-1\}$ and $s_{j_k}$, the $k^\text{th}$ $\alpha$-successor of $s_j$ and the $j_k^\text{th}$ state of $S$.
+
+\subsubsection{Labels}
+The set of atomic propositions $AP$ and the labeling function $L$ of $\mathcal{M}$ are characterised in Prism as follows : for all $a \in AP$,
+\[
+  \text{label} \; ``a" = (s=j_0\, \& \, \dots \, \& \, s=j_{m-1});
+\]
+where $S_a= \{s \in S \; | \; a \in L(s) \}$ and $s_{j_k} \in S_a$,
+with $m = |S_a|$, $k \in \{0, \dots, m-1\}$,
+$j_k \in \{ 0, \dots, n-1 \}$ and $s_{j_k}$, the $k^\text{th}$ state of $S_a$ and the $j_k^\text{th}$ state of $S$.
+
+\subsubsection{Weights}
+Finally, the weight function $w$ can be characterised with the notion of \textit{rewards}. In Prism, it is possible to associate to each transition
+of the set $\rightarrow \; =  \{ (s, \alpha, s') \in S \times A \times S \; | \; \Delta(s, \alpha, s') > 0 \}$ a value in

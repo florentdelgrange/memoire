@@ -17,7 +17,7 @@ let $(x_s)_{s \in S}$ be a vector of probabilities,
     \]
 \end{itemize}
 This defines a linear equations system.
-Let $S_{=0}$ be te subset of states of $S$ that can not reach $T$ in the underlying graph of $\mathcal{M}$, $S_{=1} = T$ and $S_{=?} = S \setminus (S_{=0} \cup S_{=1})$.
+Let $S_{=0}$ be te subset of states of $S$ that are not connected to $T$ in the underlying graph of $\mathcal{M}$ (i.e., the set of states $s$ from which no path reaching $T$ exists, i.e., forall $\pi = s_0s_1\dots \in Paths(s)$ and forall $k \in \mathbb{N}$, $s_k \not\in T$), $S_{=1} = T$ and $S_{=?} = S \setminus (S_{=0} \cup S_{=1})$.
 The solution $(x_s)_{s \in S_{=?}}$ of this linear equations system is unique and $x_s = \mathbb{P}_s(\Diamond T)$ for all $s \in S$.
 
 \subsection{Expected cost of paths of a MC for reachability properties}
@@ -51,14 +51,14 @@ We can compute $\mathbb{P}_s(\Diamond_{\leq l} T)$ by reduction to the reachabil
 		\end{cases}
 	\]
 \end{itemize}
-\textit{Note} : here, the weight function is ommited in $\mathcal{M}_l$. So, $\mathcal{M}_l$ is unweighted. \\
+\textit{Remark} : here, the weight function is ommited in $\mathcal{M}_l$. So, $\mathcal{M}_l$ is unweighted. \\
 Resolving the cost bounded reachability by the threshold $l$ from $s$ to $T$ in $\mathcal{M}$ can be done by resolving the reachbility problem from $(s, 0)$ to $T_l$ in $\mathcal{M}_l$, i.e., $\mathbb{P}^\mathcal{M}_s(\Diamond_{\leq l} T) = \mathbb{P}^{\mathcal{M}_l}_{(s, 0)}(\Diamond T_l)$
 
 \section{Linear programs}
 \subsection{SR problem}
-Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be a MC and $T \subseteq S$ be a set of target states of $\mathcal{M}$. We will resolve the SR problem by building the strategy $\sigma$ that will maximise the
+Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be a MDP and $T \subseteq S$ be a set of target states of $\mathcal{M}$. We will resolve the SR problem by building the strategy $\sigma$ that will maximise the
 probability of reaching $T$ from all $s \in S$. Let $s \in S$ be a state of $\mathcal{M}$ and $\alpha \in [0, 1]$ be a probability threshold. If $\mathbb{P}_s^\sigma(\Diamond T) \geq \alpha$, $\sigma$ obviously resolves the
-SR problem. Otherwise, no strategy exist to solve the SR problem. So, we will first compute $\mathbb{P}_s^{\max}(\Diamond T)$ for all $s \in S$. Let $(x_s)_{s \in S}$
+SR problem. Otherwise, no strategy exist to solve the SR problem. So, we will first compute $\max_{\sigma} \mathbb{P}_s^\sigma (\Diamond T) = \mathbb{P}_s^{\max}(\Diamond T)$ for all $s \in S$. Let $(x_s)_{s \in S}$
 be a probability vector for the following LP :
 \[
 	\min \sum_{s \in S} x_s
@@ -72,7 +72,7 @@ under the constraints :
 		that $s$ is connected to $T$ in $G^\mathcal{M}$}. \\
 	0 &\leq x_s \leq 1 && \forall s \in S
 \end{flalign*}
-\textit{Note : we denote by $G^\mathcal{M}$ the underlying graph of $\mathcal{M}$}. \\
+\textit{Remark} : we denote by $G^\mathcal{M}$ the underlying graph of $\mathcal{M}$. \\
 
 The optimal solution $(v_s)_{s \in S}$ of this LP is unique and gives the following result :
 \[
@@ -124,10 +124,10 @@ We build $\sigma$ this way : let $s \in S$ be a state of $\mathcal{M}$ and $\mat
 \]
 
 \subsection{SSP-E problem}
-Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be a MC and $T \subseteq S$ be a set
+Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be a MDP and $T \subseteq S$ be a set
 of target states of $\mathcal{M}$. We will resolve the SSP-E problem by building a strategy $\sigma$ that will minimise the expected cost of paths to reach $T$
 from all $s \in S$. Let $s \in S$ be a state of $\mathcal{M}$ and $l \in \mathbb{N}$ be a length threshold. If $\mathbb{E}_s^\sigma(\Diamond T) \geq l$, $\sigma$ obviously resolves the
-SSP-E problem. Otherwise, no strategy exist to solve the SSP-E problem. So, we will first compute $\mathbb{E}^{\min}_s(\Diamond T)$ for all $s \in S$.
+SSP-E problem. Otherwise, no strategy exist to solve the SSP-E problem. So, we will first compute $\min_{\sigma}\mathbb{E}^\sigma_s(\Diamond T) = \mathbb{E}^{\min}_s(\Diamond T)$ for all $s \in S$.
 Let $S_{=1} = \{ s \in S \; | \; \mathbb{P}^{\max}_s(\Diamond T) = 1 \}$ be the set of states that reach $T$ with a maximum probability one and $(x_s)_{s \in S}$ be a costs vector for the following LP :
 		\[ \max \sum_{s \in S_{=1}} x_s \]
 		under the constraints \\
@@ -148,9 +148,6 @@ The optimal solution $(v_s)_{s \in S}$ of this LP is unique and gives the follow
 	v_s = \mathbb{E}^{\min}_s(\Diamond T) \quad \forall s \in S
 \]
 We can now build an optimal pure memoryless strategy $\sigma$ that minimises the expected cost of paths of $\mathcal{M}$ to reach $T$ :
-\begin{align*}
-	\sigma(s) = \arg \min_{\alpha \in A(s)} ( w(\alpha) &+
-		\sum_{s' \in S \setminus T} \Delta(s, \alpha, s') \cdot v_{s'} ) \\
-	\text{and }
-	\mathbb{E}^\sigma_s(\Diamond T) &= \min_\sigma \mathbb{E}^\sigma_s(\Diamond T)
-\end{align*}
+\[
+	\sigma(s) = \arg \min_{\alpha \in A(s)} ( w(\alpha) +
+		\sum_{s' \in S \setminus T} \Delta(s, \alpha, s') \cdot v_{s'} ) \]

@@ -3,13 +3,15 @@
 
 Before studying different multi-objective problems in \textit{Markov decision
 processes} and defining \textit{strategies} that solve such problems, we will introduce some fundamental concepts that define the area of the subject.
-Actually, we will be interested to know some measurements related to the cost of \textit{paths} of Markov decision process as well as to the probability to reach some states in this model through these paths.
+Actually, we will be interested to know some measurements related to the cost of \textit{paths} of Markov decision processes as well as to the probability to reach some states in these models through these paths.
 These measurements can not be computed without defining a probability measure on events formed by these paths.
 So, first of all, we need to define what are \textit{Markov chains}. Indeed, these
 stochastic models are essential to measure the probability of \textit{paths} of Markov decision processes.
 
 \section{Markov chains}
-Markov chains are transitions system based models that describe the evolution of situations in stochastic environments. The particularity of such systems is that each state inside these models can go to its successors following a probability distribution. That yields that the evolution of a Markov chain being in a state to another only depends on this state.
+Markov chains are transitions system based models that describe the evolution of situations in stochastic environments. The particularity of such systems is that each state inside these models can go to its successors following a probability distribution.
+%That yields that a Markov chain being in a state and evolving to another one only depends on this state.
+That yields that the evolution of a Markov Chain, i.e., to go from a state to another one, only depends on the current state of the system.
 \begin{definition}[\textbf{Discrete-time Markov chain}]
   A \textit{(weighted) discrete-time Markov chain} (denoted by \textbf{MC}) is a stochastic model defined by a tuple $\mathcal{M}=(S, \Delta, w, AP, L)$ where
 	\begin{itemize}
@@ -23,7 +25,7 @@ Markov chains are transitions system based models that describe the evolution of
     \item $AP$ is a set of atomic propositions, and
     \item $L : S \rightarrow 2^{AP}$ is a labeling function.
 	\end{itemize}
-  \textit{Note }: $AP$ and $L$ can be ommited. In that case, we consider that $AP = S$ and $L$ is the natural labeling of each state, i.e., for all $s \in S$, $L(s) = \{s\}$
+  \textit{Remark }: $AP$ and $L$ can be ommited. In that case, we consider that $AP = S$ and $L$ is the natural labeling of each state, i.e., for all $s \in S$, $L(s) = \{s\}$
 \end{definition}
 
 \begin{property}
@@ -31,14 +33,16 @@ Markov chains are transitions system based models that describe the evolution of
 \end{property}
 
 We can represent a MC $\mathcal{M} = (S, \Delta, w, AP, L)$ with a directed graph, where vertices represent the states
-of the MC and where all edge $(s, s') \in S^2$ that links two states is labeled with the transition probability to go from $s$ to $s'$, i.e., $\Delta(s, s')$, as well as the cost of this transition, i.e., $w(s, s')$. Additionally, the labels of each
-states can be represented next to it. We name this graph the \textit{underlying graph of} $\mathcal{M}$.
+of the MC and where all edge $(s, s') \in S^2$ that links two states is labeled with the nonzero transition probability to go from $s$ to $s'$, i.e., $\Delta(s, s')$, as well as the cost of this transition, i.e., $w(s, s')$.
+We name this graph the \textit{underlying graph of} $\mathcal{M}$.
+Additionally, the labels of each
+state can be represented next to it.
 
 \begin{example}[\textit{Production of solar pannels according to weather}]\label{solar-pannel}
   Let $\mathcal{M}_{sp} = (S, \Delta, w, AP, L)$ be the MC of the figure \ref{MCexample}. This system modelises the production of eneregy (in $kJ$) of
   an installation of solar pannels according to weather.
   Here, the states are elements of $S = \{s_0, s_1, s_2, s_3\}$ and the atomic propositions are elements of $AP = \{sunny, \, slightly\_cloudy, \, moderately\_cloudy, \, cloudy \}$. The transition function is given by edges on the figure (e.g., $\Delta(s_0, s_1) = \frac{1}{5}$) as well as the
-  cost of each transition (e.g., $w(s_0, s_1) = 5$). Finaly, labels of states
+  cost of each transition (e.g., $w(s_0, s_1) = 5$). finally, labels of states
   are put next each of them in orange in the figure (e.g., $L(s_0) = \{sunny\}$).
   \begin{figure}[h!]
     \centering
@@ -46,21 +50,22 @@ states can be represented next to it. We name this graph the \textit{underlying 
     \caption{MC modeling a daily production of energy (in $kJ$) of solar pannels according to weather}
     \label{MCexample}
   \end{figure}
-  The way $w$ is defined for this MC yields that when a day is sunny, the installation produces $5 kJ$ during this day, $3 kJ$ when a day is slightly cloudy, $2 kJ$ when a day is moderately cloudy and finaly $1 kJ$ when the day is cloudy.
+  The way $w$ is defined for this MC yields that when a day is sunny, the installation produces $5 kJ$ during this day, $3 kJ$ when a day is slightly cloudy, $2 kJ$ when a day is moderately cloudy and finally $1 kJ$ when the day is cloudy.
 \end{example}
 
 \subsection{Probability of paths of MCs}
 
 \begin{definition}[\textbf{Paths of a MC}] Let $\mathcal{M} = (S, \Delta, w, AP, L)$ be a MC.
-A \textit{path} $\pi = s_0 s_1 s_2 \dots$ of $\mathcal{M}$ is a (infinite) sequence of states of the MC such that for all $i \in \mathbb{N}$, $\Delta(s_i, s_{i+1})> 0$. We denote by $Paths(s)$ the set of paths $\pi = s_0s_1s_2\dots$ of $\mathcal{M}$ that begin in the state $s \in S$, i.e., such that $s_0 = s$.
+A \textit{path} $\pi = s_0 s_1 s_2 \dots$ of $\mathcal{M}$ is a (infinite) sequence of states of the MC such that for all $i \in \mathbb{N}$, $\Delta(s_i, s_{i+1})> 0$. We denote by $Paths(s)$ the set of paths $\pi = s_0s_1s_2\dots$ of $\mathcal{M}$ starting from the state $s \in S$, i.e., such that $s_0 = s$.
 \end{definition}
 \begin{definition}[\textbf{Finite paths of a MC}]
 Let $\mathcal{M} = (S, \Delta, w, AP, L)$ be a MC.
 A \textbf{finite} path $\hat{\pi} = s_0 \dots s_n$ of $\mathcal{M}$, with $n \in \mathbb{N}$, is a finite sequence of states of $\mathcal{M}$ such that $\Delta(s_i, s_{i+1}) > 0$ for all $i \in \{0, \dots, n-1\}$.
-We denote by $Paths_{fin}(s)$ the set of finite paths $\hat{\pi} = s_0 \dots s_n$ that begin in the state $s \in S$, i.e., such that $s_0 = s$
+We denote by $Paths_{fin}(s)$ the set of finite paths $\hat{\pi} = s_0 \dots s_n$ starting from the state $s \in S$, i.e., such that $s_0 = s$
 \end{definition}
 \begin{definition}[\textbf{Prefixes of paths}]
-Let $\mathcal{M} = (S, \Delta, w, AP, L)$ be a MC and $\pi = s_0s_1s_2 \dots$ be a path of $\mathcal{M}$. A prefix of $\pi$ is a finite path $\hat{\pi} = s'_0 \dots s'_n$, with $n \in \mathbb{N}$ such that $s'_i = s_i$ for all $i \in \{0, \dots, n\}$. The set of all prefixes of $\pi$ is denoted by $pref(\pi)$
+Let $\mathcal{M} = (S, \Delta, w, AP, L)$ be a MC and $\pi = s_0s_1s_2 \dots$ be a path of $\mathcal{M}$. A prefix of $\pi$ is a finite path $\hat{\pi} = s'_0 \dots s'_n$, with $n \in \mathbb{N}$, such that $s'_i = s_i$ for all $i \in \{0, \dots, n\}$.
+The set of all prefixes of $\pi$ is denoted by $pref(\pi)$.
 \end{definition}
 
 We are now interested of measuring the probability of events of MCs. These events can be formulated with the notion of \textit{cylinder set}.
@@ -110,10 +115,10 @@ Computing $\mathbb{P}_s(\Diamond T)$ for all $s \in S$ can be done in polynomial
 time through a linear equations system (cf. appendix for more details).
 \end{theorem}
 
-\begin{example}[\textit{Reachability property in a MC modeling a solar pannel system}]
-  Let $\mathcal{M}_{sp}$ be the MC modeling the system of the example \ref{solar-pannel}.
-   The probability that a cloudy day eventually comes, starting on a sunndy day, is one, i.e., $\mathbb{P}_{s_0}(\Diamond \{s_3\}) = 1$. Indeed, the underlying graph of $\mathcal{M}_{sp}$ is strongly connected, so reaching any state starting from any state has always a probability $1$.
-\end{example}
+% \begin{example}[\textit{Reachability property in a MC modeling a solar pannel system}]
+%   Let $\mathcal{M}_{sp}$ be the MC modeling the system of the example \ref{solar-pannel}.
+%    The probability that a cloudy day eventually comes, starting on a sunndy day, is one, i.e., $\mathbb{P}_{s_0}(\Diamond \{s_3\}) = 1$. Indeed, the underlying graph of $\mathcal{M}_{sp}$ is strongly connected, so reaching any state starting from any state has always a probability $1$.
+% \end{example}
 
 Now, we will consider the \textit{cost of paths} of a MC. Furthermore, we
 are interrested by the cost of paths to reach $T$. To compute this cost, we use the \textit{truncated sum function}.
@@ -201,7 +206,7 @@ Markov decision processes are systems that modelise situations describing both n
     \item $AP$ is a set of atomic propositions, and
     \item $L : S \rightarrow 2^{AP}$ is a labeling function.
 	\end{itemize}
-  \textit{Note : }again, $AP$ and $L$ can be ommited. In that case, we consider that $AP=S$ and $L$ is the natural labeling of each state, i.e., for all state $s \in S$, $L(s) = \{s\}$.
+  \textit{Remark : }again, $AP$ and $L$ can be ommited. In that case, we consider that $AP=S$ and $L$ is the natural labeling of each state, i.e., for all state $s \in S$, $L(s) = \{s\}$.
 \end{definition}
 
 \begin{property}
@@ -225,10 +230,10 @@ We will now introduce some useful notations.
 
 %The underlying graph of a MDP $\mathcal{M}$ is a directed graph where vertices are states of $\mathcal{M}$ and each edge starting from a state $s$ to one of its successor $s'$ exists if and only if there exists an enabled action $\alpha$
 %of $s$ such that $\Delta(s, \alpha, s') > 0$. For the other elements of the tuple defining $\mathcal{M}$, the graph is essentially caracterised the same way as for a MC.
-We can represent a MDP with the underlying directed graph of the MDP the same way as for a MC, with the exception that each vertice representing a state $s$ has transitions to the intermediate vertices representing enabled actions of $s$ and, for each enabled action $\alpha$ of $s$, edges go from the vertice reprensenting $\alpha$ to the vertices representing $\alpha$-successors of $s$.
+We can represent a MDP with its underlying directed graph, the same way as for a MC, with the exception that each vertice representing a state $s$ has outgoing edges to the intermediate vertices representing enabled actions of $s$ and, for each enabled action $\alpha$ of $s$, edges go from the vertice reprensenting $\alpha$ to the vertices representing $\alpha$-successors of $s$.
 
 \begin{example}\label{simple-mdp}
-  Let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be the MDP of the figure \ref{mdp01}. We have that $S = \{s_0, s_1, s_2\}$, $A = \{\alpha, \beta, \gamma\}$ and $AP=\{a, b\}$. If the system currently is in the state $s_0$, labeled with $L(s_0) = \{a\}$, the only action available is $\beta$ (because $A(s_0) = \{\beta\}$).
+  Let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be the MDP of the figure \ref{mdp01}. We have that $S = \{s_0, s_1, s_2\}$, $A = \{\alpha, \beta, \gamma\}$ and $AP=\{a, b\}$. If the system currently is in state $s_0$, labeled with $L(s_0) = \{a\}$, the only action available is $\beta$ (because $A(s_0) = \{\beta\}$).
   The cost of choosing $\beta$ is $w(\beta) = 3$.
   So, the system evolves following the probability distribution defined by $\Delta_{s_0, \beta}$ : it has a probability of $\frac{1}{2}$
   to go to its $\beta$-successor $s_1$ and a same probability to go to its $\beta$-successor $s_2$. Let assume that the system evolves to the state $s_2$, a state with no label ($L(s_2) = \emptyset$). So, in that case, the system has two possible decisions : $\alpha$ or $\gamma$ (because $A(s_2) = \{\alpha, \gamma\}$). If $\alpha$ is chosen, the system returns to $s_2$ with a probability one and a cost of $w(\alpha) = 5$. Else, if $\gamma$ is chosen, the system goes to $s_0$ with a probability one and a cost of $w(\gamma) = 2$.
@@ -244,7 +249,7 @@ In order to resolve nondeterminism inside MDPs, we need the notions of paths in 
 \begin{definition}[\textbf{Paths in a MDP}]
   Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be a MDP and the transition relation
   \[\rightarrow \; =  \{ (s, \alpha, s') \in S \times A \times S \; | \; \Delta(s, \alpha, s') > 0 \}, \,\]
-	A path $\pi$ of $\mathcal{M}$ is defined as a sequence of states
+	a path $\pi$ of $\mathcal{M}$ is defined as a sequence of states
 	\[ \pi = s_0 \xrightarrow{\alpha_1} s_1 \xrightarrow{\alpha_2} s_2 \xrightarrow{\alpha_3} \dots \]
 	Let $s \in S$ be a state of $\mathcal{M}$, we denote by $Paths(s)$ the set of
 	paths of $\mathcal{M}$ starting from the state $s$, i.e., such that $s_0 = s$.
@@ -253,8 +258,8 @@ In opposition of MCs, there is no probabilistic space defined on paths of MDPs.
 This is related to nondeterminism linked to the choices of actions possible when the system is in a state. We need strategies to resolve nondeterminism.
 \begin{definition}[\textbf{Histories}]
 	Let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be a MDP. A \textit{history} of $\mathcal{M}$
-	is a finite sequence of states $(s_0 \dots s_n) \in S^+$ where
-	$\forall i \in \{1, \dots, n \}, \; \exists \alpha \in A(s_{i-1})$ such that $\Delta(s_{i-1}, \alpha, s_i) > 0$.
+	is a finite sequence of states $(s_0 \dots s_n) \in S^+$ where for all
+	$i \in \{1, \dots, n \}, \; \exists \alpha \in A(s_{i-1})$ such that $\Delta(s_{i-1}, \alpha, s_i) > 0$.
 	A history is the sequence of state that brought the state $s_0$ to the state $s_n$ along a path of $\mathcal{M}$. The set of histories of $\mathcal{M}$  is given by $\mathcal{H}(S)$.
 \end{definition}
 
@@ -293,7 +298,7 @@ $h = s_0 s_1 \dots s_n$ of $\mathcal{M}$,
 
 As the propability of events in a MC is measurable, the probability of events in a MDP controlled by strategy is also measurable.
 \begin{notation}
-  We denote by $\mathbb{P}_s^\sigma$ the probability measure defined on the paths starting in the state $s$ of the Markov chain induced by the strategy $\sigma$.
+  We denote by $\mathbb{P}_s^\sigma$ the probability measure defined on paths starting from the state $s$ of the Markov chain induced by the strategy $\sigma$.
 \end{notation}
 
 Markov chains induced by such (infinite memory) strategies can be seen as forests of trees representing an infinite unfolding of the MDP where actions are controlled by strategy (this is due to the fact that the set of histories of a MDP is infinite). So, such induced MCs have infinite size. Actually, such strategies are not easy to use in practice because it requires to
@@ -314,7 +319,7 @@ A \textit{finite memory strategy} $\sigma = (Q, \sigma_\alpha, \delta, \delta_0)
 Let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be a MDP and $\sigma = (Q, \sigma_\alpha, \delta, \delta_0)$ be a finite memory strategy for $\mathcal{M}$.
 The product of $\mathcal{M}$ by $\sigma$ is given by
 \[ \mathcal{M} \times \sigma = \mathcal{M}^\sigma = (S \times Q, \Delta^\sigma, w^\sigma, AP, L^\sigma) \]
-where $\mathcal{M}^\sigma$ is the MC induced by the finite memory strategy $\sigma$ and where
+where $\mathcal{M}^\sigma$ is the MC induced by the finite memory strategy $\sigma$ and where,
 for all states $s, s' \in S$ and for all modes $q, q' \in Q$ of the strategy,
 \begin{itemize}
 	\item $\Delta^\sigma((s, q), (s', q')) =
@@ -336,7 +341,7 @@ for all states $s, s' \in S$ and for all modes $q, q' \in Q$ of the strategy,
     \caption{Finite memory strategy for $\mathcal{M}$ with $2$ modes}\label{finite_mem_strat}
   \end{figure}
 
-  We assume that for all $s \in S$, $\delta_0(s) = m_0$. The strategy simply consists in choosing once $\alpha$ when the system enters in the state $s_2$ and choosing $\gamma$ just after that to return to $s_0$. The MC induced by the product of $\mathcal{M}$ by $\sigma$ is given in the figure
+  We assume that for all $s \in S$, $\delta_0(s) = m_0$. The strategy simply consists in choosing once $\alpha$ when the system enters in the state $s_2$ and choosing $\gamma$ just after that, to return to $s_0$. The MC induced by the product of $\mathcal{M}$ by $\sigma$ is given in the figure
   \ref{inducedMC}.
   \begin{figure}[H]
     \centering
@@ -380,7 +385,7 @@ Before introducing the following, we will first introduce the \textit{truncated 
 \begin{definition}[\textbf{Truncated sum for MDPs}]
 	Let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be a MDP, $s \in S$ be a state of $\mathcal{M}$, $T \subseteq S$ be a set of target states and
 	$\pi = s_0 \xrightarrow{\alpha_1} s_1 \xrightarrow{\alpha_2} s_2 \xrightarrow{\alpha_3} \dots \in Paths(s)$ be a path of
-	$\mathcal{M}$ starting in $s$. The truncated sum $TS^T : Paths(s)
+	$\mathcal{M}$ starting from $s$. The truncated sum $TS^T : Paths(s)
 	\rightarrow \mathbb{N} \cup {\infty}$ of the path $\pi$ is defined as follows :
 	\[
 		TS^T(\pi) =
@@ -399,8 +404,8 @@ The stochastic shortest path problem in a MDP can be approached in different
 ways. We will first approach the \textit{stochastic shortest path expectation} problem and
 then approach the \textit{stochastic shortest path percentile} problem. \\
 
-As the probability of paths induced by strategy is measurable and
-as the cost of theses paths is computable via the trunacted sum function, we can
+Since the probability of paths induced by strategy is measurable and
+since the cost of theses paths is computable via the trunacted sum function, we can
 compute the expected length of paths that reach a set of target states using a strategy and more particulary build the strategy that will minimise the expected length of these paths.
 
 \begin{definition}[\textbf{SSP-E problem}]
@@ -412,7 +417,7 @@ consists of deciding if a strategy $\sigma$ exists such that
   \mathbb{E}^\sigma_s(\Diamond T) \leq l
 \]
 % i.e., if there exists a strategy $\sigma$ such that the expected length of paths starting in the state $s$ in the MC induced by this strategy is lower than the length threshold $l$.
-where $\mathbb{E}_s^\sigma(\Diamond T)$ corresponds to the expected cost of paths starting in $s$ in the MC induced by $\sigma$.
+where $\mathbb{E}_s^\sigma(\Diamond T)$ corresponds to the expected cost of paths starting from $s$ in the MC induced by $\sigma$.
 \end{definition}
 
 \begin{theorem}
@@ -422,7 +427,7 @@ where $\mathbb{E}_s^\sigma(\Diamond T)$ corresponds to the expected cost of path
 Finally, the last problem that we will present in this chapter is the
 \textit{stochastic shortest path percentile} problem. For this problem, we will
 be interested to decide if there exists a strategy that allow to reach a set of target states with
-a cost bounded with above a high probability threshold.
+a cost bounded by a high probability threshold.
 
 \begin{definition}[\textbf{SSP-P problem}]
   Let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be a MDP, $s \in S$ be a state of
@@ -436,7 +441,7 @@ a cost bounded with above a high probability threshold.
 \end{definition}
 
 \begin{theorem}
-  The SSP-P problem can be decided in pseudo-polynomial time in the size of $\mathcal{M}$ and $l$ by building a pure finite memory strategy. This strategy is built by unfolding the MDP $\mathcal{M}$ from the state $s$ until $l$ and resoving the SR problem on this unfolded MDP.
+  The SSP-P problem can be decided in pseudo-polynomial time in the size of $\mathcal{M}$ and $l$ by building a pure finite memory strategy. This strategy is built by unfolding the MDP $\mathcal{M}$ from the state $s$ until $l$ and by resolving the SR problem on this unfolded MDP.
 \end{theorem}
 
 \begin{definition}[\textbf{Unfolded MDP until a bounded length}] Let
@@ -465,8 +470,8 @@ a cost bounded with above a high probability threshold.
   \item Target states are states of
   $T_l = \{(s, v) \;|\; s \in T \wedge v \leq l \}$.
   \end{itemize}
-  \textit{Note} : as all state $(s, v) \in S_l$ such that $v = \bot$ can never reach $T_l$, it is not useful to keep these states in the unfolded MDP $\mathcal{M}_l$. So, we can replace all these states in $S_l$ with a unique state $\bot$ such that, for all $(s, v) \in S_l$ such that $v \neq \bot$ and for all $\alpha \in A(s)$ such that $v + w(\alpha) > l$,
-  $\Delta_l((s, v), \alpha, \bot) = 1$.
+  \textit{Remark} : since all state $(s, v) \in S_l$ such that $v = \bot$ can never reach $T_l$, it is not useful to keep these states in the unfolded MDP $\mathcal{M}_l$. So, we can replace all these states in $S_l$ with a unique state $\bot$ such that, for all $(s, v) \in S_l$ such that $v \neq \bot$ and for all $\alpha \in A(s)$ such that $v + w(\alpha) > l$,
+  $\Delta_l((s, v), \alpha, \bot) = 1$. Then, we define a new action $\alpha_\bot \in A_l$ with an arbitrary weight that will allow a self-loop for $\bot$, i.e., $\Delta_l(\bot, \alpha_\bot, \bot)=1$.
 \end{definition}
 
 \begin{example}[\textit{Unfold a MDP}]
@@ -475,6 +480,8 @@ a cost bounded with above a high probability threshold.
   \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\linewidth]{resources/unfolding}
-    \caption{$\mathcal{M}$ unfolded from $s_0$ until $l=8$}\label{unfolding}
+    \caption{$\mathcal{M}$ unfolded from $s_0$ until $l=8$ for $\{s_1\}$}\label{unfolding}
   \end{figure}
+  The highlighted strategy in the figure \ref{unfolding} is the memoryless strategy that resolves the SR problem in $\mathcal{M}_l$. This strategy is the
+  same as the one that resolves the SSP-P problem in $\mathcal{M}$ and is thus finite memory in $\mathcal{M}$.
 \end{example}
