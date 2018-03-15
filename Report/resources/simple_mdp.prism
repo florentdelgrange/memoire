@@ -1,0 +1,21 @@
+mdp
+
+module simple_mdp
+
+s: [0..2] init 0;
+
+[beta] s=0 -> 0.5 : (s'=1) + 0.5 : (s'=2);
+[gamma] s=1 -> 1 : (s'=0);
+[alpha] s=2 -> 1 : (s'=2);
+[gamma] s=2 -> 1 : (s'=0);
+
+endmodule
+
+label "a" = s=0;
+label "b" = s=1;
+
+rewards "weights"
+  [alpha] true : 5;
+  [beta] true : 3;
+  [gamma] true : 2;
+endrewards

@@ -28,66 +28,118 @@ We will not dwell on continuous time models anymore and focus primarily on discr
 
 \section{Input formats}
 Storm supports various native input formats, including Prism, Jani, generalised stochastic Petri nets, dynamic fault trees, cpGCL and explicit format.
-We will introduce some of these input languages by presenting how to use them modelize our
+We will introduce some of these input languages by presenting how to use them to modelize our
 discrete time models.
 \subsection{Prism}
-The Prism language allows to deal with MCs, CMCs and MDPs in Storm.
+The Prism language \cite{prismsynt} allows to deal with MCs, CMCs and MDPs in Storm.
 It is a state-based language using reactive modules.
 We will not define the complete syntax and semantic of Prism but rather provide a way to
 define our MDPs using this language. Let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be a MDP such that the state space
 $S$ is finite, with $|S| = n$, and $i \in \{0, \dots, n-1\}$ such that $s_i \in S$ is the $i^{\text{th}}$ state of $S$ from which events that we are
 interested to measure start. \\
 
-In Prism, a \textit{module} represents a system. Thus, we just need a single module to
-define $\mathcal{M}$. A module allows to characterise $S$, $A$ and $\Delta$. We begin by enumerating states of $\mathcal{M}$ :
+In Prism language, a \textit{module} represents a component of the system.
+Depending on how our MDPs are defined, we just need a single module to
+represent them. A module allows to characterise $S$, $A$ and $\Delta$. We begin by enumerating states of $\mathcal{M}$ :
 \[
   s: [0\, ..\, n-1] \; \text{init} \; i;
 \]
 In this manner, we express that for all $j \in \{0, \dots, n-1\}$, $s_j \in S$
-is the $j^{\text{th}}$ state of $S$ and $s_i$ is the initial state from which events start. In prism, $s$ is considered as a \textit{variable} of the model.
-Since $s$ is a variable, it is possible to form predicates $\Phi$ with the following  syntax :
-\[ \Phi ::= true \; | \; s \varphi x \; | \; (\Phi_1) \& (\Phi_2) \; | \; (\Phi_1) || (\Phi_2) \]
-where $\varphi \in \{<, \leq, >, \geq, =, \neq\}$
-and $x \in \mathbb{N}$. Thus, we have that the predicate
+is the $j^{\text{th}}$ state of $S$ and $s_i$ is the initial state from which events start. In Prism language, $s$ is considered as a \textit{variable} of the module, ranging on states of $S$. Note that a variable represents a set of states of the MDP. Thus, it is possible that a module have more than one variable if the state space of the MDP is formed by more than one sates set.
+Thanks to variables of the system, it is possible to form predicates $\Phi$ with the following  syntax :
+\begin{align*}
+  \Phi &::= true \; | \; s \varphi x \; | \; (X) \; | \; (\Psi) \\
+  X &::= \Phi \; | \; \Phi \& X \\
+  \Psi &::= \Phi \; | \; \Phi || \Psi
+\end{align*}
+where $s$ is a variable of the module, $\varphi \in \{<, \leq, >, \geq, =, \neq\}$
+and $x \in \mathbb{N}$. Let $s_j \in S$ be the $j^\text{th}$ state of $S$. We have that $s_j \models \Phi$ iff $\Phi$ is true for the state $s_j$, i.e.,
 \begin{itemize}
-  \item $\Phi = true$ is true,
-  \item $\Phi = s \varphi x$ is true iff $s \in \{ s_k \in S \; | \; k \varphi x \}$,
-  \item $\Phi = (\Phi_1) \& (\Phi_2)$ is true iff
-    $\Phi_1$ and $\Phi_2$ are true and
-  \item $\Phi = (\Phi_1) || (\Phi_2)$ is true iff $\Phi_1$ is true or $\Phi_2$ is true
+  \item $s_j \models true$,
+  \item $s_j \models s \varphi x$ iff $s_j$ is a state represented by the variable $s$ and $j \varphi x$,
+  \item $s_j \models (\Phi_1 \& \dots \& \Phi_m)$ iff
+    for all $k \in \{1, \dots, m\}$, $s_j \models \Phi_k$, and
+  \item $s_j \models (\Phi_1 || \dots || \Phi_m)$ iff
+    there exists $k \in \{1, \dots, m\}$ such that $s \models \Phi_k$.
 \end{itemize}
-Otherwise, $\Phi$ is false. Variables also allow to generate subsets $\phi$ of $S$ with the following syntax :
-\[
-  \phi ::= s' \varphi x \; | \; s' \xi x \; | \; s'=\zeta(\phi_1, \phi_2)
-  \; | \; (\phi_1) \& (\phi_2)
-\]
-where $\varphi \in \{<, \leq, >, \geq, =, \neq\}$,
-$\xi \in \{+, -\}$, $\zeta \in \{\min, \max \}$ and $x \in \mathbb{N}$.
-Let assume that the system is currently in the $j^\text{th}$ state of $S$, i.e.,
-in the state $s_j$. The subsets formed by $\phi$ are defined as follows :
-\begin{itemize}
-  \item $\phi = s' \varphi x = \{ s_k \in S \; | \; k \varphi x \}$,
-  \item $\phi = s' \xi x = \{ s_k \in S \; | \; k = j \xi x \}$,
-  \item $\phi = \zeta(\phi_1, \phi_2) = $
-\end{itemize}
+We denote by $Sat(\Phi)$ the set of states that satisfies the predicate $\Phi$, i.e., $Sat(\Phi) = \{s \in S \; | \; s \models \Phi\}$. \\
 
-Then, transitions of $\mathcal{M}$ are described as follows :
+The behaviour of the module, i.e., transitions of $\{ (s, \alpha, s') \in S \times A \times S \; | \; \Delta(s, \alpha, s') > 0 \}$, is then described
+inside the module by a set of \textit{guarded commands}, taken the following form :
+\[
+  [\alpha] \; \Phi \rightarrow \delta_1 : \phi_1 + \dots + \delta_m : \phi_m;
+\]
+where $\Phi$ is a predicate such that for all $s \in Sat(\Phi)$, $\alpha \in A(s)$, $\delta_k \in [0, 1]$ and $\phi_k$ is an \textit{update formula} describing a state represented by a variable of the module. This guarded command basically means that all states that satisfy the predicate $\Phi$ go to the state  described by $\phi_k$ with a probability $\delta_k$, where the action $\alpha$ is chosen.
+An update formula $\phi$ is of the form :
+\[\phi::=(x'_1=u_1) \& (x'_2=u_2) \& \dots \& (x'_k=u_k)\]
+where $x_1, x_2, \dots, x_k$ are variables of the module and $u_1, u_2, \dots, u_k$ are expressions over all variables.
+% \begin{align*}
+%   \phi &::= (s'=\chi) \; | \; (s'= \mu(\chi, \chi)) \; | \; \psi \\
+%   \chi &::= s \varphi x \; | \; x \\
+%   \psi &::= \phi \; | \; \phi \& \psi
+% \end{align*}
+% where $s$ is a variable of the module,
+% $\varphi \in \{+, -\}$, $\mu \in \{\min, \max \}$ and $x \in \mathbb{N}$.
+% Let assume that the system is currently in the $j^\text{th}$ state of $S$, i.e.,
+% in the state $s_j$
+% %The expression $\chi$ actually represents the core of a variable update ; it represents the index of the state to which the system evolves.
+% %\begin{itemize}
+% %  \item $\chi = x$ directly refers to the index $x$ of the variable to update and
+% %  \item $\chi = s \varphi x$ refers to the current index of the variable $s$ on which the operation $\varphi x$ is applied (here, $j \varphi x$).
+% %\end{itemize}
+% and let $k \in \{0, \dots, n-1\}$. We have that $s_k \models \phi$ iff $\phi$ refers to the state $s_k$, i.e.,
+% \begin{itemize}
+%   \item $s_k \models s' = x$ iff $k = x$. Then the system go from $s_j$ to $s_x$.
+%   \item $s_k \models s' = s \varphi x$ iff $k$ is the current index of the variable $s$ on which the operation $\varphi$ has been applied. Here, we have $k = j \varphi x$. Thus the system go from $s_j$ to $s_{j+\varphi}$.
+% \end{itemize}
+More specifically, transitions of $\mathcal{M}$ can be described with the following guarded command :
 let $s_j$ be the $j^{\text{th}}$ state of $S$, for all enabled actions $\alpha \in A(s_j)$ of $s_j$,
 \[
   [\alpha] \; s=j \rightarrow \delta_0 : s'=j_0 + \dots + \delta_{m-1} :  s'=j_{m-1};
 \]
 where $s_{j_0}, \dots, s_{j_{m-1}}$ are $\alpha$-successors of $s_j$ and $\delta_k = \Delta(s_j, \alpha, s_{j_k})$,
-with  $m=|Succ(s_j,\alpha)|$, $k \in \{0, \dots, m-1\}$, $j_k \in \{0, \dots, n-1\}$ and $s_{j_k}$, the $k^\text{th}$ $\alpha$-successor of $s_j$ and the $j_k^\text{th}$ state of $S$.
+with  $m=|Succ(s_j,\alpha)|$, $k \in \{0, \dots, m-1\}$, $j_k \in \{0, \dots, n-1\}$ and $s_{j_k}$, the $k^\text{th}$ $\alpha$-successor of $s_j$ and the $j_k^\text{th}$ state of $S$. \\
 
-\subsubsection{Labels}
-The set of atomic propositions $AP$ and the labeling function $L$ of $\mathcal{M}$ are characterised in Prism as follows : for all $a \in AP$,
+The set of atomic propositions $AP$ and the labelling function $L$ of $\mathcal{M}$ are characterised in Prism language as follows : for all $a \in AP$,
 \[
-  \text{label} \; ``a" = (s=j_0\, \& \, \dots \, \& \, s=j_{m-1});
+  \text{label} \; ``a" = \Phi;
 \]
-where $S_a= \{s \in S \; | \; a \in L(s) \}$ and $s_{j_k} \in S_a$,
-with $m = |S_a|$, $k \in \{0, \dots, m-1\}$,
-$j_k \in \{ 0, \dots, n-1 \}$ and $s_{j_k}$, the $k^\text{th}$ state of $S_a$ and the $j_k^\text{th}$ state of $S$.
+such that the set of states that satisfy the predicate $\Phi$ is actually the set $\{ s \in S \; | \; a \in L(s) \}$. \\
 
-\subsubsection{Weights}
-Finally, the weight function $w$ can be characterised with the notion of \textit{rewards}. In Prism, it is possible to associate to each transition
-of the set $\rightarrow \; =  \{ (s, \alpha, s') \in S \times A \times S \; | \; \Delta(s, \alpha, s') > 0 \}$ a value in
+% \[
+%   \text{label} \; ``a" = (s=j_0\, \& \, \dots \, \& \, s=j_{m-1});
+% \]
+% where $S_a= \{s \in S \; | \; a \in L(s) \}$ and $s_{j_k} \in S_a$,
+% with $m = |S_a|$, $k \in \{0, \dots, m-1\}$,
+% $j_k \in \{ 0, \dots, n-1 \}$ and $s_{j_k}$, the $k^\text{th}$ state of $S_a$ and the $j_k^\text{th}$ state of $S$.
+%
+
+Finally, the weight function $w$ can be characterised with the notion of \textit{rewards}. In Prism language, it is possible to associate to each transition
+of the set $\{ (s, \alpha, s') \in S \times A \times S \; | \; \Delta(s, \alpha, s') > 0 \}$ a real value. In Prism language, a \textit{dimension rewards} is a set of rewards that take the following form:
+\[
+  [\alpha] \; \Phi : x;
+\]
+where $\alpha \in A$ is an action, $\Phi$ is a predicate and $x \in \mathbb{R}$
+is the value of the reward of going from a state $s \in S$, such that $\alpha \in A(s)$, to states of $Sat(\Phi)$. Note that if the action $\alpha$ is omitted (giving a reward of the form $[]\; \Phi : x^*;$), each transition $(s, \alpha, s') \in S\times A \times S$ such that $s \in Sat(\Phi)$ and $\alpha \in A(s)$
+has a reward of $x^*$. Note also that it is possible to specify multiple dimension rewards for a MDP. We will detail this notion later.
+We can adapt the reward notion to describe the weight function of our MDPs with a set of rewards formed as follows:
+let $\alpha \in A$ be an action of $\mathcal{M}$ and $x = w(\alpha)$, the reward $x$ formed by
+\[
+  [\alpha] \; true : x;
+\]
+is actually the cost of the action $\alpha$.
+
+\begin{example}[\textit{Describing a MDP in Prism language}]
+Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be the MDP of the figure \ref{prism-simple}. This MDP can be defined in Prism language as follows :\\
+\begin{minipage}{0.4\linewidth}
+  \lstinputlisting[language={Prism},
+      numbers=left,
+      rulesepcolor=\color{black}, rulecolor=\color{black}, breaklines=true,
+      breakatwhitespace=true, firstnumber=1, firstline=1, lastline=25]{resources/simple_mdp.prism}
+\end{minipage}
+\begin{minipage}{0.6\linewidth}
+    \includegraphics[width=\linewidth]{resources/simple-mdp}
+    \captionsetup{justification=centering}
+    \captionof{figure}{MDP $\mathcal{M}$, with $S = \{s_0, s_1, s_2\}$, $A = \{\alpha, \beta, \gamma\}$ and $AP = \{a, b\}$}\label{prism-simple}
+\end{minipage}
+\end{example}
