@@ -45,7 +45,7 @@ represent them. A module allows to characterise $S$, $A$ and $\Delta$. We begin 
   s: [0\, ..\, n-1] \; \text{init} \; i;
 \]
 In this manner, we express that for all $j \in \{0, \dots, n-1\}$, $s_j \in S$
-is the $j^{\text{th}}$ state of $S$ and $s_i$ is the initial state from which events start. In Prism language, $s$ is considered as a \textit{variable} of the module, ranging on states of $S$. Note that a variable represents a set of states of the MDP. Thus, it is possible that a module have more than one variable if the state space of the MDP is formed by more than one sates set.
+is the $j^{\text{th}}$ state of $S$ and $s_i$ is the initial state from which events start. In Prism language, $s$ is considered as a \textit{variable} of the module, ranging on states of $\mathcal{M}$. Note that a variable represents a set of states of the MDP. Thus, it is possible that a module have more than one variable if the state space of the MDP is formed by more than one sates set.
 Thanks to variables of the system, it is possible to form predicates $\Phi$ with the following  syntax :
 \begin{align*}
   \Phi &::= true \; | \; s \varphi x \; | \; (X) \; | \; (\Psi) \\
@@ -53,13 +53,13 @@ Thanks to variables of the system, it is possible to form predicates $\Phi$ with
   \Psi &::= \Phi \; | \; \Phi || \Psi
 \end{align*}
 where $s$ is a variable of the module, $\varphi \in \{<, \leq, >, \geq, =, \neq\}$
-and $x \in \mathbb{N}$. Let $s_j \in S$ be the $j^\text{th}$ state of $S$. We have that $s_j \models \Phi$ iff $\Phi$ is true for the state $s_j$, i.e.,
+and $x \in \mathbb{N}$. Let $s^* \in S$ be a state of $\mathcal{M}$. We have that $s^* \models \Phi$ iff $\Phi$ is true for the state $s^*$, i.e.,
 \begin{itemize}
-  \item $s_j \models true$,
-  \item $s_j \models s \varphi x$ iff $s_j$ is a state represented by the variable $s$ and $j \varphi x$,
-  \item $s_j \models (\Phi_1 \& \dots \& \Phi_m)$ iff
+  \item $s^* \models true$,
+  \item $s^* \models s \varphi x$ iff there exists a $j \in \mathbb{N}$ in the range of indices of the module variable $s$ by which the state $s^*$ is represented (i.e., $s^*$ is represented by $s=j$) such that $j \varphi x$.
+  \item $s^* \models (\Phi_1 \& \dots \& \Phi_m)$ iff
     for all $k \in \{1, \dots, m\}$, $s_j \models \Phi_k$, and
-  \item $s_j \models (\Phi_1 || \dots || \Phi_m)$ iff
+  \item $s^* \models (\Phi_1 || \dots || \Phi_m)$ iff
     there exists $k \in \{1, \dots, m\}$ such that $s \models \Phi_k$.
 \end{itemize}
 We denote by $Sat(\Phi)$ the set of states that satisfies the predicate $\Phi$, i.e., $Sat(\Phi) = \{s \in S \; | \; s \models \Phi\}$. \\
@@ -129,11 +129,10 @@ let $\alpha \in A$ be an action of $\mathcal{M}$ and $x = w(\alpha)$, the reward
 \]
 is actually the cost of the action $\alpha$.
 
-\begin{example}[\textit{Describing a MDP in Prism language}]
-Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be the MDP of the figure \ref{prism-simple}. This MDP can be defined in Prism language as follows :\\
+\begin{example}[\textit{Define an MDP in Prism language}]
+Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be the MDP of the figure \ref{prism-simple}. This MDP can be defined in Prism language as follows:\\
 \begin{minipage}{0.4\linewidth}
   \lstinputlisting[language={Prism},
-      numbers=left,
       rulesepcolor=\color{black}, rulecolor=\color{black}, breaklines=true,
       breakatwhitespace=true, firstnumber=1, firstline=1, lastline=25]{resources/simple_mdp.prism}
 \end{minipage}
@@ -143,3 +142,15 @@ Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be the MDP of the figure \ref{prism-s
     \captionof{figure}{MDP $\mathcal{M}$, with $S = \{s_0, s_1, s_2\}$, $A = \{\alpha, \beta, \gamma\}$ and $AP = \{a, b\}$}\label{prism-simple}
 \end{minipage}
 \end{example}
+
+\begin{example}[\textit{Unfold an MDP in Prism language}]
+Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be the MDP of the figure \ref{prism-simple}, $s \in S$ be a state of $\mathcal{M}$ and $l \in \mathbb{N}$
+be a length threshold such that $l=8$. We can define the unfolding of $\mathcal{M}$ until $l$ for the set of target states $T = \{s_1\}$ (cf. figure \ref{unfolding}) in Prism language as follows:
+\lstinputlisting[language={Prism},
+    rulesepcolor=\color{black}, rulecolor=\color{black}, breaklines=true,
+    breakatwhitespace=true, firstnumber=1, firstline=1, lastline=25]{resources/unfolded_simple_mdp.prism}
+\end{example}
+Since the state space of the unfolded MDP $\mathcal{M}_l$ is a Cartesian product between the state space $S$ of $\mathcal{M}$ and the set $V = \{0, \dots, l, \bot\} \subseteq \mathbb{N} \cup \{\bot\}$, we can define the variables of the unfolded MDP $\mathcal{M}_l$ with the variables of the MDP and a new variable $v$, ranging from $0$ to $l+1$ (where the $(l+1)^\text{th}$ state actually represents the $\bot$ value). The guarded
+commands of the module are obviously defined, following the definition of the
+probability transition function $\Delta_l$ of any unfolded MDP. Finally, a label $target$ is added,
+labelling each state of the set $T_l = \{ (t, v) \in S \times V \; | \; t \in T \; \wedge \; v \leq l \}$.
