@@ -19,17 +19,17 @@ That yields that the evolution of a Markov Chain, i.e., to go from a state to an
 		\item $\Delta: S \times S \rightarrow [0,1] \cap \mathbb{Q}$ is a  \textit{transition function} such that \[\forall s \in S, \sum_{s' \in S}\Delta(s, s')= 1\]
 		%\item $d_0:S \rightarrow [0,1]$ est la distribution initiale telle que \[\sum_{s \in S}d_0(s)= 1\] (à noter que dans le cadre de ce document, la distribution initiale peut être omise, et dans ce cas, $\forall s \in S, d_0(s) = \frac{1}{|S|}$).
 		where $\Delta(s, s')$ describes the probability that the system goes from state $s$ to state $s'$ in one transition,
-    \item $w : S \times S \rightarrow \mathbb{N}_0$ %est la fonction
+    \item $w: S \times S \rightarrow \mathbb{N}_0$ %est la fonction
         %de poids associant à chaque transition un coût strictement positif.
       is a weight function that links a strictly positive cost to each transition,
     \item $AP$ is a set of atomic propositions, and
-    \item $L : S \rightarrow 2^{AP}$ is a labeling function.
+    \item $L: S \rightarrow 2^{AP}$ is a labeling function.
 	\end{itemize}
   \textit{Remark }: $AP$ and $L$ can be ommited. In that case, we consider that $AP = S$ and $L$ is the natural labeling of each state, i.e., for all $s \in S$, $L(s) = \{s\}$
 \end{definition}
 
 \begin{property}
-  Let $\mathcal{M} = (S, \Delta, w, AP, L)$ be a MC and $s \in S$ be a state of $\mathcal{M}$. The transition function $\Delta$ defines a probability distribution $\Delta_s : S \rightarrow \mathcal{D}(S), \, s' \mapsto \Delta(s, s')$ on $S$.
+  Let $\mathcal{M} = (S, \Delta, w, AP, L)$ be a MC and $s \in S$ be a state of $\mathcal{M}$. The transition function $\Delta$ defines a probability distribution $\Delta_s: S \rightarrow \mathcal{D}(S), \, s' \mapsto \Delta(s, s')$ on $S$.
 \end{property}
 
 We can represent a MC $\mathcal{M} = (S, \Delta, w, AP, L)$ with a directed graph, where vertices represent the states
@@ -38,16 +38,21 @@ We name this graph the \textit{underlying graph of} $\mathcal{M}$.
 Additionally, the labels of each
 state can be represented next to it.
 
-\begin{example}[\textit{Production of solar pannels according to weather}]\label{solar-pannel}
-  Let $\mathcal{M}_{sp} = (S, \Delta, w, AP, L)$ be the MC of the figure \ref{MCexample}. This system modelises the production of eneregy (in $kJ$) of
-  an installation of solar pannels according to weather.
+\begin{notation}[\textit{Size of a MC}]
+  A MC $\mathcal{M}=(S, \Delta, w, AP, L)$ is called \textit{finite} if its state space $S$ is finite. The size of $\mathcal{M}$ corresponds to the size of the set
+  $\{(s, s') \in S^2 \; | \; \Delta(s, s') > 0 \}$, i.e., the number of edges in the underlying graph of $\mathcal{M}$.
+\end{notation}
+
+\begin{example}[\textit{Production of solar panels according to weather}]\label{solar-panel}
+  Let $\mathcal{M}_{sp} = (S, \Delta, w, AP, L)$ be the MC of the figure \ref{MCexample}. This system modelises the production of energy (in $kJ$) of
+  an installation of solar panels according to weather.
   Here, the states are elements of $S = \{s_0, s_1, s_2, s_3\}$ and the atomic propositions are elements of $AP = \{sunny, \, slightly\_cloudy, \, moderately\_cloudy, \, cloudy \}$. The transition function is given by edges on the figure (e.g., $\Delta(s_0, s_1) = \frac{1}{5}$) as well as the
   cost of each transition (e.g., $w(s_0, s_1) = 5$). finally, labels of states
   are put next each of them in orange in the figure (e.g., $L(s_0) = \{sunny\}$).
   \begin{figure}[h!]
     \centering
     \includegraphics[width=0.6\linewidth]{resources/weather-solar-pannel}
-    \caption{MC modeling a daily production of energy (in $kJ$) of solar pannels according to weather}
+    \caption{MC modeling a daily production of energy (in $kJ$) of solar panels according to weather}
     \label{MCexample}
   \end{figure}
   The way $w$ is defined for this MC yields that when a day is sunny, the installation produces $5 kJ$ during this day, $3 kJ$ when a day is slightly cloudy, $2 kJ$ when a day is moderately cloudy and finally $1 kJ$ when the day is cloudy.
@@ -89,8 +94,8 @@ We can express all events with this formulation. For example, the event that con
 Any event defined using complementation or countable union of cylinder sets are also measurable.
 \end{corollary}
 
-\begin{example}[\textit{Probability of paths in a MC modeling a solar pannel system}]
-  Let $\mathcal{M}_{sp} = (S, \Delta, w, AP, L)$ be the MC of the example \ref{solar-pannel}. The probability of sunny weather four days in a row starting on a sunny day is given
+\begin{example}[\textit{Probability of paths in a MC modeling a solar panel system}]
+  Let $\mathcal{M}_{sp} = (S, \Delta, w, AP, L)$ be the MC of the example \ref{solar-panel}. The probability of sunny weather four days in a row starting on a sunny day is given
   by $\mathbb{P}_{s_0}(Cyl(s_0s_0s_0s_0)) = (\frac{1}{2})^3 = \frac{1}{8}$
 \end{example}
 
@@ -103,7 +108,7 @@ of completing an objective in a MC. The first one that we will tackle is the rea
   Let $\mathcal{M} = (S, \Delta, w, AP, L)$ be a MC and $T \subseteq S$ be a set of target states. The event of reaching $T$, denoted by $\Diamond T$,
   is defined as a finite union of cylinder sets. Indeed, let $s \in S$ be a state of $\mathcal{M}$ and $Paths_{fin}^T(s)$ be the set of finite paths $\hat{\pi} = s_0 \dots s_n \in Paths_{fin}(s)$, such that for all $i \in \{0, \dots, n-1 \}, \, s_i \not \in T$ and $s_n \in T$,
   \[ \Diamond T = \bigcup_{s_0 \dots s_n \in Paths_{fin}^T(s)} Cyl(s_0 \dots s_n) \]
-  As all cylinders of the set $Paths_{fin}^T(s)$ are disjoint (their prefixes are different), we can measure the probability of $\Diamond T$ with :
+  As all cylinders of the set $Paths_{fin}^T(s)$ are disjoint (their prefixes are different), we can measure the probability of $\Diamond T$ with:
   \[
     \mathbb{P}_s(\Diamond T) = \sum_{s_0 \dots s_n \in Paths_{fin}^T(s)}  \mathbb{P}_s(Cyl(s_0 \dots s_n))
   \]
@@ -112,11 +117,11 @@ It remains to compute this probability.
 
 \begin{theorem}
 Computing $\mathbb{P}_s(\Diamond T)$ for all $s \in S$ can be done in polynomial
-time through a linear equations system (cf. appendix for more details).
+time through a linear equations system (cf. appendix \ref{app-reach} for more details).
 \end{theorem}
 
-% \begin{example}[\textit{Reachability property in a MC modeling a solar pannel system}]
-%   Let $\mathcal{M}_{sp}$ be the MC modeling the system of the example \ref{solar-pannel}.
+% \begin{example}[\textit{Reachability property in a MC modeling a solar panel system}]
+%   Let $\mathcal{M}_{sp}$ be the MC modeling the system of the example \ref{solar-panel}.
 %    The probability that a cloudy day eventually comes, starting on a sunndy day, is one, i.e., $\mathbb{P}_{s_0}(\Diamond \{s_3\}) = 1$. Indeed, the underlying graph of $\mathcal{M}_{sp}$ is strongly connected, so reaching any state starting from any state has always a probability $1$.
 % \end{example}
 
@@ -126,7 +131,7 @@ are interrested by the cost of paths to reach $T$. To compute this cost, we use 
 \begin{definition}[\textbf{Truncated sum}]
   Let $\mathcal{M}=(S, \Delta, w, AP, L)$ be a MC, $s \in S$ be a state of $\mathcal{M}$, $\pi = s_0s_1s_2\dots \in Paths(s)$ be a path of $\mathcal{M}$ and $T \subseteq S$ be a set of target states.
   The trunacted sum of $\pi$ is the cost to reach $T$ through $\pi$
-  for the first time. More formally, the function $TS^T : Paths(s) \rightarrow \mathbb{N} \cup \{\infty\}$ is defined as follows :
+  for the first time. More formally, the function $TS^T: Paths(s) \rightarrow \mathbb{N} \cup \{\infty\}$ is defined as follows:
 	\[
 		TS^T(\pi) =
 		\begin{cases}
@@ -140,11 +145,11 @@ expected cost of paths of a MC to reach a set of targets as well as
 the probability of reaching this target set with a cost bounded.
 
 \begin{definition}[\textbf{Expected cost of paths of a MC for reachablity properties}]
-	Let $\mathcal{M} = (S, \Delta, w, AP, L)$ be a MC, $s \in S$ be a state of $\mathcal{M}$ and $T \subseteq S$ be a set of target states. We define the expected cost to reach $T$, i.e., $\mathbb{E}_s(\Diamond T)$, corresponding to \textit{the expected truncated sum of paths from $s$ to reach $T$} as follows :
+	Let $\mathcal{M} = (S, \Delta, w, AP, L)$ be a MC, $s \in S$ be a state of $\mathcal{M}$ and $T \subseteq S$ be a set of target states. We define the expected cost to reach $T$, i.e., $\mathbb{E}_s(\Diamond T)$, corresponding to \textit{the expected truncated sum of paths from $s$ to reach $T$} as follows:
 	\begin{itemize}
 	\renewcommand{\labelitemi}{\tiny$\bullet$}
 	\item If $\mathbb{P}_s(\Diamond T) < 1$, then $\mathbb{E}_s(\Diamond T) = \infty$.%(par la propriété \ref{prop-ts}).
-	\item Else, if $\mathbb{P}_s(\Diamond T) = 1$, then :
+	\item Else, if $\mathbb{P}_s(\Diamond T) = 1$, then:
 	\[
     \mathbb{E}_s(\Diamond T) = \sum_{c = 0}^\infty c \cdot \mathbb{P}_s(\{\pi \in Paths(s) \; | \; TS^T(\pi) = c \})
   \]
@@ -158,14 +163,14 @@ An equivalent characterisation of the expected cost from $s \in S$ to $T$ in cas
 with $Paths^T_{fin}(s)$, the set of finite paths $\hat{\pi} = s_0 \dots s_n \in Paths_{fin}(s)$  such that for all $i \in \{0, \dots, n-1\}, s_i \not \in T$ and $s_n \in T$. As we can measure the probability of cylinder sets of finite paths of $\hat{\pi} \in Paths_{fin}^T(s)$, we can compute $\mathbb{E}_s(\Diamond T)$.
 
 \begin{theorem}
-  Computing $\mathbb{E}_s(\Diamond T)$ for all $s \in S$ can be done in polynomial time through a linear equations system (cf. appendix for more details).
+  Computing $\mathbb{E}_s(\Diamond T)$ for all $s \in S$ can be done in polynomial time through a linear equations system (cf. appendix \ref{app-expMC} for more details).
 \end{theorem}
 
 The last concept that we will define in MCs is the cost bounded reachability.
 
 \begin{definition}[\textbf{Cost bounded reachability probability}]
 	Let $\mathcal{M} = (S, \Delta, w, AP, L)$ be a MC, $s \in S$ be a state of $\mathcal{M}$, $T \subseteq S$ be a set of target states and $l \in \mathbb{N}$, a length threshold.
-  The \textit{probability to reach $T$ from $s$ with a cost bounded} by the threshold $l$ is defined as follows :
+  The \textit{probability to reach $T$ from $s$ with a cost bounded} by the threshold $l$ is defined as follows:
 	\[
     \mathbb{P}_s(\Diamond_{\leq l} T) = \mathbb{P}_s(\{\pi \in Paths(s) \; | \; TS^T(\pi) \leq l \})
   \]
@@ -179,7 +184,7 @@ in the unfolded MC until $l$.
 Intuitively, we unfold $\mathcal{M}$ by recording in each state the cost of
 current paths. The new set of target states in the unfolded MC is the set of
 target states in $\mathcal{M}$ that have a current cost less than $l$ (cf.
-appendix for more details). Finnaly, it remains to compute the probability to
+appendix \ref{app-cbrMC} for more details). Finally, it remains to compute the probability to
 reach these new target states in the unfolded MC. \\
 
 Now, we can define what is a Markov decision process and introduce the concept of strategy that is the pillar concept of resolving objective problems in such models.
@@ -200,17 +205,17 @@ Markov decision processes are systems that modelise situations describing both n
 		\end{flalign*}
 
 			where $\Delta(s, \alpha, s')$ defines the probability of going from $s$ to $s'$ in one transition when the action $\alpha \in A(s)$ is chosen,
-    \item $w : A \rightarrow \mathbb{N}_0$ %est la fonction
+    \item $w: A \rightarrow \mathbb{N}_0$ %est la fonction
         %de poids associant à chaque transition un coût strictement positif.
       is a weight function that links a strictly positive cost to each action,
     \item $AP$ is a set of atomic propositions, and
-    \item $L : S \rightarrow 2^{AP}$ is a labeling function.
+    \item $L: S \rightarrow 2^{AP}$ is a labeling function.
 	\end{itemize}
-  \textit{Remark : }again, $AP$ and $L$ can be ommited. In that case, we consider that $AP=S$ and $L$ is the natural labeling of each state, i.e., for all state $s \in S$, $L(s) = \{s\}$.
+  \textit{Remark: }again, $AP$ and $L$ can be ommited. In that case, we consider that $AP=S$ and $L$ is the natural labeling of each state, i.e., for all state $s \in S$, $L(s) = \{s\}$.
 \end{definition}
 
 \begin{property}
-  Let $\mathcal{M} = (S,A, \Delta, w, AP, L)$ be a MDP, $s \in S$ be a state of $\mathcal{M}$ and $\alpha \in A(s)$ be an enabled action of the state $s$. The transition function $\Delta$ defines a probability distribution $\Delta_{s, \alpha} : S \rightarrow \mathcal{D}(S), \, s' \mapsto \Delta(s, \alpha, s')$ on $S$.
+  Let $\mathcal{M} = (S,A, \Delta, w, AP, L)$ be a MDP, $s \in S$ be a state of $\mathcal{M}$ and $\alpha \in A(s)$ be an enabled action of the state $s$. The transition function $\Delta$ defines a probability distribution $\Delta_{s, \alpha}: S \rightarrow \mathcal{D}(S), \, s' \mapsto \Delta(s, \alpha, s')$ on $S$.
 \end{property}
 \begin{property}
   A MC is essentially a MDP where, for each state $s$, $|A(s)| = 1$.
@@ -230,13 +235,18 @@ We will now introduce some useful notations.
 
 %The underlying graph of a MDP $\mathcal{M}$ is a directed graph where vertices are states of $\mathcal{M}$ and each edge starting from a state $s$ to one of its successor $s'$ exists if and only if there exists an enabled action $\alpha$
 %of $s$ such that $\Delta(s, \alpha, s') > 0$. For the other elements of the tuple defining $\mathcal{M}$, the graph is essentially caracterised the same way as for a MC.
-We can represent a MDP with its underlying directed graph, the same way as for a MC, with the exception that each vertice representing a state $s$ has outgoing edges to the intermediate vertices representing enabled actions of $s$ and, for each enabled action $\alpha$ of $s$, edges go from the vertice reprensenting $\alpha$ to the vertices representing $\alpha$-successors of $s$.
+We can represent a MDP with its underlying directed graph, the same way as for a MC, with the exception that each vertex representing a state $s$ has outgoing edges to intermediate vertices representing enabled actions of $s$ and, for each enabled action $\alpha$ of $s$, edges go from the vertex representing $\alpha$ to the vertices representing $\alpha$-successors of $s$.
+
+\begin{notation}[\textit{Size of a MDP}]
+  A MDP $\mathcal{M}=(S, A, \Delta, w, AP, L)$ is called \textit{finite} if its states space $S$ is finite. The size of $\mathcal{M}$ corresponds to the size
+  of the set $\{(s, \alpha, s') \in S \times A \times S \; | \; \Delta(s, \alpha, s') > 0 \}$, i.e., the number of outgoing edges of vertices representing actions in the underlying graph of $\mathcal{M}$.
+\end{notation}
 
 \begin{example}\label{simple-mdp}
   Let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be the MDP of the figure \ref{mdp01}. We have that $S = \{s_0, s_1, s_2\}$, $A = \{\alpha, \beta, \gamma\}$ and $AP=\{a, b\}$. If the system currently is in state $s_0$, labeled with $L(s_0) = \{a\}$, the only action available is $\beta$ (because $A(s_0) = \{\beta\}$).
   The cost of choosing $\beta$ is $w(\beta) = 3$.
-  So, the system evolves following the probability distribution defined by $\Delta_{s_0, \beta}$ : it has a probability of $\frac{1}{2}$
-  to go to its $\beta$-successor $s_1$ and a same probability to go to its $\beta$-successor $s_2$. Let assume that the system evolves to the state $s_2$, a state with no label ($L(s_2) = \emptyset$). So, in that case, the system has two possible decisions : $\alpha$ or $\gamma$ (because $A(s_2) = \{\alpha, \gamma\}$). If $\alpha$ is chosen, the system returns to $s_2$ with a probability one and a cost of $w(\alpha) = 5$. Else, if $\gamma$ is chosen, the system goes to $s_0$ with a probability one and a cost of $w(\gamma) = 2$.
+  So, the system evolves following the probability distribution defined by $\Delta_{s_0, \beta}$: it has a probability of $\frac{1}{2}$
+  to go to its $\beta$-successor $s_1$ and a same probability to go to its $\beta$-successor $s_2$. Let assume that the system evolves to the state $s_2$, a state with no label ($L(s_2) = \emptyset$). So, in that case, the system has two possible decisions: $\alpha$ or $\gamma$ (because $A(s_2) = \{\alpha, \gamma\}$). If $\alpha$ is chosen, the system returns to $s_2$ with a probability one and a cost of $w(\alpha) = 5$. Else, if $\gamma$ is chosen, the system goes to $s_0$ with a probability one and a cost of $w(\gamma) = 2$.
   \begin{figure}[h!]
     \centering
     \includegraphics[width=0.7\linewidth]{resources/simple-mdp}
@@ -268,7 +278,7 @@ These notions allow to introduce strategies in MDPs.
 \begin{definition}[\textbf{Pure strategy}]
 Let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be a MDP. A \textit{strategy} (also named \textit{policy} or \textit{scheduler} in literature) for $\mathcal{M}$
 	is a function
-	$\sigma : \mathcal{H}(S) \rightarrow A$
+	$\sigma: \mathcal{H}(S) \rightarrow A$
 	that selects, for a given history $h = (s_0 \dots s_n) \in \mathcal{H}(S)$, an enabled action of $s_n$, i.e., $\sigma(s_0 \dots s_n) = \alpha \in A(s_n)$.
 	The path $\pi = s_0 \xrightarrow{\alpha_1} s_1 \xrightarrow{\alpha_2} s_2 \xrightarrow{\alpha_3} \dots$
 	is a $\sigma$-path iff $\alpha_i = \sigma(s_0 \dots s_{i-1})$
@@ -309,9 +319,9 @@ Let $\mathcal{M} = (S, A, \Delta, AP, L)$ be a MDP.
 A \textit{finite memory strategy} $\sigma = (Q, \sigma_\alpha, \delta, \delta_0)$ is a \textit{Moore machine} where
 \begin{itemize}
 	\item $Q$ is a finite set of \textit{modes},
-	\item $\sigma_\alpha : Q \times S \rightarrow A$ is a function that that choose, for any $s \in S$, an action $\alpha \in A(s)$ following a mode $q \in Q$ in which the machine currently is,
+	\item $\sigma_\alpha: Q \times S \rightarrow A$ is a function that that choose, for any $s \in S$, an action $\alpha \in A(s)$ following a mode $q \in Q$ in which the machine currently is,
 	\item $\delta: Q \times S \rightarrow Q$ is the transition function,
-	\item $\delta_0 : S \rightarrow Q$ is the function that chooses the initial mode of the machine following a state $s \in S$ of the MDP from which the machine is initialised.
+	\item $\delta_0: S \rightarrow Q$ is the function that chooses the initial mode of the machine following a state $s \in S$ of the MDP from which the machine is initialised.
 \end{itemize}
 \end{definition}
 
@@ -377,7 +387,7 @@ The resolution of problems in MDPs will be done through strategies that will cho
 
 \begin{theorem}
   The SR-problem can be decided in polynomial time in the size of $\mathcal{M}$
-  through a linear program, by building a pure memoryless strategy that gives the optimal actions to reach $T$ from every state $s \in S$ (cf. appendix for more details).
+  through a linear program, by building a pure memoryless strategy that gives the optimal actions to reach $T$ from every state $s \in S$ (cf. appendix \ref{app-sr} for more details).
 \end{theorem}
 
 Before introducing the following, we will first introduce the \textit{truncated sum} of paths of MDPs in order to compute the cost of paths of a MDP.
@@ -385,8 +395,8 @@ Before introducing the following, we will first introduce the \textit{truncated 
 \begin{definition}[\textbf{Truncated sum for MDPs}]
 	Let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be a MDP, $s \in S$ be a state of $\mathcal{M}$, $T \subseteq S$ be a set of target states and
 	$\pi = s_0 \xrightarrow{\alpha_1} s_1 \xrightarrow{\alpha_2} s_2 \xrightarrow{\alpha_3} \dots \in Paths(s)$ be a path of
-	$\mathcal{M}$ starting from $s$. The truncated sum $TS^T : Paths(s)
-	\rightarrow \mathbb{N} \cup {\infty}$ of the path $\pi$ is defined as follows :
+	$\mathcal{M}$ starting from $s$. The truncated sum $TS^T: Paths(s)
+	\rightarrow \mathbb{N} \cup {\infty}$ of the path $\pi$ is defined as follows:
 	\[
 		TS^T(\pi) =
 		\begin{cases}
@@ -421,7 +431,7 @@ where $\mathbb{E}_s^\sigma(\Diamond T)$ corresponds to the expected cost of path
 \end{definition}
 
 \begin{theorem}
-  The SSP-E problem can be decided in polynomial time in the size of $\mathcal{M}$, through a linear program by building a pure memoryless strategy that gives the optimal actions to minimise the expected cost of paths to reach $T$ from every state $s \in S$ (cf. appendix for more details).
+  The SSP-E problem can be decided in polynomial time in the size of $\mathcal{M}$, through a linear program by building a pure memoryless strategy that gives the optimal actions to minimise the expected cost of paths to reach $T$ from every state $s \in S$ (cf. appendix \ref{app-sspe} for more details).
 \end{theorem}
 
 Finally, the last problem that we will present in this chapter is the
@@ -447,7 +457,7 @@ a cost bounded by a high probability threshold.
 \begin{definition}[\textbf{Unfolded MDP until a bounded length}] Let
   $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be a MDP, $s^* \in S$ be a state of
   $\mathcal{M}$, $T \subseteq S$ be a set of target states of $\mathcal{M}$ and $l \in \mathbb{N}$ be a paths length threshold.
-  Unfolding $\mathcal{M}$ from $s^*$ until $l$ can be done as follows : \\
+  Unfolding $\mathcal{M}$ from $s^*$ until $l$ can be done as follows: \\
   We build $\mathcal{M}_l = (S_l, A_l, \Delta_l, w, AP, L_l)$ for the subset $T_l \subseteq S_l$ where
   \begin{itemize}
   \item $S_l$ is composed of states $(s, v)$ where $s \in S$ et $v \in \{0, \dots, l\} \cup \{\bot\}$.
@@ -456,7 +466,7 @@ a cost bounded by a high probability threshold.
   As we unfold $\mathcal{M}$ from $s^*$, we have that
   $(s, 0) \not \in S_l$ for all $s \in S$ such that $s \neq s^*$.
   \item For each $\alpha \in A$, we have that $\alpha \in A_l$ and for all $(s, v) \in S_l$, $A_l(s, v) = A(s)$.
-  \item $\Delta_l : S_l \times S_l \rightarrow [0, 1]$ is the probability transition function given by :\\
+  \item $\Delta_l: S_l \times S_l \rightarrow [0, 1]$ is the probability transition function given by:\\
   $\text{Forall } (s, v), (s', v') \in S_l \text{ and for all } \alpha \in A(s),$
   \[
   \Delta_l((s, v), \alpha, (s', v')) =
@@ -470,7 +480,7 @@ a cost bounded by a high probability threshold.
   \item Target states are states of
   $T_l = \{(s, v) \;|\; s \in T \wedge v \leq l \}$.
   \end{itemize}
-  \textit{Remark} : since all state $(s, v) \in S_l$ such that $v = \bot$ can never reach $T_l$, it is not useful to keep these states in the unfolded MDP $\mathcal{M}_l$. So, we can replace all these states in $S_l$ with a unique state $\bot$ such that, for all $(s, v) \in S_l$ such that $v \neq \bot$ and for all $\alpha \in A(s)$ such that $v + w(\alpha) > l$,
+  \textit{Remark}: since all state $(s, v) \in S_l$ such that $v = \bot$ can never reach $T_l$, it is not useful to keep these states in the unfolded MDP $\mathcal{M}_l$. So, we can replace all these states in $S_l$ with a unique state $\bot$ such that, for all $(s, v) \in S_l$ such that $v \neq \bot$ and for all $\alpha \in A(s)$ such that $v + w(\alpha) > l$,
   $\Delta_l((s, v), \alpha, \bot) = 1$. Then, we define a new action $\alpha_\bot \in A_l$ with an arbitrary weight that will allow a self-loop for $\bot$, i.e., $\Delta_l(\bot, \alpha_\bot, \bot)=1$.
 \end{definition}
 

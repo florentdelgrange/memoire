@@ -1,5 +1,5 @@
 \chapter{Storm overview}
-\textit{This chapter is based on the article named ``A Storm is coming : a modern probabilistic model checker'' \cite{storm1} and on the documentation of the tool.} \\
+\textit{This chapter is based on the article named ``A Storm is coming: a modern probabilistic model checker'' \cite{storm1} and on the documentation of the tool.} \\
 
 Storm is a probabilistic model checker recently released. It is able to analyse
 four Markov models, featuring discrete-time Markov chains and Markov decision processes. The main aim of this tool is to be competitive in terms of performances, to be updated with new verification algorithms, to be able to
@@ -11,18 +11,16 @@ for multi-objective problems.
 As mentioned above, Storm allows to model-check four types of Markov models.
 The first family of models contains discrete-time Markov models that are covered in the first chapter, composed by
 discrete time Markov chains and Markov decision processes.
-The second family of models contains continuous-time Markov models, composed by continuous time Markov chains and Markov automata.
-\subsubsection*{Continuous time Markov chains (CMC)}
-These models are similar to discrete time Markov chains but each state $s$ is
+The second family of models contains continuous-time Markov models, composed by continuous time Markov chains and Markov automata. \\
+
+Continuous time Markov chains models (CTMC) \cite{maro} are similar to discrete time Markov chains, but each state $s$ is
 characterised by an exit rate $\lambda_s$.
 The time $t$ spent in each state $s$ of the system is negatively exponentially distributed with this rate, i.e., $e^{- \lambda_s t}$.
 This exit rate and a probability transition function allow to induce a generator
 function with which it is possible to compute the probability
 %to go from one state to another after a certain time.
 that the system is currently in a state $s'$ while the system was in the state $s$, $t$ time units ago. Note that there is no more ``step'' notion in continuous
-Markov model types.
-\subsubsection*{Markov automata (MA)}
-This is a continuous nondeterministic Markov model. The key idea is the same that between MCs and MDPs in discrete time. \\
+Markov model types. Furthermore, a Markov automata (MA) is a continuous nondeterministic Markov model. The key idea is the same that between MCs and MDPs in discrete time. \\
 
 We will not dwell on continuous time models anymore and focus primarily on discrete time models.
 
@@ -34,45 +32,45 @@ discrete time models.
 The Prism language \cite{prismsynt} allows to deal with MCs, CMCs and MDPs in Storm.
 It is a state-based language using reactive modules.
 We will not define the complete syntax and semantic of Prism but rather provide a way to
-define our MDPs using this language. Let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be a MDP such that the state space
-$S$ is finite, with $|S| = n$, and $i \in \{0, \dots, n-1\}$ such that $s_i \in S$ is the $i^{\text{th}}$ state of $S$ from which events that we are
-interested to measure start. \\
+define our MDPs using this language.
+Let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be a finite MDP, with $|S| = n$ and $s_i \in S$ be the $i^{\text{th}}$ state of $S$ from which events that we are
+interested to measure start, with $i \in \{0, \dots, n-1\}$. \\
 
-In Prism language, a \textit{module} represents a component of the system.
+In the Prism language, a \textit{module} represents a component of the system.
 Depending on how our MDPs are defined, we just need a single module to
-represent them. A module allows to characterise $S$, $A$ and $\Delta$. We begin by enumerating states of $\mathcal{M}$ :
+represent them. A module allows to characterise $S$, $A$ and $\Delta$. We begin by enumerating states of $\mathcal{M}$:
 \[
   s: [0\, ..\, n-1] \; \text{init} \; i;
 \]
 In this manner, we express that for all $j \in \{0, \dots, n-1\}$, $s_j \in S$
-is the $j^{\text{th}}$ state of $S$ and $s_i$ is the initial state from which events start. In Prism language, $s$ is considered as a \textit{variable} of the module, ranging on states of $\mathcal{M}$. Note that a variable represents a set of states of the MDP. Thus, it is possible that a module have more than one variable if the state space of the MDP is formed by more than one sates set.
-Thanks to variables of the system, it is possible to form predicates $\Phi$ with the following  syntax :
+is the $j^{\text{th}}$ state of $S$ and $s_i$ is the initial state from which events start. In the Prism language, $s$ is considered as a \textit{variable} of the module, ranging on states of $\mathcal{M}$. Note that a variable represents a set of states of the MDP. Thus, it is possible that a module have more than one variable if the state space of the MDP is formed by more than one set of sates.
+Thanks to variables of the system, it is possible to form predicates $\Phi$ with the following  syntax:
 \begin{align*}
-  \Phi &::= true \; | \; s \varphi x \; | \; (X) \; | \; (\Psi) \\
+  \Phi &::= true \; | \; x \varphi p \; | \; (X) \; | \; (\Psi) \\
   X &::= \Phi \; | \; \Phi \& X \\
   \Psi &::= \Phi \; | \; \Phi || \Psi
 \end{align*}
-where $s$ is a variable of the module, $\varphi \in \{<, \leq, >, \geq, =, \neq\}$
-and $x \in \mathbb{N}$. Let $s^* \in S$ be a state of $\mathcal{M}$. We have that $s^* \models \Phi$ iff $\Phi$ is true for the state $s^*$, i.e.,
+where $x$ is a variable of the module, $\varphi \in \{<, \leq, >, \geq, =, \neq\}$
+and $p \in \mathbb{N}$. Let $s \in S$ be a state of $\mathcal{M}$. We have that $s \models \Phi$ iff $\Phi$ is true for the state $s$, i.e.,
 \begin{itemize}
-  \item $s^* \models true$,
-  \item $s^* \models s \varphi x$ iff there exists a $j \in \mathbb{N}$ in the range of indices of the module variable $s$ by which the state $s^*$ is represented (i.e., $s^*$ is represented by $s=j$) such that $j \varphi x$.
-  \item $s^* \models (\Phi_1 \& \dots \& \Phi_m)$ iff
-    for all $k \in \{1, \dots, m\}$, $s_j \models \Phi_k$, and
-  \item $s^* \models (\Phi_1 || \dots || \Phi_m)$ iff
+  \item $s \models true$,
+  \item $s \models x \varphi p$ iff there exists a $j \in \mathbb{N}$ in the range of indices of the module variable $x$ by which the state $s$ is represented (i.e., $s$ is represented by $x=j$) such that $j \varphi p$.
+  \item $s \models (\Phi_1 \& \dots \& \Phi_m)$ iff
+    for all $k \in \{1, \dots, m\}$, $s \models \Phi_k$, and
+  \item $s \models (\Phi_1 || \dots || \Phi_m)$ iff
     there exists $k \in \{1, \dots, m\}$ such that $s \models \Phi_k$.
 \end{itemize}
 We denote by $Sat(\Phi)$ the set of states that satisfies the predicate $\Phi$, i.e., $Sat(\Phi) = \{s \in S \; | \; s \models \Phi\}$. \\
 
 The behaviour of the module, i.e., transitions of $\{ (s, \alpha, s') \in S \times A \times S \; | \; \Delta(s, \alpha, s') > 0 \}$, is then described
-inside the module by a set of \textit{guarded commands}, taken the following form :
+inside the module by a set of \textit{guarded commands}, taken the following form:
 \[
-  [\alpha] \; \Phi \rightarrow \delta_1 : \phi_1 + \dots + \delta_m : \phi_m;
+  [\alpha] \; \Phi \rightarrow \delta_1: \phi_1 + \dots + \delta_m: \phi_m;
 \]
 where $\Phi$ is a predicate such that for all $s \in Sat(\Phi)$, $\alpha \in A(s)$, $\delta_k \in [0, 1]$ and $\phi_k$ is an \textit{update formula} describing a state represented by a variable of the module. This guarded command basically means that all states that satisfy the predicate $\Phi$ go to the state  described by $\phi_k$ with a probability $\delta_k$, where the action $\alpha$ is chosen.
-An update formula $\phi$ is of the form :
+An update formula $\phi$ is of the form:
 \[\phi::=(x'_1=u_1) \& (x'_2=u_2) \& \dots \& (x'_k=u_k)\]
-where $x_1, x_2, \dots, x_k$ are variables of the module and $u_1, u_2, \dots, u_k$ are expressions over all variables.
+where $x_1, x_2, \dots, x_k$ are variables of the module and $u_1, u_2, \dots, u_k$ are \textit{expressions} (i.e., literal values, variables, constants and operators) over all variables.
 % \begin{align*}
 %   \phi &::= (s'=\chi) \; | \; (s'= \mu(\chi, \chi)) \; | \; \psi \\
 %   \chi &::= s \varphi x \; | \; x \\
@@ -92,15 +90,15 @@ where $x_1, x_2, \dots, x_k$ are variables of the module and $u_1, u_2, \dots, u
 %   \item $s_k \models s' = x$ iff $k = x$. Then the system go from $s_j$ to $s_x$.
 %   \item $s_k \models s' = s \varphi x$ iff $k$ is the current index of the variable $s$ on which the operation $\varphi$ has been applied. Here, we have $k = j \varphi x$. Thus the system go from $s_j$ to $s_{j+\varphi}$.
 % \end{itemize}
-More specifically, transitions of $\mathcal{M}$ can be described with the following guarded command :
+More specifically, transitions of $\mathcal{M}$ can be described with the following guarded command:
 let $s_j$ be the $j^{\text{th}}$ state of $S$, for all enabled actions $\alpha \in A(s_j)$ of $s_j$,
 \[
-  [\alpha] \; s=j \rightarrow \delta_0 : s'=j_0 + \dots + \delta_{m-1} :  s'=j_{m-1};
+  [\alpha] \; s=j \rightarrow \delta_0: s'=j_0 + \dots + \delta_{m-1}:  s'=j_{m-1};
 \]
 where $s_{j_0}, \dots, s_{j_{m-1}}$ are $\alpha$-successors of $s_j$ and $\delta_k = \Delta(s_j, \alpha, s_{j_k})$,
 with  $m=|Succ(s_j,\alpha)|$, $k \in \{0, \dots, m-1\}$, $j_k \in \{0, \dots, n-1\}$ and $s_{j_k}$, the $k^\text{th}$ $\alpha$-successor of $s_j$ and the $j_k^\text{th}$ state of $S$. \\
 
-The set of atomic propositions $AP$ and the labelling function $L$ of $\mathcal{M}$ are characterised in Prism language as follows : for all $a \in AP$,
+The set of atomic propositions $AP$ and the labelling function $L$ of $\mathcal{M}$ are characterised in the Prism language as follows: for all $a \in AP$,
 \[
   \text{label} \; ``a" = \Phi;
 \]
@@ -114,23 +112,25 @@ such that the set of states that satisfy the predicate $\Phi$ is actually the se
 % $j_k \in \{ 0, \dots, n-1 \}$ and $s_{j_k}$, the $k^\text{th}$ state of $S_a$ and the $j_k^\text{th}$ state of $S$.
 %
 
-Finally, the weight function $w$ can be characterised with the notion of \textit{rewards}. In Prism language, it is possible to associate to each transition
-of the set $\{ (s, \alpha, s') \in S \times A \times S \; | \; \Delta(s, \alpha, s') > 0 \}$ a real value. In Prism language, a \textit{dimension rewards} is a set of rewards that take the following form:
+Finally, the weight function $w$ can be characterised with the notion of \textit{rewards}. In the Prism language, it is possible to associate to each transition
+of the set %$\{ (s, \alpha, s') \in S \times A \times S \; | \; \Delta(s, \alpha, s') > 0 \}$
+$\rightarrow$\footnote{recall that the transition relation $\rightarrow$ is the set $\{ (s, \alpha, s') \in S \times A \times S \; | \; \Delta(s, \alpha, s') > 0 \}$}
+a real value. In the Prism language, a \textit{dimension rewards} is a set of rewards that take the following form:
 \[
-  [\alpha] \; \Phi : x;
+  [\alpha] \; \Phi: x;
 \]
 where $\alpha \in A$ is an action, $\Phi$ is a predicate and $x \in \mathbb{R}$
-is the value of the reward of going from a state $s \in S$, such that $\alpha \in A(s)$, to states of $Sat(\Phi)$. Note that if the action $\alpha$ is omitted (giving a reward of the form $[]\; \Phi : x^*;$), each transition $(s, \alpha, s') \in S\times A \times S$ such that $s \in Sat(\Phi)$ and $\alpha \in A(s)$
+is the value of the reward of going from a state $s \in S$, such that $\alpha \in A(s)$, to states of $Sat(\Phi)$. Note that if the action $\alpha$ is omitted (giving a reward of the form $[]\; \Phi: x^*;$), each transition $s \xrightarrow{\,\alpha\,} s'$ such that $s \in Sat(\Phi)$ and $\alpha \in A(s)$
 has a reward of $x^*$. Note also that it is possible to specify multiple dimension rewards for a MDP. We will detail this notion later.
 We can adapt the reward notion to describe the weight function of our MDPs with a set of rewards formed as follows:
 let $\alpha \in A$ be an action of $\mathcal{M}$ and $x = w(\alpha)$, the reward $x$ formed by
 \[
-  [\alpha] \; true : x;
+  [\alpha] \; true: x;
 \]
-is actually the cost of the action $\alpha$.
+is actually the cost of choosing the action $\alpha$.
 
-\begin{example}[\textit{Define an MDP in Prism language}]
-Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be the MDP of the figure \ref{prism-simple}. This MDP can be defined in Prism language as follows:\\
+\begin{example}[\textit{Define an MDP in the Prism language}]
+Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be the MDP of the figure \ref{prism-simple}. This MDP can be defined in the Prism language as follows:\\
 \begin{minipage}{0.4\linewidth}
   \lstinputlisting[language={Prism},
       rulesepcolor=\color{black}, rulecolor=\color{black}, breaklines=true,
@@ -143,9 +143,9 @@ Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be the MDP of the figure \ref{prism-s
 \end{minipage}
 \end{example}
 
-\begin{example}[\textit{Unfold an MDP in Prism language}]
-Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be the MDP of the figure \ref{prism-simple}, $s \in S$ be a state of $\mathcal{M}$ and $l \in \mathbb{N}$
-be a length threshold such that $l=8$. We can define the unfolding of $\mathcal{M}$ until $l$ for the set of target states $T = \{s_1\}$ (cf. figure \ref{unfolding}) in Prism language as follows:
+\begin{example}[\textit{Unfold an MDP in the Prism language}]
+Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be the MDP of the figure \ref{prism-simple}, $s_0 \in S$ be the first state of $S$ and $l \in \mathbb{N}$
+be a length threshold such that $l=8$. We can define the unfolding of $\mathcal{M}$ from the state $s_0$ until the length threshold $l$ for the set of target states $T = \{s_1\}$ (cf. figure \ref{unfolding}) in the Prism language as follows:
 \lstinputlisting[language={Prism},
     rulesepcolor=\color{black}, rulecolor=\color{black}, breaklines=true,
     breakatwhitespace=true, firstnumber=1, firstline=1, lastline=25]{resources/unfolded_simple_mdp.prism}
@@ -154,3 +154,62 @@ Since the state space of the unfolded MDP $\mathcal{M}_l$ is a Cartesian product
 commands of the module are obviously defined, following the definition of the
 probability transition function $\Delta_l$ of any unfolded MDP. Finally, a label $target$ is added,
 labelling each state of the set $T_l = \{ (t, v) \in S \times V \; | \; t \in T \; \wedge \; v \leq l \}$.
+
+\subsection{Explicit format}
+Storm also supports input models specified in explicit format. The syntactic power of such format is lower compared to the Prism language, but is
+very simple and intuitive. Indeed, a MDP specified in explicit format
+consists of a transitions matrix file, describing explicitly transitions of the system, a reward matrix, describing explicitly
+rewards of these transitions, and a labelling set. More formally, let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be a finite MDP, where $|S| = n$ and where $A(s)$ is countable for all $s \in S$. The transition matrix $P$ and the rewards matrix $R$ of sizes $(|\rightarrow|, 4)$ are defined as follows:
+let $l \in \{1, \dots, |\rightarrow|\}$ be the $l^\text{th}$ line of $P$ and $R$,
+\begin{itemize}
+  \item $P_{l, 1} = R_{l, 1}$ is the index $i$ of the source state $s_i \in S$,
+  \item $P_{l, 2} = R_{l, 2}$ is the index $k$ of an enabled action of $s_i$ in $A(s_i)$,
+  \item $P_{l, 3} = R_{l, 3}$ is the index $j$ of the target state $s_j \in S$ and
+  \item $P_{l, 4}$ is the nonzero transition probability $p$ given by $\Delta(s_i, \alpha_{s_i, k}, s_j)$, where $\alpha_{s_i, k}$ denotes the $k^\text{th}$ enabled action of $A(s_i)$.
+  \item $R_{l, 4}$ is the reward of the transition $(s_i, \alpha_{s_i, k}, s_j)$.
+\end{itemize}
+Thus, the line $l \in \{1, \dots, |\rightarrow|\}$ of $P$ defined by the vector $(i, k, j, p) \in \mathbb{N}^3
+\times [0, 1]$ describes that the state $s_i$ goes to the state $s_j$ by choosing
+the $k^\text{th}$ enabled action $\alpha_{s_i, k}$ of $A(s_i)$ with a probability $p = \Delta(s_i, \alpha_{s_i, k}, s_j)$. In a similar way,
+the line $l' \in \{1, \dots, |\rightarrow|\}$ of $R$ defined by the vector
+$(i, k, j, r) \in \mathbb{N}^3 \times \mathbb{R}$ describes that the state $s_i$ goes to the state $s_j$ by choosing the $k^\text{th}$ enabled action $\alpha_{s_i, k}$ of $A(s_i)$ with a reward $r$.
+Since rewards of our MDPs are actually costs of actions, this reward $r$ is equals to $w(\alpha_{s_i, k})$. \\
+
+Finally, labels of this MDP are defined with a set of vectors $L_\text{explicit}$ defined as follows : \[L_\text{explicit} = \{(i, a_1, \dots, a_k) \in \mathbb{N} \times AP^k \; | \; k = |L(s_i)| \wedge \{a_1, \dots, a_k\} = L(s_i)\}\]
+
+\begin{example}[\textit{Define a MDP in explicit format}]
+Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be the MDP of the figure \ref{prism-simple}. The explicit transition matrix $P$, the explicit reward matrix $R$ and the explicit labels set $L_\text{explicit}$ of $\mathcal{M}$ are defined as follows :
+  \begin{equation*}
+  P =
+  	\begin{pmatrix}
+  	0 & 1 & 1 & \frac{1}{2} \\[0.3em]
+  	0 & 1 & 2 & \frac{1}{2} \\[0.3em]
+  	1 & 2 & 0 & 1 \\[0.3em]
+    2 & 0 & 2 & 1 \\[0.3em]
+    2 & 2 & 0 & 1
+  	\end{pmatrix}, \quad \quad
+  R =
+    \begin{pmatrix}
+  	0 & 1 & 1 & 3 \\[0.3em]
+  	0 & 1 & 2 & 3 \\[0.3em]
+  	1 & 2 & 0 & 2 \\[0.3em]
+    2 & 0 & 2 & 5 \\[0.3em]
+    2 & 2 & 0 & 2
+    \end{pmatrix}, \quad \quad
+  L_\text{explicit} = \{ (0, a), (1, b) \}
+  \end{equation*}
+\end{example}
+
+\subsection{Jani}
+Jani \cite{JQM} is a recent modeling language whose syntax is based on Json and whose design is based on networks of communicating automata.
+The purpose of this language is to provide a stable and uniform interface
+between tools and, more particularly, model checkers.
+This format supports MCs, CTMCs, MDPs and MAs. \\
+
+Actually, the semantic model of the Prism language forms the conceptual basis of
+Jani and is extended to also support MAs.
+Furthermore, Jani is designed to be more trivial than the Prism language and, thus,
+to be easy to generate and parse programmatically without library dependencies.
+However, Jani has not been designed to be created manually by users, but rather
+to be automatically generated from higher-level and domain-specific languages while remaining human-readable, in contrast to binary encodings. Storm actually allows to
+convert multiple input types to Jani. An example of conversion in available in appendix (cf. appendix \ref{prism2jani}).
