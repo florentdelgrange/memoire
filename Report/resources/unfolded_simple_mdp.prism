@@ -16,7 +16,7 @@ endmodule
 
 label "a" = s=0;
 label "b" = s=1;
-label "target" = (s=1) & v <= 8;
+label "target" = (s=1 & v<=l);
 
 rewards "weights"
   [alpha] true : 5;

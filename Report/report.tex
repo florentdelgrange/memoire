@@ -4,7 +4,7 @@
 %  %DIV=13,
 %  %openright,
 %  ]{scrbook}
-\documentclass[12pt, twoside]{report}
+\documentclass[12pt, twoside, openright]{report}
 
 \usepackage[framemethod=TikZ]{mdframed}
 \usepackage[utf8]{inputenc}
@@ -161,7 +161,16 @@ font={\fontsize{40}{50}\selectfont}
 
 \pagestyle{headings}
 \clearpage
-%\setcounter{page}{0}
+
+% Blank pages without footers
+\makeatletter
+\renewcommand*{\cleardoublepage}{\clearpage\if@twoside \ifodd\c@page\else
+\hbox{}%
+\thispagestyle{empty}%
+\newpage%
+\if@twocolumn\hbox{}\newpage\fi\fi\fi}
+\makeatother
+
 \begin{document}
 
 \thispagestyle{title}
@@ -173,8 +182,8 @@ font={\fontsize{40}{50}\selectfont}
 
 \begin{adjustbox}{minipage=.6\textwidth,center}
 Faculty of Sciences\par
-Computer Science department \par
-Theoretical Computer Science service
+Computer Science Department \par
+Theoretical Computer Science Service
 %\hfill --- David Carlisle
 \end{adjustbox}
 
@@ -237,6 +246,7 @@ $\quad$ Mickael Randour
 
 \include{preliminaries}
 \include{storm-overview}
+\include{model-checking}
 
 \bibliographystyle{plain}
 \bibliography{bib}

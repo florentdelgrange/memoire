@@ -5,35 +5,36 @@ Storm is a probabilistic model checker recently released. It is able to analyse
 four Markov models, featuring discrete-time Markov chains and Markov decision processes. The main aim of this tool is to be competitive in terms of performances, to be updated with new verification algorithms, to be able to
 deal with a large panel of modeling languages,... This tool provides %many other
 a lot of model checking features, including solvers for problems presented in the previous chapter and
-for multi-objective problems.
+for multi-objective problems. In this chapter, we will briefly present how our MDPs can be defined in this powerful tool, how they are represented and whit which different approaches problems are solved.
+Whit this background, we will enrich next chapters with practical Storm examples.
 
 \section{Models}
 As mentioned above, Storm allows to model-check four types of Markov models.
-The first family of models contains discrete-time Markov models that are covered in the first chapter, composed by
-discrete time Markov chains and Markov decision processes.
-The second family of models contains continuous-time Markov models, composed by continuous time Markov chains and Markov automata. \\
+The first family of models contains discrete-time Markov models, that are covered in the first chapter, composed by
+discrete-time Markov chains and Markov decision processes.
+The second family of models contains continuous-time Markov models, composed by continuous-time Markov chains and Markov automata. \\
 
-Continuous time Markov chains models (CTMC) \cite{maro} are similar to discrete time Markov chains, but each state $s$ is
+Continuous-time Markov chains models (CTMC) \cite{maro} are similar to discrete-time Markov chains, but each state $s$ is
 characterised by an exit rate $\lambda_s$.
-The time $t$ spent in each state $s$ of the system is negatively exponentially distributed with this rate, i.e., $e^{- \lambda_s t}$.
+The time $t$ spent in each state $s$ of the system is negatively exponentially distributed with this rate, i.e., the probability to stay in $s$ after $t$ time units passed in $s$ is $e^{- \lambda_s t}$.
 This exit rate and a probability transition function allow to induce a generator
 function with which it is possible to compute the probability
 %to go from one state to another after a certain time.
 that the system is currently in a state $s'$ while the system was in the state $s$, $t$ time units ago. Note that there is no more ``step'' notion in continuous
-Markov model types. Furthermore, a Markov automata (MA) is a continuous nondeterministic Markov model. The key idea is the same that between MCs and MDPs in discrete time. \\
+Markov model types. Furthermore, a Markov automata (MA) is a continuous nondeterministic Markov model where the key idea is the same that between MCs and MDPs in discrete-time. \\
 
-We will not dwell on continuous time models anymore and focus primarily on discrete time models.
+We will not dwell on continuous-time models anymore and focus primarily on discrete-time models.
 
 \section{Input formats}
 Storm supports various native input formats, including Prism, Jani, generalised stochastic Petri nets, dynamic fault trees, cpGCL and explicit format.
-We will introduce some of these input languages by presenting how to use them to modelize our
-discrete time models.
+We will introduce the three input languages supported by the main executable of Storm by presenting how to use them to modelize our
+discrete-time systems.
 \subsection{Prism}
 The Prism language \cite{prismsynt} allows to deal with MCs, CMCs and MDPs in Storm.
 It is a state-based language using reactive modules.
-We will not define the complete syntax and semantic of Prism but rather provide a way to
-define our MDPs using this language.
-Let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be a finite MDP, with $|S| = n$ and $s_i \in S$ be the $i^{\text{th}}$ state of $S$ from which events that we are
+We will not define the complete syntax and semantic of the Prism language, but rather provide a way to
+define our MDPs.
+Let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be a finite MDP, with $|S| = n$, and $s_i \in S$ be the $i^{\text{th}}$ state of $S$ from which events that we are
 interested to measure start, with $i \in \{0, \dots, n-1\}$. \\
 
 In the Prism language, a \textit{module} represents a component of the system.
@@ -44,7 +45,7 @@ represent them. A module allows to characterise $S$, $A$ and $\Delta$. We begin 
 \]
 In this manner, we express that for all $j \in \{0, \dots, n-1\}$, $s_j \in S$
 is the $j^{\text{th}}$ state of $S$ and $s_i$ is the initial state from which events start. In the Prism language, $s$ is considered as a \textit{variable} of the module, ranging on states of $\mathcal{M}$. Note that a variable represents a set of states of the MDP. Thus, it is possible that a module have more than one variable if the state space of the MDP is formed by more than one set of sates.
-Thanks to variables of the system, it is possible to form predicates $\Phi$ with the following  syntax:
+Thanks to variables of the module, it is possible to form predicates $\Phi$ with the following  syntax:
 \begin{align*}
   \Phi &::= true \; | \; x \varphi p \; | \; (X) \; | \; (\Psi) \\
   X &::= \Phi \; | \; \Phi \& X \\
@@ -62,7 +63,7 @@ and $p \in \mathbb{N}$. Let $s \in S$ be a state of $\mathcal{M}$. We have that 
 \end{itemize}
 We denote by $Sat(\Phi)$ the set of states that satisfies the predicate $\Phi$, i.e., $Sat(\Phi) = \{s \in S \; | \; s \models \Phi\}$. \\
 
-The behaviour of the module, i.e., transitions of $\{ (s, \alpha, s') \in S \times A \times S \; | \; \Delta(s, \alpha, s') > 0 \}$, is then described
+The behaviour of the module, i.e., transitions of the set $\rightarrow$\footnote{recall that the transition relation $\rightarrow$ is the set $\{ (s, \alpha, s') \in S \times A \times S \; | \; \Delta(s, \alpha, s') > 0 \}$} is then described
 inside the module by a set of \textit{guarded commands}, taken the following form:
 \[
   [\alpha] \; \Phi \rightarrow \delta_1: \phi_1 + \dots + \delta_m: \phi_m;
@@ -90,7 +91,7 @@ where $x_1, x_2, \dots, x_k$ are variables of the module and $u_1, u_2, \dots, u
 %   \item $s_k \models s' = x$ iff $k = x$. Then the system go from $s_j$ to $s_x$.
 %   \item $s_k \models s' = s \varphi x$ iff $k$ is the current index of the variable $s$ on which the operation $\varphi$ has been applied. Here, we have $k = j \varphi x$. Thus the system go from $s_j$ to $s_{j+\varphi}$.
 % \end{itemize}
-More specifically, transitions of $\mathcal{M}$ can be described with the following guarded command:
+More specifically, since all states of $\mathcal{M}$ are represented by the values of the single variable $s$, transitions of $\mathcal{M}$ can be described with the following guarded command:
 let $s_j$ be the $j^{\text{th}}$ state of $S$, for all enabled actions $\alpha \in A(s_j)$ of $s_j$,
 \[
   [\alpha] \; s=j \rightarrow \delta_0: s'=j_0 + \dots + \delta_{m-1}:  s'=j_{m-1};
@@ -114,14 +115,14 @@ such that the set of states that satisfy the predicate $\Phi$ is actually the se
 
 Finally, the weight function $w$ can be characterised with the notion of \textit{rewards}. In the Prism language, it is possible to associate to each transition
 of the set %$\{ (s, \alpha, s') \in S \times A \times S \; | \; \Delta(s, \alpha, s') > 0 \}$
-$\rightarrow$\footnote{recall that the transition relation $\rightarrow$ is the set $\{ (s, \alpha, s') \in S \times A \times S \; | \; \Delta(s, \alpha, s') > 0 \}$}
-a real value. In the Prism language, a \textit{dimension rewards} is a set of rewards that take the following form:
+$\rightarrow$
+a real value. A \textit{dimension rewards} is a set of rewards that take the following form:
 \[
   [\alpha] \; \Phi: x;
 \]
 where $\alpha \in A$ is an action, $\Phi$ is a predicate and $x \in \mathbb{R}$
 is the value of the reward of going from a state $s \in S$, such that $\alpha \in A(s)$, to states of $Sat(\Phi)$. Note that if the action $\alpha$ is omitted (giving a reward of the form $[]\; \Phi: x^*;$), each transition $s \xrightarrow{\,\alpha\,} s'$ such that $s \in Sat(\Phi)$ and $\alpha \in A(s)$
-has a reward of $x^*$. Note also that it is possible to specify multiple dimension rewards for a MDP. We will detail this notion later.
+has a reward of $x^*$. Note also that it is possible to specify multiple dimensions rewards for an MDP. We will detail this notion later.
 We can adapt the reward notion to describe the weight function of our MDPs with a set of rewards formed as follows:
 let $\alpha \in A$ be an action of $\mathcal{M}$ and $x = w(\alpha)$, the reward $x$ formed by
 \[
@@ -144,7 +145,7 @@ Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be the MDP of the figure \ref{prism-s
 \end{example}
 
 \begin{example}[\textit{Unfold an MDP in the Prism language}]
-Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be the MDP of the figure \ref{prism-simple}, $s_0 \in S$ be the first state of $S$ and $l \in \mathbb{N}$
+Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be the MDP of the figure \ref{prism-simple} and $l \in \mathbb{N}$
 be a length threshold such that $l=8$. We can define the unfolding of $\mathcal{M}$ from the state $s_0$ until the length threshold $l$ for the set of target states $T = \{s_1\}$ (cf. figure \ref{unfolding}) in the Prism language as follows:
 \lstinputlisting[language={Prism},
     rulesepcolor=\color{black}, rulecolor=\color{black}, breaklines=true,
@@ -156,15 +157,20 @@ probability transition function $\Delta_l$ of any unfolded MDP. Finally, a label
 labelling each state of the set $T_l = \{ (t, v) \in S \times V \; | \; t \in T \; \wedge \; v \leq l \}$.
 
 \subsection{Explicit format}
-Storm also supports input models specified in explicit format. The syntactic power of such format is lower compared to the Prism language, but is
-very simple and intuitive. Indeed, a MDP specified in explicit format
-consists of a transitions matrix file, describing explicitly transitions of the system, a reward matrix, describing explicitly
-rewards of these transitions, and a labelling set. More formally, let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be a finite MDP, where $|S| = n$ and where $A(s)$ is countable for all $s \in S$. The transition matrix $P$ and the rewards matrix $R$ of sizes $(|\rightarrow|, 4)$ are defined as follows:
+Storm also supports input models specified in explicit format. The syntactic power of a such format is lower compared to the Prism language, but is
+very simple and intuitive. Thereby, this format can thus be interesting in case of
+we want to verify a model generated from another tool (e.g., MRMC or Prism).
+In general, a model generated in explicit format from another tool does not match exactly but can be easily modified by hand to be handled by Storm due to
+the simplicity of the format. \\
+
+An MDP specified in explicit format
+consists of a transitions matrix file, describing explicitly transitions of the system, a reward matrix file, describing explicitly
+rewards of these transitions, and a labelling set file. More formally, let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be a finite MDP, where $|S| = n$ and where $A(s)$ is countable for all $s \in S$. The transition matrix $P$ and the rewards matrix $R$ of sizes $(|\rightarrow|, 4)$ are defined as follows:
 let $l \in \{1, \dots, |\rightarrow|\}$ be the $l^\text{th}$ line of $P$ and $R$,
 \begin{itemize}
-  \item $P_{l, 1} = R_{l, 1}$ is the index $i$ of the source state $s_i \in S$,
+  \item $P_{l, 1} = R_{l, 1}$ is the index $i$ of the source state $s_i \in S$ of the $l^\text{th}$ transition of $\rightarrow$,
   \item $P_{l, 2} = R_{l, 2}$ is the index $k$ of an enabled action of $s_i$ in $A(s_i)$,
-  \item $P_{l, 3} = R_{l, 3}$ is the index $j$ of the target state $s_j \in S$ and
+  \item $P_{l, 3} = R_{l, 3}$ is the index $j$ of the target state $s_j \in S$ of this transition and
   \item $P_{l, 4}$ is the nonzero transition probability $p$ given by $\Delta(s_i, \alpha_{s_i, k}, s_j)$, where $\alpha_{s_i, k}$ denotes the $k^\text{th}$ enabled action of $A(s_i)$.
   \item $R_{l, 4}$ is the reward of the transition $(s_i, \alpha_{s_i, k}, s_j)$.
 \end{itemize}
@@ -173,28 +179,28 @@ Thus, the line $l \in \{1, \dots, |\rightarrow|\}$ of $P$ defined by the vector 
 the $k^\text{th}$ enabled action $\alpha_{s_i, k}$ of $A(s_i)$ with a probability $p = \Delta(s_i, \alpha_{s_i, k}, s_j)$. In a similar way,
 the line $l' \in \{1, \dots, |\rightarrow|\}$ of $R$ defined by the vector
 $(i, k, j, r) \in \mathbb{N}^3 \times \mathbb{R}$ describes that the state $s_i$ goes to the state $s_j$ by choosing the $k^\text{th}$ enabled action $\alpha_{s_i, k}$ of $A(s_i)$ with a reward $r$.
-Since rewards of our MDPs are actually costs of actions, this reward $r$ is equals to $w(\alpha_{s_i, k})$. \\
+Since rewards of our MDPs are actually costs of actions, this reward $r$ equals $w(\alpha_{s_i, k})$. \\
 
 Finally, labels of this MDP are defined with a set of vectors $L_\text{explicit}$ defined as follows : \[L_\text{explicit} = \{(i, a_1, \dots, a_k) \in \mathbb{N} \times AP^k \; | \; k = |L(s_i)| \wedge \{a_1, \dots, a_k\} = L(s_i)\}\]
 
-\begin{example}[\textit{Define a MDP in explicit format}]
-Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be the MDP of the figure \ref{prism-simple}. The explicit transition matrix $P$, the explicit reward matrix $R$ and the explicit labels set $L_\text{explicit}$ of $\mathcal{M}$ are defined as follows :
+\begin{example}[\textit{Define an MDP in explicit format}]
+Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be the MDP of the figure \ref{prism-simple}. The explicit transition matrix $P$, the explicit reward matrix $R$ and the explicit set of labels $L_\text{explicit}$ of $\mathcal{M}$ are defined as follows :
   \begin{equation*}
   P =
   	\begin{pmatrix}
-  	0 & 1 & 1 & \frac{1}{2} \\[0.3em]
-  	0 & 1 & 2 & \frac{1}{2} \\[0.3em]
-  	1 & 2 & 0 & 1 \\[0.3em]
+  	0 & 0 & 1 & \frac{1}{2} \\[0.3em]
+  	0 & 0 & 2 & \frac{1}{2} \\[0.3em]
+  	1 & 0 & 0 & 1 \\[0.3em]
     2 & 0 & 2 & 1 \\[0.3em]
-    2 & 2 & 0 & 1
+    2 & 1 & 0 & 1
   	\end{pmatrix}, \quad \quad
   R =
     \begin{pmatrix}
-  	0 & 1 & 1 & 3 \\[0.3em]
-  	0 & 1 & 2 & 3 \\[0.3em]
-  	1 & 2 & 0 & 2 \\[0.3em]
+  	0 & 0 & 1 & 3 \\[0.3em]
+  	0 & 0 & 2 & 3 \\[0.3em]
+  	1 & 0 & 0 & 2 \\[0.3em]
     2 & 0 & 2 & 5 \\[0.3em]
-    2 & 2 & 0 & 2
+    2 & 1 & 0 & 2
     \end{pmatrix}, \quad \quad
   L_\text{explicit} = \{ (0, a), (1, b) \}
   \end{equation*}
@@ -211,5 +217,41 @@ Jani and is extended to also support MAs.
 Furthermore, Jani is designed to be more trivial than the Prism language and, thus,
 to be easy to generate and parse programmatically without library dependencies.
 However, Jani has not been designed to be created manually by users, but rather
-to be automatically generated from higher-level and domain-specific languages while remaining human-readable, in contrast to binary encodings. Storm actually allows to
+to be automatically generated from higher-level and domain-specific languages, while remaining human-readable, in contrast to binary encodings. Storm actually allows to
 convert multiple input types to Jani. An example of conversion in available in appendix (cf. appendix \ref{prism2jani}).
+
+\section{Properties}
+Storm uses \textit{probabilistic branching time logic}, i.e., PRCTL and CSL,
+to verify respectively properties of discrete-time and continuous-time models.
+We will focus on PRCTL on the next chapter (cf. section ).
+We will see that the language of a such logic additionally allows to formulate requests to solve problems encountered in the first chapter and for problems we will encounter later.
+
+%\section{Implementation}
+\section{Engines}
+Storm is decomposed in five engines that pursue different approaches to solve a problem.
+\begin{itemize}
+  \item \textit{Sparse}: this engine is the default one. It uses sparse matrices as in-memory representation of models. Numerical analysis methods allow efficient memory allocation and fast operations for this data structure on small and moderately sized models.
+  Actually, this data structure is very powerful in the case of most states of the model have transitions to a small subset of the state space of the model. This case represents actually most of the cases: in general, underlying graphs of Markov models are rarely complete and the transitions matrix representing the probability transition function of
+  most of the models is thus sparse.
+  \item \textit{DD}: this engine uses multi-terminal binary decision diagrams (MTBDDs) as their primal representation. This data structure allows
+  to handle gigantic models. Intuitively, each state of the system are encoded on $n$ bits and the probability transition function is a boolean function
+  over the bits representation of two states. Binary decision diagrams (BDDs) are
+  used to represent boolean functions and are actually compressed binary decision trees through directed acyclic graphs (DAGs), with two terminal states ($1$ and $0$). MTBDDs are BDDs allowing numerical values for terminal states.
+  \item \textit{Hybrid}: this engine uses MTBDDs as representation of models, but sometimes uses sparse matrices if operations are judged more appropriate with this format.
+  \item \textit{Abstraction refinement}: this engine abstracts (non-necessary finite) discrete-time Markov models to finite stochastic games and automatically refines the abstraction as necessary. This engine is suited for models with an infinite state space (others engines can not handle this type of models).
+  \item \textit{Exploration}: this engine uses sparse representation for models and explores the state space of models with machine learning methods.
+\end{itemize}
+
+\section{Solvers}
+Several solvers are available in Storm.
+Storm uses the suited solver in function of the situation (i.e., the input model, its format, the engine used and its in-memory representation).
+\begin{itemize}
+  \item Bellman equations, mixed-integer linear programming and satisfiability modulo theories (SMT) can be used with sparse matrices and MTBDDs. However,
+  since numerical methods are prone to numerical problems (more particularly
+  for the value-iteration step of Bellman equations), Storm supports enabling exact arithmetic to obtain precise results.
+  \item A SMT problem is a decision problem for first-order logical formulae with equality and without quantifier. SMT solvers are used to minimise the size of models by bisimulation.
+  \item Storm can check MDPs via linear programming and MCs via linear equation systems.
+  \item Although Storm does not support stochastic games as input format,
+    solvers for them are available for the abstraction refinement engine
+    which uses these as representation.
+\end{itemize}
