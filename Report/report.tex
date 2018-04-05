@@ -8,15 +8,18 @@
 
 \usepackage[framemethod=TikZ]{mdframed}
 \usepackage[utf8]{inputenc}
-%\usepackage[francais]{babel}
+\usepackage[english]{babel}
 \usepackage{anyfontsize}
 \usepackage{adjustbox}
 \usepackage{graphicx}
 \usepackage{amsmath,amsfonts,amsthm} % Math packages
 \usepackage{graphicx}
+\usepackage[noend]{algorithmic}
+\usepackage{algorithm}
 \usepackage{float}
 \usepackage{xcolor,fix-cm}
 \usepackage{fancyhdr}
+\usepackage{centernot}
 \usepackage{tabularx}
 \usepackage{lmodern}
 \usepackage{titlesec}
@@ -33,6 +36,8 @@
 \usepackage{cprotect}
 \usepackage{wrapfig}
 \usepackage{setspace}
+\usepackage[shortlabels]{enumitem}
+
 %\usepackage{kpfonts}
 %\usepackage[explicit]{titlesec}
 
@@ -42,6 +47,8 @@
 \let\evensidemargin\tmp
 \reversemarginpar
 
+\renewcommand\qedsymbol{$\blacksquare$}
+
 \include{chapter_style3}
 \include{prism}
 
@@ -49,6 +56,8 @@
 \definecolor{background}{HTML}{EEEEEE}
 \definecolor{delim}{RGB}{20,105,176}
 \colorlet{numb}{magenta!60!black}
+
+\newcommand\U{\,\text{\sffamily U}\,}
 
 \lstdefinelanguage{json}{
     basicstyle=\normalfont\ttfamily\tiny,
@@ -76,22 +85,40 @@
       {]}{{{\color{delim}{]}}}}{1},
 }
 
-%\cxset{style7}
+\floatname{algorithm}{Algorithm}
+\renewcommand{\algorithmicrequire}{\textbf{Input :}}
+\renewcommand{\algorithmicensure}{\textbf{Output :}}
+\renewcommand{\algorithmicif}{\textbf{if}}
+\renewcommand{\algorithmicthen}{\textbf{then}}
+\renewcommand{\algorithmicelse}{\textbf{else}}
+\renewcommand{\algorithmicelsif}{\textbf{else if}}
+\renewcommand{\algorithmicwhile}{\textbf{while}}
+\renewcommand{\algorithmicdo}{\textbf{do}}
+\renewcommand{\algorithmicend}{\textbf{end}}
+\renewcommand{\algorithmicreturn}{\textbf{return}}
+\renewcommand{\algorithmicfor}{\textbf{for}}
+\renewcommand{\algorithmicforall}{\textbf{for all}}
+\renewcommand{\algorithmiccomment}[1]{\hfill \textit{\footnotesize(* ~#1 *)}}
 
+%\cxset{style7}
 % Theorem style
-  \theoremstyle{definition}%{3pt}{3pt}{\slshape}{}{\bfseries}{.}{.5em}{}
-  \newtheorem{definition}{Definition}[chapter]
   \newtheorem{theorem}{Theorem}[chapter]
   \newtheorem{lemma}{Lemma}[chapter]
   \newtheorem{corollary}{Corollary}[chapter]
-  \newtheorem*{notations}{Notations}
+
+  \newenvironment{proof2}{\paragraph{\normalfont \textit{Proof:}}}{\hfill$\square$}
+
+  \theoremstyle{definition}%{3pt}{3pt}{\slshape}{}{\bfseries}{.}{.5em}{}
+  \newtheorem{definition}{Definition}[chapter]
   \newtheorem{property}{Property}[chapter]
+  \newtheorem*{notations}{Notations}
   \newtheorem*{proprietes}{Properties}
   \newtheorem{proposition}{Proposition}[chapter]
+
   \theoremstyle{remark}
   \newtheorem{notation}{Notation}[chapter]
   \newtheorem{example}{Example}[chapter]
-  \newtheorem{remark}{Remarque}[chapter]
+  \newtheorem{remark}{Remark}[chapter]
 
 % Itemize
 \renewcommand\labelitemi{\tiny$\bullet$}
@@ -197,7 +224,7 @@ Theoretical Computer Science Service
 \vspace{0.3em}
 \begin{mdframed}[style=l3style]
 %Synthèse multi-objectif\\dans les processus\\décisionnels de Markov
-Multi-objective \\synthesis in Markov \\ Decision Processes
+Multi-objective \\Synthesis in Markov \\ Decision Processes
 %\vspace{-0.8em} \\\vspace{-0.8em}\HRule % Defines a new command for the horizontal lines, change thickness here
 %{\Large Rapport de stage}
 \end{mdframed}
@@ -213,7 +240,7 @@ Multi-objective \\synthesis in Markov \\ Decision Processes
 %\Large
 \large
 \begin{flushright}
-\textit{Master thesis submitted by}\\Florent Delgrange\\ \textit{in fulfillment of the requirements for the Computer Science Master degree}\par
+\textit{Master thesis submitted by}\\Florent Delgrange\\ \textit{in fulfilment of the requirements for the Computer Science Master degree}\par
 \end{flushright}
 \textit{Directors : } \par $\quad$ Véronique Bruyère\par
 $\quad$ Mickael Randour

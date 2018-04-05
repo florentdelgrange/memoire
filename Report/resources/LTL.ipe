@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70206" creator="Ipe 7.2.6">
-<info created="D:20180206224059" modified="D:20180324183747"/>
+<info created="D:20180206224059" modified="D:20180325164045"/>
 <preamble>\usepackage{xcolor}
 \usepackage{latexsym}
 %% The &apos;lf&apos; option for lining figures
@@ -291,12 +291,18 @@ h
 320 800 l
 </path>
 <text matrix="1 0 0 1 64 0" transformations="translations" pos="328 800" stroke="black" type="label" width="16.488" height="1.395" depth="0" valign="baseline" size="Large" style="math">\dots</text>
-<text matrix="1 0 0 1 44 -20" transformations="translations" pos="8 768" stroke="black" type="label" width="41.361" height="9.521" depth="0" valign="baseline" size="Large">atomic</text>
-<text matrix="1 0 0 1 24 -20" transformations="translations" pos="8 752" stroke="black" type="label" width="81.199" height="9.521" depth="2.79" valign="baseline" size="Large">proposition $a$</text>
-<path matrix="1 0 0 1 64 -56" stroke="black">
+<text matrix="1 0 0 1 30.367 1.77646" transformations="translations" pos="108 796" stroke="black" type="label" width="12.096" height="6.179" depth="2.15" valign="baseline" size="Large" style="math">s_0</text>
+<text matrix="1 0 0 1 34.7937 1.42211" transformations="translations" pos="168 796" stroke="black" type="label" width="12.096" height="6.179" depth="2.15" valign="baseline" size="Large" style="math">s_1</text>
+<text matrix="1 0 0 1 34.7937 1.42211" transformations="translations" pos="232 796" stroke="black" type="label" width="12.096" height="6.179" depth="2.15" valign="baseline" size="Large" style="math">s_2</text>
+<text matrix="1 0 0 1 34.7937 1.42211" transformations="translations" pos="296 796" stroke="black" type="label" width="12.096" height="6.179" depth="2.15" valign="baseline" size="Large" style="math">s_3</text>
+<path matrix="1 0 0 1 96 -272" stroke="black" fill="black" tiling="rising">
+16 0 0 16 144 800 e
+</path>
+<text matrix="1 0 0 1 -192 -244" transformations="translations" pos="456 768" stroke="black" type="label" width="70.626" height="9.962" depth="2.79" valign="baseline" size="Large">$=$ arbitrary</text>
+<path matrix="1 0 0 1 64 -56" stroke="black" fill="black" tiling="rising">
 16 0 0 16 80 800 e
 </path>
-<path matrix="1 0 0 1 64 -56" stroke="black" fill="black" tiling="rising">
+<path matrix="1 0 0 1 64 -56" stroke="black">
 16 0 0 16 144 800 e
 </path>
 <path matrix="1 0 0 1 64 -56" stroke="black" fill="black" tiling="rising">
@@ -322,22 +328,16 @@ h
 320 800 l
 </path>
 <text matrix="1 0 0 1 64 -56" transformations="translations" pos="328 800" stroke="black" type="label" width="16.488" height="1.395" depth="0" valign="baseline" size="Large" style="math">\dots</text>
-<text matrix="1 0 0 1 30.367 1.77646" transformations="translations" pos="108 796" stroke="black" type="label" width="12.096" height="6.179" depth="2.15" valign="baseline" size="Large" style="math">s_0</text>
-<text matrix="1 0 0 1 34.7937 1.42211" transformations="translations" pos="168 796" stroke="black" type="label" width="12.096" height="6.179" depth="2.15" valign="baseline" size="Large" style="math">s_1</text>
-<text matrix="1 0 0 1 34.7937 1.42211" transformations="translations" pos="232 796" stroke="black" type="label" width="12.096" height="6.179" depth="2.15" valign="baseline" size="Large" style="math">s_2</text>
-<text matrix="1 0 0 1 34.7937 1.42211" transformations="translations" pos="296 796" stroke="black" type="label" width="12.096" height="6.179" depth="2.15" valign="baseline" size="Large" style="math">s_3</text>
-<text matrix="1 0 0 1 29.7473 4" transformations="translations" pos="104 760" stroke="darkorange" type="label" width="21.72" height="10.756" depth="3.59" valign="baseline" size="Large" style="math">\{a\}</text>
-<path matrix="1 0 0 1 96 -328" stroke="black" fill="black" tiling="rising">
-16 0 0 16 144 800 e
-</path>
-<text matrix="1 0 0 1 -192 -300" transformations="translations" pos="456 768" stroke="black" type="label" width="70.626" height="9.962" depth="2.79" valign="baseline" size="Large">$=$ arbitrary</text>
-<path matrix="1 0 0 1 64 -112" stroke="black" fill="black" tiling="rising">
+<text matrix="1 0 0 1 100 4" transformations="translations" pos="104 760" stroke="darkorange" type="label" width="10.145" height="9.803" depth="0" valign="baseline" size="Large" style="math">\Phi</text>
+<text matrix="1 0 0 1 52 76" transformations="translations" pos="8 672" stroke="black" type="label" width="26.924" height="8.824" depth="0" valign="baseline" size="Large">next</text>
+<text matrix="1 0 0 1 52 76" transformations="translations" pos="8 656" stroke="black" type="label" width="24.491" height="9.962" depth="2.79" valign="baseline" size="Large" style="math">\bigcirc \Phi</text>
+<path matrix="1 0 0 1 64 -112" stroke="black">
 16 0 0 16 80 800 e
 </path>
 <path matrix="1 0 0 1 64 -112" stroke="black">
 16 0 0 16 144 800 e
 </path>
-<path matrix="1 0 0 1 64 -112" stroke="black" fill="black" tiling="rising">
+<path matrix="1 0 0 1 64 -112" stroke="black">
 16 0 0 16 208 800 e
 </path>
 <path matrix="1 0 0 1 64 -112" stroke="black" fill="black" tiling="rising">
@@ -360,9 +360,11 @@ h
 320 800 l
 </path>
 <text matrix="1 0 0 1 64 -112" transformations="translations" pos="328 800" stroke="black" type="label" width="16.488" height="1.395" depth="0" valign="baseline" size="Large" style="math">\dots</text>
-<text matrix="1 0 0 1 100 -52" transformations="translations" pos="104 760" stroke="darkorange" type="label" width="10.145" height="9.803" depth="0" valign="baseline" size="Large" style="math">\Phi</text>
-<text matrix="1 0 0 1 52 20" transformations="translations" pos="8 672" stroke="black" type="label" width="26.924" height="8.824" depth="0" valign="baseline" size="Large">next</text>
-<text matrix="1 0 0 1 52 20" transformations="translations" pos="8 656" stroke="black" type="label" width="24.491" height="9.962" depth="2.79" valign="baseline" size="Large" style="math">\bigcirc \Phi</text>
+<text matrix="1 0 0 1 84 -52" transformations="translations" pos="104 760" stroke="darkorange" type="label" width="46.575" height="9.803" depth="0" valign="baseline" size="Large" style="math">\Phi \wedge \neg \Psi</text>
+<text matrix="1 0 0 1 52 20" transformations="translations" pos="8 672" stroke="black" type="label" width="28.484" height="9.963" depth="0" valign="baseline" size="Large">until</text>
+<text matrix="1 0 0 1 48 20" transformations="translations" pos="8 656" stroke="black" type="label" width="40" height="9.963" depth="0" valign="baseline" size="Large" style="math">\Phi$ {\sffamily U} $\Psi</text>
+<text matrix="1 0 0 1 20 -52" transformations="translations" pos="104 760" stroke="darkorange" type="label" width="46.575" height="9.803" depth="0" valign="baseline" size="Large" style="math">\Phi \wedge \neg \Psi</text>
+<text matrix="1 0 0 1 164 -52" transformations="translations" pos="104 760" stroke="darkorange" type="label" width="10.926" height="9.803" depth="0" valign="baseline" size="Large" style="math">\Psi</text>
 <path matrix="1 0 0 1 64 -168" stroke="black">
 16 0 0 16 80 800 e
 </path>
@@ -392,11 +394,11 @@ h
 320 800 l
 </path>
 <text matrix="1 0 0 1 64 -168" transformations="translations" pos="328 800" stroke="black" type="label" width="16.488" height="1.395" depth="0" valign="baseline" size="Large" style="math">\dots</text>
-<text matrix="1 0 0 1 84 -108" transformations="translations" pos="104 760" stroke="darkorange" type="label" width="46.575" height="9.803" depth="0" valign="baseline" size="Large" style="math">\Phi \wedge \neg \Psi</text>
-<text matrix="1 0 0 1 52 -36" transformations="translations" pos="8 672" stroke="black" type="label" width="28.484" height="9.963" depth="0" valign="baseline" size="Large">until</text>
-<text matrix="1 0 0 1 48 -36" transformations="translations" pos="8 656" stroke="black" type="label" width="40" height="9.963" depth="0" valign="baseline" size="Large" style="math">\Phi$ {\sffamily U} $\Psi</text>
-<text matrix="1 0 0 1 20 -108" transformations="translations" pos="104 760" stroke="darkorange" type="label" width="46.575" height="9.803" depth="0" valign="baseline" size="Large" style="math">\Phi \wedge \neg \Psi</text>
-<text matrix="1 0 0 1 164 -108" transformations="translations" pos="104 760" stroke="darkorange" type="label" width="10.926" height="9.803" depth="0" valign="baseline" size="Large" style="math">\Psi</text>
+<text matrix="1 0 0 1 96 -108" transformations="translations" pos="104 760" stroke="darkorange" type="label" width="19.709" height="9.803" depth="0" valign="baseline" size="Large" style="math">\neg \Phi</text>
+<text matrix="1 0 0 1 35.5241 -35.2684" transformations="translations" pos="8 672" stroke="black" type="label" width="62.432" height="9.962" depth="2.79" valign="baseline" size="Large">eventually</text>
+<text matrix="1 0 0 1 32 -108" transformations="translations" pos="104 760" stroke="darkorange" type="label" width="19.709" height="9.803" depth="0" valign="baseline" size="Large" style="math">\neg \Phi</text>
+<text matrix="1 0 0 1 164 -108" transformations="translations" pos="104 760" stroke="darkorange" type="label" width="10.145" height="9.803" depth="0" valign="baseline" size="Large" style="math">\Phi</text>
+<text matrix="1 0 0 1 40.1857 87.652" transformations="translations" pos="24 532" stroke="black" type="label" width="21.503" height="9.803" depth="0" valign="baseline" size="Large" style="math">\Diamond \Phi</text>
 <path matrix="1 0 0 1 64 -224" stroke="black">
 16 0 0 16 80 800 e
 </path>
@@ -406,12 +408,12 @@ h
 <path matrix="1 0 0 1 64 -224" stroke="black">
 16 0 0 16 208 800 e
 </path>
-<path matrix="1 0 0 1 64 -224" stroke="black" fill="black" tiling="rising">
+<path matrix="1 0 0 1 64 -224" stroke="black">
 16.4924 0 0 16.4924 272 800 e
 </path>
-<path matrix="1 0 0 1 64 -224" stroke="black" arrow="normal/normal">
-96 800 m
-128 800 l
+<path stroke="black" arrow="normal/normal">
+160 576 m
+192 576 l
 </path>
 <path matrix="1 0 0 1 64 -224" stroke="black" arrow="normal/normal">
 160 800 m
@@ -425,58 +427,23 @@ h
 288 800 m
 320 800 l
 </path>
-<text matrix="1 0 0 1 64 -224" transformations="translations" pos="328 800" stroke="black" type="label" width="16.488" height="1.395" depth="0" valign="baseline" size="Large" style="math">\dots</text>
-<text matrix="1 0 0 1 96 -164" transformations="translations" pos="104 760" stroke="darkorange" type="label" width="19.709" height="9.803" depth="0" valign="baseline" size="Large" style="math">\neg \Phi</text>
-<text matrix="1 0 0 1 35.5241 -91.2684" transformations="translations" pos="8 672" stroke="black" type="label" width="62.432" height="9.962" depth="2.79" valign="baseline" size="Large">eventually</text>
-<text matrix="1 0 0 1 32 -164" transformations="translations" pos="104 760" stroke="darkorange" type="label" width="19.709" height="9.803" depth="0" valign="baseline" size="Large" style="math">\neg \Phi</text>
+<text matrix="1 0 0 1 60 -224" transformations="translations" pos="328 800" stroke="black" type="label" width="16.488" height="1.395" depth="0" valign="baseline" size="Large" style="math">\dots</text>
+<text matrix="1 0 0 1 100 -164" transformations="translations" pos="104 760" stroke="darkorange" type="label" width="10.145" height="9.803" depth="0" valign="baseline" size="Large" style="math">\Phi</text>
+<text matrix="1 0 0 1 44.75 -92.405" transformations="translations" pos="8 672" stroke="black" type="label" width="40.268" height="9.962" depth="2.79" valign="baseline" size="Large">always</text>
+<text matrix="1 0 0 1 36 -164" transformations="translations" pos="104 760" stroke="darkorange" type="label" width="10.145" height="9.803" depth="0" valign="baseline" size="Large" style="math">\Phi</text>
 <text matrix="1 0 0 1 164 -164" transformations="translations" pos="104 760" stroke="darkorange" type="label" width="10.145" height="9.803" depth="0" valign="baseline" size="Large" style="math">\Phi</text>
-<text matrix="1 0 0 1 40.1857 31.652" transformations="translations" pos="24 532" stroke="black" type="label" width="21.503" height="9.803" depth="0" valign="baseline" size="Large" style="math">\Diamond \Phi</text>
-<path matrix="1 0 0 1 60 -280" stroke="black">
-16 0 0 16 80 800 e
-</path>
-<path matrix="1 0 0 1 64 -280" stroke="black">
-16 0 0 16 144 800 e
-</path>
-<path matrix="1 0 0 1 64 -280" stroke="black">
-16 0 0 16 208 800 e
-</path>
-<path matrix="1 0 0 1 64 -280" stroke="black">
-16.4924 0 0 16.4924 272 800 e
-</path>
-<path stroke="black" arrow="normal/normal">
-156 520 m
-192 520 l
-</path>
-<path matrix="1 0 0 1 64 -280" stroke="black" arrow="normal/normal">
-160 800 m
-192 800 l
-</path>
-<path matrix="1 0 0 1 64 -280" stroke="black" arrow="normal/normal">
-224 800 m
-256 800 l
-</path>
-<path matrix="1 0 0 1 64 -280" stroke="black" dash="dashed" arrow="normal/normal">
-288 800 m
-320 800 l
-</path>
-<text matrix="1 0 0 1 60 -280" transformations="translations" pos="328 800" stroke="black" type="label" width="16.488" height="1.395" depth="0" valign="baseline" size="Large" style="math">\dots</text>
-<text matrix="1 0 0 1 100 -220" transformations="translations" pos="104 760" stroke="darkorange" type="label" width="10.145" height="9.803" depth="0" valign="baseline" size="Large" style="math">\Phi</text>
-<text matrix="1 0 0 1 44.75 -148.405" transformations="translations" pos="8 672" stroke="black" type="label" width="40.268" height="9.962" depth="2.79" valign="baseline" size="Large">always</text>
-<text matrix="1 0 0 1 32 -220" transformations="translations" pos="104 760" stroke="darkorange" type="label" width="10.145" height="9.803" depth="0" valign="baseline" size="Large" style="math">\Phi</text>
-<text matrix="1 0 0 1 164 -220" transformations="translations" pos="104 760" stroke="darkorange" type="label" width="10.145" height="9.803" depth="0" valign="baseline" size="Large" style="math">\Phi</text>
-<text matrix="1 0 0 1 40.1967 -24.2202" transformations="translations" pos="24 532" stroke="black" type="label" width="20.865" height="9.803" depth="0" valign="baseline" size="Large" style="math">\Box \Phi</text>
-<text matrix="1 0 0 1 228 -219.817" transformations="translations" pos="104 760" stroke="darkorange" type="label" width="10.145" height="9.803" depth="0" valign="baseline" size="Large" style="math">\Phi</text>
+<text matrix="1 0 0 1 40.1967 31.7798" transformations="translations" pos="24 532" stroke="black" type="label" width="20.865" height="9.803" depth="0" valign="baseline" size="Large" style="math">\Box \Phi</text>
+<text matrix="1 0 0 1 228 -163.817" transformations="translations" pos="104 760" stroke="darkorange" type="label" width="10.145" height="9.803" depth="0" valign="baseline" size="Large" style="math">\Phi</text>
 <text matrix="1 0 0 1 8 0" transformations="translations" pos="48 796" stroke="black" type="label" width="28.094" height="9.962" depth="2.79" valign="baseline" size="Large">path</text>
 <text matrix="1 0 0 1 -12 -4" transformations="translations" pos="112 800" stroke="black" type="label" width="23.394" height="6.177" depth="0" valign="baseline" size="Large" style="math">\pi=</text>
-<text matrix="1 0 0 1 108 -4" transformations="translations" pos="80 472" stroke="black" type="label" width="27.314" height="9.963" depth="0" valign="baseline" size="Large">with</text>
-<text transformations="translations" pos="432 744" stroke="black" type="label" width="77.298" height="9.965" depth="2.15" valign="baseline" size="Large">{\color{DarkOrange}$a$} holds in $s_0$</text>
-<text matrix="1 0 0 1 0 -56" transformations="translations" pos="432 744" stroke="black" type="label" width="80.069" height="9.965" depth="2.15" valign="baseline" size="Large">{\color{DarkOrange}$\Phi$} holds in $s_1$</text>
-<text matrix="1 0 0 1 344 -108" transformations="translations" pos="104 760" stroke="darkorange" type="label" width="46.575" height="9.803" depth="0" valign="baseline" size="Large" style="math">\Phi \wedge \neg \Psi</text>
-<text matrix="1 0 0 1 -72 -8" transformations="translations" pos="488 648" stroke="black" type="label" width="119.947" height="9.962" depth="2.79" valign="baseline" size="Large">holds in every state</text>
-<text matrix="1 0 0 1 0 8" transformations="translations" pos="428 616" stroke="black" type="label" width="93.257" height="9.962" depth="2.79" valign="baseline" size="Large">before reaching</text>
-<text matrix="1 0 0 1 0 8" transformations="translations" pos="424 600" stroke="black" type="label" width="106.992" height="9.962" depth="2.79" valign="baseline" size="Large">a state holding {\color{DarkOrange}$\Psi$}</text>
-<text transformations="translations" pos="432 576" stroke="black" type="label" width="97.237" height="9.962" depth="2.79" valign="baseline" size="Large">reaching a state</text>
-<text matrix="1 0 0 1 16 0" transformations="translations" pos="432 560" stroke="black" type="label" width="60.091" height="9.962" depth="2.79" valign="baseline" size="Large">holding {\color{DarkOrange}$\Phi$}</text>
-<text matrix="1 0 0 1 -16 0" transformations="translations" pos="432 520" stroke="black" type="label" width="134.775" height="9.962" depth="2.79" valign="baseline" size="Large">{\color{DarkOrange}$\Phi$} holds in every state</text>
+<text matrix="1 0 0 1 108 52" transformations="translations" pos="80 472" stroke="black" type="label" width="27.314" height="9.963" depth="0" valign="baseline" size="Large">with</text>
+<text transformations="translations" pos="432 744" stroke="black" type="label" width="80.069" height="9.965" depth="2.15" valign="baseline" size="Large">{\color{DarkOrange}$\Phi$} holds in $s_1$</text>
+<text matrix="1 0 0 1 344 -52" transformations="translations" pos="104 760" stroke="darkorange" type="label" width="46.575" height="9.803" depth="0" valign="baseline" size="Large" style="math">\Phi \wedge \neg \Psi</text>
+<text matrix="1 0 0 1 -72 48" transformations="translations" pos="488 648" stroke="black" type="label" width="119.947" height="9.962" depth="2.79" valign="baseline" size="Large">holds in every state</text>
+<text matrix="1 0 0 1 0 64" transformations="translations" pos="428 616" stroke="black" type="label" width="93.257" height="9.962" depth="2.79" valign="baseline" size="Large">before reaching</text>
+<text matrix="1 0 0 1 0 64" transformations="translations" pos="424 600" stroke="black" type="label" width="106.992" height="9.962" depth="2.79" valign="baseline" size="Large">a state holding {\color{DarkOrange}$\Psi$}</text>
+<text matrix="1 0 0 1 0 56" transformations="translations" pos="432 576" stroke="black" type="label" width="97.237" height="9.962" depth="2.79" valign="baseline" size="Large">reaching a state</text>
+<text matrix="1 0 0 1 16 56" transformations="translations" pos="432 560" stroke="black" type="label" width="60.091" height="9.962" depth="2.79" valign="baseline" size="Large">holding {\color{DarkOrange}$\Phi$}</text>
+<text matrix="1 0 0 1 -16 56" transformations="translations" pos="432 520" stroke="black" type="label" width="134.775" height="9.962" depth="2.79" valign="baseline" size="Large">{\color{DarkOrange}$\Phi$} holds in every state</text>
 </page>
 </ipe>
