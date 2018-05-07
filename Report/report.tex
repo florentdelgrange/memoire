@@ -12,7 +12,7 @@
 \usepackage{anyfontsize}
 \usepackage{adjustbox}
 \usepackage{graphicx}
-\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{amsmath,amsfonts,amsthm,amssymb} % Math packages
 \usepackage{graphicx}
 \usepackage[noend]{algorithmic}
 \usepackage{algorithm}
@@ -58,6 +58,13 @@
 \colorlet{numb}{magenta!60!black}
 
 \newcommand\U{\,\text{\sffamily U}\,}
+\newcommand\TS{\text{\sffamily TS}}
+\newcommand\SR{\textnormal{\sffamily SR}}
+\newcommand\SSPE{\textnormal{\sffamily SSP-E}}
+\newcommand\SSPP{\textnormal{\sffamily SSP-P}}
+\newcommand\SPG{\textnormal{\sffamily SP-G}}
+\newcommand\SSPWE{\textnormal{\sffamily SSP-WE}}
+\newcommand\SSPPQ{\textnormal{\sffamily SSP-PQ}}
 
 \lstdefinelanguage{json}{
     basicstyle=\normalfont\ttfamily\tiny,
@@ -132,6 +139,13 @@
 \definecolor{umons-gray}{RGB}{150, 150, 150}
 \definecolor{bordeaux}{HTML}{7b002c}
 \definecolor{Nokia}{HTML}{1C4499}
+\definecolor{custom-blue}{RGB}{6,69,173} % Gives your custom colour a name
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=umons-red,
+    citecolor=custom-blue
+}
 
 \newcommand{\HRule}{\rule{\linewidth}{0.3mm}\\} % Defines a new command for the horizontal lines, change thickness here
 
@@ -208,13 +222,13 @@ font={\fontsize{40}{50}\selectfont}
 }
 
 \begin{adjustbox}{minipage=.6\textwidth,center}
-Faculty of Sciences\par
-Computer Science Department \par
-Theoretical Computer Science Service
+  Faculty of Science\par
+  Computer Science
+% Theoretical Computer Science Service
 %\hfill --- David Carlisle
 \end{adjustbox}
 
-\vspace{4em}
+\vspace{5em}
 \vspace{1em}
 % \begin{center}
 % \includegraphics[scale=.6]{resources/tornado}
@@ -274,6 +288,7 @@ $\quad$ Mickael Randour
 \include{preliminaries}
 \include{storm-overview}
 \include{model-checking}
+\include{multi-objective-synthesis}
 
 \bibliographystyle{plain}
 \bibliography{bib}

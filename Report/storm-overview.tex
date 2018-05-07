@@ -1,18 +1,18 @@
-\chapter{Storm overview}
-\textit{This chapter is based on the article named ``A Storm is coming: a modern probabilistic model checker'' \cite{storm1} and on the documentation of the tool.} \\
+\chapter{Overview of the tool Storm}
+\textit{This chapter is essentially based on the article named ``A Storm is coming: a modern probabilistic model checker'' \cite{storm1} and on the documentation of the tool.} \\
 
 Storm is a probabilistic model checker recently released. It is able to analyse
 four Markov models, featuring discrete-time Markov chains and Markov decision processes. The main aim of this tool is to be competitive in terms of performances, to be updated with new verification algorithms, to be able to
 deal with a large panel of modeling languages,... This tool provides %many other
 a lot of model checking features, including solvers for problems presented in the previous chapter and
-for multi-objective problems. In this chapter, we will briefly present how our MDPs can be defined in this powerful tool, how they are represented and whit which different approaches problems are solved.
+for multi-objective problems. In this chapter, we will briefly present how our MDPs can be defined in this powerful tool, how they are represented and with which different approaches problems are solved.
 Whit this background, we will enrich next chapters with practical Storm examples.
 
 \section{Models}
 As mentioned above, Storm allows to model-check four types of Markov models.
-The first family of models contains discrete-time Markov models, that are covered in the first chapter, composed by
+The first family of models is discrete-time Markov models, that are covered in the first chapter, composed by
 discrete-time Markov chains and Markov decision processes.
-The second family of models contains continuous-time Markov models, composed by continuous-time Markov chains and Markov automata. \\
+The second family of models is continuous-time Markov models, composed by continuous-time Markov chains and Markov automata. \\
 
 Continuous-time Markov chains models (CTMC) \cite{maro} are similar to discrete-time Markov chains, but each state $s$ is
 characterised by an exit rate $\lambda_s$.
@@ -20,32 +20,34 @@ The time $t$ spent in each state $s$ of the system is negatively exponentially d
 This exit rate and a probability transition function allow to induce a generator
 function with which it is possible to compute the probability
 %to go from one state to another after a certain time.
-that the system is currently in a state $s'$ while the system was in the state $s$, $t$ time units ago. Note that there is no more ``step'' notion in continuous
-Markov model types. Furthermore, a Markov automata (MA) is a continuous nondeterministic Markov model where the key idea is the same that between MCs and MDPs in discrete-time. \\
+that the system is currently in a state $s'$ while the system was in the state $s$, $t$ time units ago.
+Note that the ``step'' notion is replaced by the ``time'' notion in comparison with discrete-time models. Furthermore, a Markov automata (MA) is a continuous-time nondeterministic Markov model where the key idea is the same as between MCs and MDPs in discrete-time. \\
 
 We will not dwell on continuous-time models anymore and focus primarily on discrete-time models.
 
 \section{Input formats}
 Storm supports various native input formats, including Prism, Jani, generalised stochastic Petri nets, dynamic fault trees, cpGCL and explicit format.
-We will introduce the three input languages supported by the main executable of Storm by presenting how to use them to modelize our
+We will introduce the three input languages supported by the main executable of Storm by presenting how to use them to model our
 discrete-time systems.
-\subsection{Prism}
+\subsection{Prism} \label{prism-subsec}
 The Prism language \cite{prismsynt} allows to deal with MCs, CMCs and MDPs in Storm.
-It is a state-based language using reactive modules.
+It is a state-based language using reactive \textit{modules}.
 We will not define the complete syntax and semantic of the Prism language, but rather provide a way to
 define our MDPs.
 Let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be a finite MDP, with $|S| = n$, and $s_i \in S$ be the $i^{\text{th}}$ state of $S$ from which events that we are
 interested to measure start, with $i \in \{0, \dots, n-1\}$. \\
 
 In the Prism language, a \textit{module} represents a component of the system.
-Depending on how our MDPs are defined, we just need a single module to
+By definition of our MDPs, we just need a single module to
 represent them. A module allows to characterise $S$, $A$ and $\Delta$. We begin by enumerating states of $\mathcal{M}$:
 \[
-  s: [0\, ..\, n-1] \; \text{init} \; i;
+  x: [0\, ..\, n-1] \; \text{init} \; i;
 \]
+In the Prism language, $x$ is considered as a \textit{variable} of the module, ranging on states of $\mathcal{M}$.
 In this manner, we express that for all $j \in \{0, \dots, n-1\}$, $s_j \in S$
-is the $j^{\text{th}}$ state of $S$ and $s_i$ is the initial state from which events start. In the Prism language, $s$ is considered as a \textit{variable} of the module, ranging on states of $\mathcal{M}$. Note that a variable represents a set of states of the MDP. Thus, it is possible that a module have more than one variable if the state space of the MDP is formed by more than one set of sates.
-Thanks to variables of the module, it is possible to form predicates $\Phi$ with the following  syntax:
+is the $j^{\text{th}}$ state of $S$ represented by the index $j$ of the variable $x$ (i.e., $x=j$), and $s_i$ is the initial state from which events start, represented by the index $i$ of the variable $x$ (i.e., $x=i$).
+Note that a variable represents a set of states of the MDP. Thus, it is possible that a module has more than one variable if the state space of the MDP is formed by a Cartesian product of set of states.
+Thanks to variables of the module, it is possible to form predicates $\Phi$ on the variables of the module with the syntax described with the following grammar:
 \begin{align*}
   \Phi &::= true \; | \; x \varphi p \; | \; (X) \; | \; (\Psi) \\
   X &::= \Phi \; | \; \Phi \& X \\
@@ -55,21 +57,26 @@ where $x$ is a variable of the module, $\varphi \in \{<, \leq, >, \geq, =, \neq\
 and $p \in \mathbb{N}$. Let $s \in S$ be a state of $\mathcal{M}$. We have that $s \models \Phi$ iff $\Phi$ is true for the state $s$, i.e.,
 \begin{itemize}
   \item $s \models true$,
-  \item $s \models x \varphi p$ iff there exists a $j \in \mathbb{N}$ in the range of indices of the module variable $x$ by which the state $s$ is represented (i.e., $s$ is represented by $x=j$) such that $j \varphi p$.
+  \item $s \models x \varphi p$ iff there exists an index $j \in \mathbb{N}$ in the range of indices of the module variable $x$ by which the state $s$ is represented (i.e., $s$ is represented by $x=j$) and such that $j \varphi p$.
   \item $s \models (\Phi_1 \& \dots \& \Phi_m)$ iff
     for all $k \in \{1, \dots, m\}$, $s \models \Phi_k$, and
   \item $s \models (\Phi_1 || \dots || \Phi_m)$ iff
     there exists $k \in \{1, \dots, m\}$ such that $s \models \Phi_k$.
 \end{itemize}
-We denote by $Sat(\Phi)$ the set of states that satisfies the predicate $\Phi$, i.e., $Sat(\Phi) = \{s \in S \; | \; s \models \Phi\}$. \\
+We denote by $Sat(\Phi)$ the set of states satisfying the predicate $\Phi$, i.e., $Sat(\Phi) = \{s \in S \; | \; s \models \Phi\}$.
 
-The behaviour of the module, i.e., transitions of the set $\rightarrow$\footnote{recall that the transition relation $\rightarrow$ is the set $\{ (s, \alpha, s') \in S \times A \times S \; | \; \Delta(s, \alpha, s') > 0 \}$} is then described
+\begin{example}[\textit{Satisfaction of a predicate on variables of an MDP module}] Consider an MDP $\mathcal{M}$ with state space $S$ and a Prism program containing a module $M$ defining this MDP.
+Assume that the size of the state space $S$ is $|S| = 5$ and that the module $M$ contains an unique variable $x$, ranging on all states of $S$. Let
+$\Phi = (x \leq 1 \,||\, x >3)$ be a predicare on the variables of the module $M$, then $Sat(\Phi) = \{s_0, s_1, s_4\}$.
+\end{example}
+
+The behaviours of the module, i.e., transitions of the set $\rightarrow$\footnote{remind that the transition relation $\rightarrow$ is the set $\{ (s, \alpha, s') \in S \times A \times S \; | \; \Delta(s, \alpha, s') > 0 \}$} are then described
 inside the module by a set of \textit{guarded commands}, taken the following form:
 \[
   [\alpha] \; \Phi \rightarrow \delta_1: \phi_1 + \dots + \delta_m: \phi_m;
 \]
-where $\Phi$ is a predicate such that for all $s \in Sat(\Phi)$, $\alpha \in A(s)$, $\delta_k \in [0, 1]$ and $\phi_k$ is an \textit{update formula} describing a state represented by a variable of the module. This guarded command basically means that all states that satisfy the predicate $\Phi$ go to the state  described by $\phi_k$ with a probability $\delta_k$, where the action $\alpha$ is chosen.
-An update formula $\phi$ is of the form:
+where $\Phi$ is a predicate over the variables of the module such that, for all $s \in Sat(\Phi)$, $\alpha \in A(s)$, $i \in \{1, \dots, m\}$, $\delta_i \in [0, 1]$ with $\sum_{i=1}^m \delta_i = 1$ and where $\phi_i$ is an \textit{update formula} describing a state represented by a variable of the module. This guarded command basically means that all states that satisfy the predicate $\Phi$ go to the state  described by $\phi_i$ with a probability $\delta_i$, when the action $\alpha$ is chosen.
+An update formula $\phi$ is of the form
 \[\phi::=(x'_1=u_1) \& (x'_2=u_2) \& \dots \& (x'_k=u_k)\]
 where $x_1, x_2, \dots, x_k$ are variables of the module and $u_1, u_2, \dots, u_k$ are \textit{expressions} (i.e., literal values, variables, constants and operators) over all variables.
 % \begin{align*}
@@ -91,19 +98,21 @@ where $x_1, x_2, \dots, x_k$ are variables of the module and $u_1, u_2, \dots, u
 %   \item $s_k \models s' = x$ iff $k = x$. Then the system go from $s_j$ to $s_x$.
 %   \item $s_k \models s' = s \varphi x$ iff $k$ is the current index of the variable $s$ on which the operation $\varphi$ has been applied. Here, we have $k = j \varphi x$. Thus the system go from $s_j$ to $s_{j+\varphi}$.
 % \end{itemize}
-More specifically, since all states of $\mathcal{M}$ are represented by the values of the single variable $s$, transitions of $\mathcal{M}$ can be described with the following guarded command:
+\begin{example}[\textit{Guarded command for a simple module}]
+Let $\mathcal{M}$ be an MDP with state space $S$. Consider that all states of $\mathcal{M}$ are represented by the values of the single variable $x$, ranging on all states of the set $S$, with $|S|=n$, the transitions of $\mathcal{M}$ can be described with the following guarded command:
 let $s_j$ be the $j^{\text{th}}$ state of $S$, for all enabled actions $\alpha \in A(s_j)$ of $s_j$,
 \[
-  [\alpha] \; s=j \rightarrow \delta_0: s'=j_0 + \dots + \delta_{m-1}:  s'=j_{m-1};
+  [\alpha] \; x=j \rightarrow \delta_0: x'=j_0 + \dots + \delta_{m-1}:  x'=j_{m-1};
 \]
 where $s_{j_0}, \dots, s_{j_{m-1}}$ are $\alpha$-successors of $s_j$ and $\delta_k = \Delta(s_j, \alpha, s_{j_k})$,
-with  $m=|Succ(s_j,\alpha)|$, $k \in \{0, \dots, m-1\}$, $j_k \in \{0, \dots, n-1\}$ and $s_{j_k}$, the $k^\text{th}$ $\alpha$-successor of $s_j$ and the $j_k^\text{th}$ state of $S$. \\
+with  $m=|Succ(s_j,\alpha)|$, $k \in \{0, \dots, m-1\}$, $j_k \in \{0, \dots, n-1\}$ and where $s_{j_k}$ is the $k^\text{th}$ $\alpha$-successor of $s_j$ and the $j_k^\text{th}$ state of $S$.
+\end{example}
 
 The set of atomic propositions $AP$ and the labelling function $L$ of $\mathcal{M}$ are characterised in the Prism language as follows: for all $a \in AP$,
 \[
   \text{label} \; ``a" = \Phi;
 \]
-such that the set of states that satisfy the predicate $\Phi$ is actually the set $\{ s \in S \; | \; a \in L(s) \}$. \\
+where the set of states satisfying the predicate $\Phi$ is actually the set of states labelled with $a$, i.e., $Sat(\Phi) = \{ s \in S \; | \; a \in L(s) \}$. \\
 
 % \[
 %   \text{label} \; ``a" = (s=j_0\, \& \, \dots \, \& \, s=j_{m-1});
@@ -121,20 +130,21 @@ a real value. A \textit{dimension rewards} is a set of rewards that take the fol
   [\alpha] \; \Phi: x;
 \]
 where $\alpha \in A$ is an action, $\Phi$ is a predicate and $x \in \mathbb{R}$
-is the value of the reward of going from a state $s \in S$, such that $\alpha \in A(s)$, to states of $Sat(\Phi)$. Note that if the action $\alpha$ is omitted (giving a reward of the form $[]\; \Phi: x^*;$), each transition $s \xrightarrow{\,\alpha\,} s'$ such that $s \in Sat(\Phi)$ and $\alpha \in A(s)$
+is the value of the reward of going from a state $s \in S$, such that $\alpha \in A(s)$, to states of $Sat(\Phi)$. Note that if the action $\alpha$ is omitted (giving a reward of the form $[]\; \Phi: x^*;$), each transition $s \xrightarrow{\,\alpha\,} s'$ such that $s' \in Sat(\Phi)$ and $\alpha \in A(s)$
 has a reward of $x^*$. Note also that it is possible to specify multiple dimensions rewards for an MDP. We will detail this notion later.
 We can adapt the reward notion to describe the weight function of our MDPs with a set of rewards formed as follows:
-let $\alpha \in A$ be an action of $\mathcal{M}$ and $x = w(\alpha)$, the reward $x$ formed by
+let $\alpha \in A$ be an action of $\mathcal{M}$ and $x = w(\alpha)$, the reward formed by
 \[
   [\alpha] \; true: x;
 \]
-is actually the cost of choosing the action $\alpha$.
+is actually the weight of the action $\alpha$.
 
 \begin{example}[\textit{Define an MDP in the Prism language}]
-Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be the MDP of the figure \ref{prism-simple}. This MDP can be defined in the Prism language as follows:\\
+Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be the MDP of Figure \ref{prism-simple}. This MDP can be defined in the Prism language as follows:\\
 \begin{minipage}{0.4\linewidth}
   \lstinputlisting[language={Prism},
-      rulesepcolor=\color{black}, rulecolor=\color{black}, breaklines=true,
+      rulesepcolor=\color{black}, rulecolor=\color{black},
+      breaklines=true,
       breakatwhitespace=true, firstnumber=1, firstline=1, lastline=25]{resources/simple_mdp.prism}
 \end{minipage}
 \begin{minipage}{0.6\linewidth}
@@ -145,22 +155,22 @@ Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be the MDP of the figure \ref{prism-s
 \end{example}
 
 \begin{example}[\textit{Unfold an MDP in the Prism language}]
-Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be the MDP of the figure \ref{prism-simple} and $l \in \mathbb{N}$
+Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be the MDP of Figure \ref{prism-simple} and $l \in \mathbb{N}$
 be a length threshold such that $l=8$. We can define the unfolding of $\mathcal{M}$ from the state $s_0$ until the length threshold $l$ for the set of target states $T = \{s_1\}$ (cf. figure \ref{unfolding}) in the Prism language as follows:
 \lstinputlisting[language={Prism},
     rulesepcolor=\color{black}, rulecolor=\color{black}, breaklines=true,
     breakatwhitespace=true, firstnumber=1, firstline=1, lastline=25]{resources/unfolded_simple_mdp.prism}
 \end{example}
-Since the state space of the unfolded MDP $\mathcal{M}_l$ is a Cartesian product between the state space $S$ of $\mathcal{M}$ and the set $V = \{0, \dots, l, \bot\} \subseteq \mathbb{N} \cup \{\bot\}$, we can define the variables of the unfolded MDP $\mathcal{M}_l$ with the variables of the MDP and a new variable $v$, ranging from $0$ to $l+1$ (where the $(l+1)^\text{th}$ state actually represents the $\bot$ value). The guarded
+Since the state space of the unfolded MDP $\mathcal{M}_l$ is a Cartesian product between the state space $S$ of $\mathcal{M}$ and the set $V = \{0, \dots, l, \bot\} \subseteq \mathbb{N} \cup \{\bot\}$, we can define the variables of the unfolded MDP $\mathcal{M}_l$ with the variables of $\mathcal{M}$ and a new variable $v$, ranging from $0$ to $l+1$ (where the $(l+1)^\text{th}$ state actually represents the $\bot$ value). The guarded
 commands of the module are obviously defined, following the definition of the
 probability transition function $\Delta_l$ of any unfolded MDP. Finally, a label $target$ is added,
 labelling each state of the set $T_l = \{ (t, v) \in S \times V \; | \; t \in T \; \wedge \; v \leq l \}$.
 
 \subsection{Explicit format}
-Storm also supports input models specified in explicit format. The syntactic power of a such format is lower compared to the Prism language, but is
+Storm also supports input models specified in explicit format. The syntactic power of such a format is lower compared to the Prism language, but is
 very simple and intuitive. Thereby, this format can thus be interesting in case of
 we want to verify a model generated from another tool (e.g., MRMC or Prism).
-In general, a model generated in explicit format from another tool does not match exactly but can be easily modified by hand to be handled by Storm due to
+In general, a same model generated in explicit format from different tool does not match exactly. However, it can be easily modified by hand to be handled by Storm due to
 the simplicity of the format. \\
 
 An MDP specified in explicit format
@@ -223,35 +233,50 @@ convert multiple input types to Jani. An example of conversion in available in a
 \section{Properties}
 Storm uses \textit{probabilistic branching time logic}, i.e., PRCTL and CSL,
 to verify respectively properties of discrete-time and continuous-time models.
-We will focus on PRCTL on the next chapter (cf. section ).
-We will see that the language of a such logic additionally allows to formulate requests to solve problems encountered in the first chapter and for problems we will encounter later.
+We will focus on PRCTL in the next chapter (cf. sections \ref{PRCTL-MC} and \ref{PRCTL-MDP}).
+We will see that the language of such a logic additionally allows to formulate requests to solve problems encountered in the first chapter and for problems we will encounter later.
 
 %\section{Implementation}
 \section{Engines}
 Storm is decomposed in five engines that pursue different approaches to solve a problem.
 \begin{itemize}
   \item \textit{Sparse}: this engine is the default one. It uses sparse matrices as in-memory representation of models. Numerical analysis methods allow efficient memory allocation and fast operations for this data structure on small and moderately sized models.
-  Actually, this data structure is very powerful in the case of most states of the model have transitions to a small subset of the state space of the model. This case represents actually most of the cases: in general, underlying graphs of Markov models are rarely complete and the transitions matrix representing the probability transition function of
+  Actually, this data structure is very powerful in the case of most states of the model have transitions to a small subset of the set of states of the model. This case represents actually most of the cases: in general, underlying graphs of Markov models are rarely complete and the transitions matrix representing the probability transition function of
   most of the models is thus sparse.
   \item \textit{DD}: this engine uses multi-terminal binary decision diagrams (MTBDDs) as their primal representation. This data structure allows
   to handle gigantic models. Intuitively, each state of the system are encoded on $n$ bits and the probability transition function is a boolean function
   over the bits representation of two states. Binary decision diagrams (BDDs) are
   used to represent boolean functions and are actually compressed binary decision trees through directed acyclic graphs (DAGs), with two terminal states ($1$ and $0$). MTBDDs are BDDs allowing numerical values for terminal states.
   \item \textit{Hybrid}: this engine uses MTBDDs as representation of models, but sometimes uses sparse matrices if operations are judged more appropriate with this format.
-  \item \textit{Abstraction refinement}: this engine abstracts (non-necessary finite) discrete-time Markov models to finite stochastic games and automatically refines the abstraction as necessary. This engine is suited for models with an infinite state space (others engines can not handle this type of models).
+  \item \textit{Abstraction refinement}: this engine \textit{abstracts} (non-necessary finite) discrete-time Markov models to finite \textit{stochastic games} and automatically \textit{refines} the \textit{abstraction} as necessary. This engine is suited for models with an infinite state space (other engines cannot handle this type of models).
+  \par Intuitively, the abstraction consists of constructing a smaller model by removing details from the concrete system.
+  The motivation is that when a property hold in the abstract model, then it also holds in the concrete system.
+  If the property does not hold in the abstraction, then either information from the model checking process allow to exhibit a counter-example to show that the property is false in the concrete system, or the abstraction is refined.
+  \par Constructing an abstraction of an MDP implies a greater degree of nondeterminism.
+  The process of abstraction must maintain a distinction between the nondeterminism from the original MDP and from the nondeterminism induced during the abstraction process, and it is why stochastic games are used \cite{DBLP:journals/fmsd/KattenbeltKNP10}.
   \item \textit{Exploration}: this engine uses sparse representation for models and explores the state space of models with machine learning methods.
 \end{itemize}
 
 \section{Solvers}
 Several solvers are available in Storm.
-Storm uses the suited solver in function of the situation (i.e., the input model, its format, the engine used and its in-memory representation).
+Storm uses the suited solver according to the situation (i.e., the input model, its format, the engine used and its in-memory representation).
+
 \begin{itemize}
-  \item Bellman equations, mixed-integer linear programming and satisfiability modulo theories (SMT) can be used with sparse matrices and MTBDDs. However,
-  since numerical methods are prone to numerical problems (more particularly
-  for the value-iteration step of Bellman equations), Storm supports enabling exact arithmetic to obtain precise results.
-  \item A SMT problem is a decision problem for first-order logical formulae with equality and without quantifier. SMT solvers are used to minimise the size of models by bisimulation.
-  \item Storm can check MDPs via linear programming and MCs via linear equation systems.
-  \item Although Storm does not support stochastic games as input format,
+  \item \textit{Linear equation systems}: Storm provides a
+    solver for linear equation systems, allowing to solve reachability and expectation problems in MCs (cf. section \ref{obj-MC} in the first chapter).
+  \item \textit{Bellman equations}: these equations form
+    systems defined in the next chapter for MDPs (cf. theorem
+    \ref{bellman1} and Appendix \ref{bellman2}) whose solutions describe
+    reachability and expectation properties.
+    The associated solver is based on an approximation technique named \textit{value iteration}, also described in the next chapter.
+    Intuitively, this technique approximates values of the solution of the equation by iteratively updating the approximation. This approximation is guaranteed to converge to the solution of the equation system.
+    Therefore, the difficulty of this technique is to find a threshold used to stop the iteration process.
+    \par Since numerical methods are prone to numerical problems, Storm supports enabling \textit{exact arithmetic} to obtain precise results.
+  \item \textit{Linear programming}: a solver for (mixed-integer) linear programs is implemented in Storm, allowing to describe reachability and expectation properties for MDPs, as encountered in the first chapter (cf. subsection \ref{vssp} in the first chapter and the linked LPs in Appendix \ref{LP-app}).\par
+  If the size of the considered MDP is sufficiently moderate, Storm uses this solver as the primary.
+  \item \textit{SMT}: a SMT problem is a decision problem for first-order logical formulae with equality and without quantifier. SMT solvers are used to minimise the size of models by \textit{bisimulation}.
+  A bisimulation is an equivalence relation between two systems having the same behaviour.
+  \item \textit{Stochastic games}: although Storm does not support stochastic games as input format,
     solvers for them are available for the abstraction refinement engine
     which uses these as representation.
 \end{itemize}

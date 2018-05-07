@@ -1,6 +1,8 @@
 \chapter{Model checking for Markov decision processes}
 
-Storm allows to model-check discrete-time and continuous-time models, i.e.,
+\textit{Concepts, theorems and definitions of this chapter are essentially inspired by chapters and sections of the book ``Principles of model checking'' \cite{PMC} treating of linear temporal logic, computation tree logic, probabilistic computation tree logic and probabilistic rewards computation tree logic.}\\
+
+The tool Storm allows to model-check discrete-time and continuous-time models, i.e.,
 verify that properties hold in states of models. This
 chapter will cover discrete-time model checking via a \textit{probabilistic branching-time logic}. We will detail the syntax, the semantic and model checking algorithms of this logic.
 We will see that it is possible to extend this logic to support weights of MCs and MDPs. Then, we will see that it is
@@ -9,20 +11,23 @@ problems we encountered in the first chapter and that we
 will address in the following chapter, covering multi-objective support for MDPs. \\
 
 As model checking for MDPs uses the notion of strategy to resolve nondeterminism,
-we first need to introduce the probabilistic branching time logic for MCs.
+we first need to introduce this probabilistic branching time logic for MCs.
 
-\section{Probabilistic computational tree logic}
-\textit{Probabilistic computational tree logic} (or \textbf{PCTL}, for short) is a \textit{branching-time temporal logic}.
+\section{Probabilistic computation tree logic}
+\textit{Probabilistic computation tree logic} (\textbf{PCTL}) is a \textit{branching-time temporal logic}.
 This logic allows to verify probabilistic systems via an
 %probabilistic
-execution tree, actually named \textit{computational tree}. For a given system, this tree consists of an infinite unfolding of this system, considering
+execution tree, actually named \textit{computation tree}. For a given system, this tree consists of an infinite unfolding of this system starting from a given state (i.e., the root of the tree), considering
 all branching possibilities.
 %Thus, it is actually an MC with an infinite tree as underlying graph.
-The key idea of this tree is that each branch of a node leads to a possible future of this node.
-So, this tree is highly linked to cylinder sets.  Possible futures of a node actually correspond to paths of the cylinder set for which the prefix leads the root to the node in the tree.
-\begin{example}[\textit{Computational tree of an MC}]
-Let $\mathcal{M}$ be the MC of the figure \ref{ct1}. The computational tree of $\mathcal{M}$ starting from the state $s_0$ is
-given in the figure \ref{ct2}. We clearly see in this tree that each possible future of a node $s^*$ actually corresponds to a state $s'_n$ of a path $\pi = s'_0 \dots s'_k \dots s'_n \dots \in Cyl(s'_0 \dots s'_k)$ such that $s'_0 = s_0$, $s'_k=s^*$ and $k < n$.
+The key ideas behind this tree are that
+each node of this tree corresponds to a state of the system,
+each prefix of this tree corresponds to a finite path of the system starting from the root of the tree, and finally that
+each branch of a node leads to a possible future of this node.
+So, this tree is highly linked to cylinder sets.  Possible futures of a node actually correspond to paths of the cylinder set formed by the prefix leading the root to the node in the tree.
+\begin{example}[\textit{Computation tree of an MC}]
+Let $\mathcal{M}$ be the MC of Figure \ref{ct1}. The computation tree of $\mathcal{M}$ starting from the state $s_0$ is
+given in Figure \ref{ct2}. We clearly see in this tree that each possible future of a node $s^*$ actually corresponds to a state $s'_n$ of a path $\pi = s'_0 \dots s'_k \dots s'_n \dots \in Cyl(s'_0 \dots s'_k)$ such that $s'_0 = s_0$, $s'_k=s^*$ and $k < n$.
 For example, $s_1$ is a possible future of the node $s_0$ (for which the prefix is $s_0s_0$ in the tree) because the path $\pi = s_0s_0s_0(s_1s_2)^\omega$ is in $Cyl(s_0s_0)$.
 \begin{figure}[h]
   \begin{minipage}{0.4\linewidth}
@@ -35,7 +40,7 @@ For example, $s_1$ is a possible future of the node $s_0$ (for which the prefix 
     \centering
     \includegraphics[width=0.8\linewidth]{resources/CLT_unfolding_2}
     \captionsetup{justification=centering}
-    \captionof{figure}{Computational tree of $\mathcal{M}$ starting from $s_0$}\label{ct2}
+    \captionof{figure}{Computation tree of $\mathcal{M}$ starting from $s_0$}\label{ct2}
   \end{minipage}
 \end{figure}
 We will see that it is possible to express formulae in PCTL describing states properties of the system like the following one:
@@ -43,18 +48,18 @@ We will see that it is possible to express formulae in PCTL describing states pr
 ``\textit{Do all executions starting from the state $s_0$ always eventually reach $b$ with a nonzero probability ?}''
 \end{center}
 Model checking algorithms of PCTL will answer \textit{yes} to this.
-Intuitively, if we refer to the computational tree,
+Intuitively, if we refer to the computation tree,
 %we see that it is possible to reach a node labeled with $b$,
 %from any node of the tree,
 %via a path from this node that has a nonzero probability.
 %we see that it is possible to reach a node labelled with $b$ from any node of the tree and, each cylinder set
 %for which the prefix leads the root to any node has a nonzero probability:
-we see that a node labelled with $b$ appears in the future of any node $s^*$ of the tree. Furthermore, there exists an index $n$ for each path $\pi = s'_0 s'_1 s'_2 \dots s'_n \dots \in Cyl(s'_0 \dots s'_k)$, where $s'_0 \dots s'_k$ is the prefix that leads the root to the node $s^* = s'_k$ in the tree, such that $k <n$ and $s'_n$ is labelled with $b$, except for the path $s_0^\omega$ (corresponding to the left path in the computational tree).
+we see that a node labelled with $b$ appears in the future of any node $s^*$ of the tree. Furthermore, if there exists an index $n$ for each path $\pi = s'_0 s'_1 s'_2 \dots s'_n \dots \in Cyl(s'_0 \dots s'_k)$, where $s'_0 \dots s'_k$ is the prefix that leads the root to the node $s^* = s'_k$ in the tree, such that $k <n$ and $s'_n$ is labelled with $b$, then the property is verified. This is true for all paths,  except for the path $s_0^\omega$ (corresponding to the left path in the computation tree).
 Since this path has a zero probability, we have that this property is verified with a probability one from the state $s_0$.
 We will see in this chapter how to verify formally each property of this type.
 %let $\hat{\pi} = s'_0 \dots s'_n$ be a finite path of $\mathcal{M}$, starting from the state $s_0$ of $\mathcal{M}$ and referring to a finite path starting from the root of the tree. If there exists an index $k$, such that $1 \leq k \leq n$ and $s'_k = s_1$, then $\mathbb{P}_{s_0}(Cyl(s'_0 \dots s'_k \dots s'_n)) = \prod_{i=0}^{k-1} \Delta(s'_i, s'_{i+1}) \cdot 1^\omega = \frac{1}{10}^{k-1}$.
 %Else, $\hat{\pi} = s_0^{n+1}$ and $\mathbb{P}_{s_0}(Cyl(s_0^{n+1})) = \frac{1}{10}^n$.
-%Furthermore, all executions starting from $s_0$ has a probability one to always eventually reach a state labeled with $b$: the only path starting from $s_0$ that does not allow it is the path $s_0^\omega$ (corresponding to the left path in the computational tree) and has a zero probability.
+%Furthermore, all executions starting from $s_0$ has a probability one to always eventually reach a state labeled with $b$: the only path starting from $s_0$ that does not allow it is the path $s_0^\omega$ (corresponding to the left path in the computation tree) and has a zero probability.
 \end{example}
 
 \subsection{Syntax and semantic}
@@ -64,19 +69,19 @@ by probability bounds.
 \begin{definition}[\textbf{Syntax of PCTL}]
 Let $AP$ be a set of atomic propositions,
 \begin{itemize}
-  \item PCTL \textit{state formulae} are formed according the following grammar:
+  \item PCTL \textit{state formulae} over $AP$ are formed according to the following grammar:
   \[
     \Phi ::= true \;\; | \;\; a \;\; | \;\; \Phi_1 \wedge \Phi_2 \;\; | \;\; \neg \Phi \;\; | \;\; \mathcal{P}_J(\phi)
   \]
   where $a \in AP$ is an atomic proposition, $J \subseteq [0, 1]$ gives probability bounds and $\phi$ is a path formula.
-  \item PCTL \textit{path formulae} are formed according the following grammar:
+  \item PCTL \textit{path formulae} over $AP$ are formed according to the following grammar:
   \[
   \phi ::= \bigcirc \Phi \;\; | \;\; \Phi_1 \U \Phi_2 \;\; | \;\; \Phi_1 \U^{\leq n} \Phi_2
   \]
   where $\Phi$, $\Phi_1$ and $\Phi_2$ are state formulae and $n \in \mathbb{N}$.
 \end{itemize}
 \end{definition}
-Intuitively, $\mathcal{P}_J(\phi)$ specify that the probability of paths satisfying the path formula $\phi$ must be in the interval $J$. A path formula is formed by temporal operators, like $\bigcirc$ and $\U$, with $\U^{\leq n}$ being $\U$ bounded by a maximum number of steps.  There exists some other linear temporal operators, dealing with paths of the system (cf. figure \ref{ltl}). These operators can be derived from the PCTL grammar:
+Intuitively, $\mathcal{P}_J(\phi)$ specify that the probability of paths satisfying the path formula $\phi$ must be in the interval $J$. A path formula is formed by temporal operators, like $\bigcirc$ and $\U$, with $\U^{\leq n}$ being $\U$ bounded by a maximum number of steps.  There exists some other linear temporal operators, dealing with paths of the system (cf. Figure \ref{ltl}). These operators can be derived from the PCTL grammar:
 let $J \in [0, 1]$ giving probability bounds, $\Phi$ be a state formula and $n \in \mathbb{N}$ be a number of steps,
 
 \makeatletter
@@ -89,7 +94,10 @@ let $J \in [0, 1]$ giving probability bounds, $\Phi$ be a state formula and $n \
   &\bigcdot \; \mathcal{P}_J(\Diamond^{\leq n} \Phi) \equiv \mathcal{P}_J(true \U^{\leq n} \Phi) \tag{\textit{bounded enventually} probability} \\
   &\bigcdot \; \mathcal{P}_J(\Box \Phi) \equiv
     \neg \mathcal{P}_J(\Diamond \neg \Phi)
-    \tag{\textit{always} probability}
+    \tag{\textit{always} probability} \\
+  &\bigcdot \; \mathcal{P}_J(\Box^{\leq n} \Phi) \equiv
+    \neg \mathcal{P}_J(\Diamond^{\leq n} \neg \Phi)
+    \tag{\textit{bounded always} probability}
 \end{flalign}
 
 \begin{figure}[h]
@@ -99,21 +107,20 @@ let $J \in [0, 1]$ giving probability bounds, $\Phi$ be a state formula and $n \
 \end{figure}
 
 \begin{definition}[\textbf{Semantic of PCTL}]
-  Let $\mathcal{M} = (S, \Delta, AP, L)$ be an MC and $s \in S$, be a state of $\mathcal{M}$,
+  Let $\mathcal{M} = (S, \Delta, w, AP, L)$ be an MC, $s \in S$, $\Phi, \Psi$ be PCTL state formulae over $AP$, and $\phi$ be a PCTL path formula over $AP$,
   \begin{flalign*}
   \intertext{$s \models \Phi$ iff the state formula $\Phi$ holds in the state $s$, i.e.,}
     &\bigcdot\; s \models true, &&&\\
     &\bigcdot\; s \models a &\text{ iff }& a \text{ is a label of $s$, i.e., } a \in L(s),&\\
-    &\bigcdot\; s \models \Phi_1 \wedge \Phi_2&\text{ iff }& s \models \Phi_1 \text{ and } s \models \Phi_2,&\\
+    &\bigcdot\; s \models \Phi \wedge \Psi &\text{ iff }& s \models \Phi \text{ and } s \models \Psi ,&\\
     &\bigcdot\; s \models \neg \Phi &\text{ iff }& s \not\models \Phi, &\\
     &\bigcdot\; s \models \mathcal{P}_J(\phi) &\text{ iff }& \mathbb{P}_s(\{ \pi \in Paths(s) \; | \; \pi \models \phi \}) \in J.& \\
   \intertext{Following a path $\pi = s_0s_1s_2\dots \in Paths(s)$, $\pi \models \phi$ iff $\pi$ satisfies the path formula $\phi$, i.e., }
-  &\bigcdot\;\pi \models \Phi&\text{ iff }&s_0 \models \Phi,&\\
   &\bigcdot\;\pi \models \bigcirc\, \Phi&\text{ iff }&s_1 \models \Phi,&\\
-  &\bigcdot\;\pi \models \Phi_1 \U \Phi_2 &\text{ iff }& \exists j \in \mathbb{N},\, s_j \models \Phi_2
-    \text{ and } \forall i \in \mathbb{N}, \, i < j, \, s_i \models \Phi_1,&\\
-  &\bigcdot\;\pi \models \Phi_1 \U^{\leq n} \Phi_2 &\text{ iff }& \exists j \in \mathbb{N}, \, j \leq n ,\, s_j \models \Phi_2
-    \text{ and } \forall i \in \mathbb{N}, \,i < j, \, s_i \models \Phi_1.&\\
+  &\bigcdot\;\pi \models \Phi \U \Psi &\text{ iff }& \exists j \in \mathbb{N},\, s_j \models \Psi
+    \text{ and } \forall i \in \mathbb{N}, \, i < j, \, s_i \models \Phi,&\\
+  &\bigcdot\;\pi \models \Phi \U^{\leq n} \Psi &\text{ iff }& \exists j \in \mathbb{N}, \, j \leq n ,\, s_j \models \Psi
+    \text{ and } \forall i \in \mathbb{N}, \,i < j, \, s_i \models \Phi.&\\
   \intertext{Additionally,}
   &\bigcdot\; \pi \models \Diamond \Phi&\text{ iff }& \exists j \in \mathbb{N}, \, s_j \models \Phi,&\\
   &\bigcdot\; \pi \models \Box \Phi&\text{ iff }& \forall j \in \mathbb{N}, \, s_j \models \Phi.&
@@ -123,7 +130,7 @@ let $J \in [0, 1]$ giving probability bounds, $\Phi$ be a state formula and $n \
 Since $\mathcal{P}_J(\phi)$ refers to probabilities, $\neg \mathcal{P}_J(\phi) = \mathcal{P}_{J'}(\phi)$ for any path formula $\phi$, with $J'=[0, 1] \setminus J$. Then, the event $\{ \pi \in Paths(s) \; | \; \pi \models \phi\}$ must be measurable to verify that $\mathcal{P}_J(\phi)$ holds in any state. We will see that these events can be formed through countable unions of cylinder sets, ensuring their measurability.
 \end{remark}
 \begin{remark}[\textit{Probabilistic satisfiability of path formulae}]
-Let $\mathcal{M}$ be the MC of the figure \ref{pctlctl}.
+Let $\mathcal{M}$ be the MC of Figure \ref{pctlctl}.
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.25\linewidth]{resources/PCTL_CTL}
@@ -133,11 +140,11 @@ Let $\mathcal{M}$ be the MC of the figure \ref{pctlctl}.
 \begin{itemize}
 % \item Let assume that there exists a path $\pi \in Paths(s_0)$ starting from $s_0$ in $\mathcal{M}$ such that $\pi \not \models \phi$, for any PCTL path formula $\phi$. That does not mean that $s_0 \models \mathcal{P}_{<1}(\phi)$: take $\pi=s_0^\omega$ and $\phi = \Diamond b$, we have that $s_0^\omega \not \models \Diamond b$ and $\mathbb{P}_s(\Diamond \{s_1\}) = 1$.
 % Then $s_0 \models \mathcal{P}_{=1}(\Diamond b)$.
-  \item Let assume there exists a state $s$ in an MC such that $s \models \mathcal{P}_{=1}(\phi)$, for any path formula $\phi$. That does not mean that all paths $\pi \in Paths(s)$ satisfy $\phi$, i.e.,
+  \item Assume there exists a state $s$ in an MC such that $s \models \mathcal{P}_{=1}(\phi)$ for a given path formula $\phi$. That does not mean that all paths $\pi \in Paths(s)$ satisfy $\phi$, i.e.,
   \[s \models \mathcal{P}_{=1}(\phi) \centernot\implies \forall \pi \in Paths(s), \, \pi \models \phi.\]
   Indeed, consider the MC $\mathcal{M}$ and take the state $s_0$ of $\mathcal{M}$, the path $s_0^\omega \in Paths(s_0)$ and the path formula $\Diamond b$. We have $s_0 \models \mathcal{P}_{=1}(\Diamond b)$, because $\mathbb{P}_{s_0}(\Diamond \{s_1\})=1$, but we have $s_0^\omega \not \models (\Diamond b)$.
 
-  \item Let assume there exists a state $s$ in an MC such that there exists a path $\pi \in Paths(s)$ starting from this state $s$ such that $\pi \models \phi$ for any path formula $\phi$.
+  \item Assume there exists a state $s$ in an MC such that there exists a path $\pi \in Paths(s)$ such that $\pi \models \phi$ for a given path formula $\phi$.
   That does not mean that $s \models \mathcal{P}_{> 0}(\phi)$, i.e.,
   \[
     \exists \pi \in Paths(s),\, \pi \models \phi \centernot\implies s \models \mathcal{P}_{>0} (\phi).
@@ -156,12 +163,12 @@ Let $\mathcal{M}$ be the MC of the figure \ref{pctlctl}.
 
 \section{Temporal events in Markov chains}\label{tempevent}
 In Markov chains, \textit{temporal events} allow to describe \textit{quantitative} and \textit{qualitative} properties.
-Quantitative properties may assert the probability to reach a subset of target states, avoiding some bad states in a infinite or finite number of steps, and
+Quantitative properties may assert the probability to reach a subset of target states, avoiding some bad states in an infinite or finite number of steps, and
 qualitative properties are special cases of quantitative properties where probabilities are trivial (i.e., zero or one).
 In order to describe these temporal events, we use \textit{LTL-like} notations.
 \textit{Linear temporal logic} (LTL) is a logical formalism
 that is suited for specifying linear temporal properties.
-In PCTL, notations of linear temporal operators (cf. figure \ref{ltl}) are actually derived from LTL temporal operators, dealing with paths of any system.
+In PCTL, notations of linear temporal operators (cf. Figure \ref{ltl}) are actually derived from LTL temporal operators, dealing with paths of any system.
 For example, following a subset of target states $T \subseteq S$ of the system, the event of reaching $T$ is denoted by $\Diamond T$ that is defined with a finite union of cylinder sets, ensuring its measurability.
 We will define here some temporal events, that are actually used to form PCTL path formulae events. So, we need to ensure their measurability.
 Furthermore, we will present how to compute their probability, which will be useful later to model-check Markov chains and Markov decision processes in PCTL.
@@ -173,8 +180,8 @@ The events $C \U^{\leq n} T$ and $C \U T$ are defined as follows:
   C \U^{\leq n} T &= \bigcup_{k=0}^n\,\bigcup_{s_0\dots s_k \in Paths_{fin}^{C,\, k,\, T}(s)} Cyl(s_0\dots s_k),\\
   C \U T &= \bigcup_{k\in \mathbb{N}}\,\bigcup_{s_0\dots s_k \in Paths_{fin}^{C,\, k,\, T}(s)} Cyl(s_0\dots s_k)
 \end{align*}
-where \[Paths_{fin}^{C,\, n,\, T}(s) = \{ s_0 \dots s_n \in Paths_{fin}(s) \; | \; s_i \in C\;\; \forall i \in \mathbb{N},\, i < n \; \; \wedge s_n \in T\},\]
-and $\mathbb{P}_s(C \U^{\leq n} T), \mathbb{P}_s(C \U T)$ actually denote the probability measure of the union of cylinder sets of finite paths  of $Paths_{fin}^{C, \, k, \, T}(s)$ starting from the state $s \in S$.
+where \[Paths_{fin}^{C,\, n,\, T}(s) = \{ s_0 \dots s_n \in Paths_{fin}(s) \; | \; \forall i \in \mathbb{N},\, i < n, \, s_i \in C \setminus T \; \wedge s_n \in T\},\]
+and $\mathbb{P}_s(C \U^{\leq n} T), \mathbb{P}_s(C \U T)$ actually denote the probability of the union of cylinder sets of finite paths  of $Paths_{fin}^{C, \, k, \, T}(s)$ starting from the state $s \in S$.
 \end{definition}
 
 The constrained reachability event allows to derivate some other classical events:
@@ -193,7 +200,7 @@ Then, let $A$ be a quadratic matrix with rows and columns referring the states o
 \[
   A_{i, j} = \Delta(s_i, s_j) \quad \forall s_i, s_j \in S_?
 \]
-Let $n_?$ = $|S_?|$. Similarly, let $b$ be a vector of probabilities in $[0, 1]^{n_?}$ , defined as $(b_s)_{s \in S_?}$ such that $b_s = \sum_{t \in S_{=1}} \Delta(s, t)$, i.e., such that $b_s$ describes the probability of reaching a state of $T$ in one outgoing transition of the state $s$.
+Let $n_?$ = $|S_?|$. Similarly, let $b$ be a vector of probabilities in $[0, 1]^{n_?}$ , defined as $(b_s)_{s \in S_?}$ such that $b_s = \sum_{t \in S_{=1}} \Delta(s, t)$, i.e., such that $b_s$ describes the probability of reaching a state of $S_{=1}$ in one outgoing transition of the state $s$.
 
 \begin{notation}[\textit{Lifted probability transition}]
   Let $s \in S$ be a state of $\mathcal{M}$. We denote by $\Delta(s, T)$ the probability of reaching $T$ in one outgoing transition of $s$, i.e., $\Delta(s, T) = \sum_{t \in T} \Delta(s, t)$.
@@ -217,25 +224,25 @@ By definition of $A$ and $b$, for any $s \in S_?$ and for $y = (y_s)_{s \in S_?}
 \[
   (\Upsilon(y))_s = y_s = \sum_{s' \in S_?} \Delta(s, s') \cdot y_{s'} + \Delta(s, S_{=1}).
 \]
-Furthermore, let $x_s = \mathbb{P}_s(C \U T)_{s \in S_?}$ for each state $s \in S$, by definition of $\Upsilon$, we have that
+Furthermore, let $x_s = \mathbb{P}_s(C \U T)_{s \in S_?}$ for each state $s \in S$, by definition of $\Upsilon$, we have
 \begin{flalign}
   x^{(0)} &= \vec{0}, \notag \\
   x^{(1)} &= A x^{(0)} + b \notag \\
-          &= b, \tag{\itshape state of $C$ reaching $S_{=1}$ in one transition}\\
+          &= b, \tag{\itshape states of $C$ reaching $S_{=1}$ in one transition}\\
   x^{(2)} &= A x^{(1)} + b \notag \\
           &= A b + b \notag \\
-          &= (\sum_{s' \in S_?} \Delta(s, s') \cdot \Delta(s', S_{=1}) + \Delta(s, S_{=1}))_{s \in S_?} \tag{\itshape state of $C$ reaching $S_{=1}$ in max. two transition steps} \\
+          &= (\sum_{s' \in S_?} \Delta(s, s') \cdot \Delta(s', S_{=1}) + \Delta(s, S_{=1}))_{s \in S_?} \tag{\itshape states of $C$ reaching $S_{=1}$ in max. two transition steps} \\
   &\dots \notag \\
-  x^{(n)} &= A x^{(n-1)} + b \tag{\itshape state of $C$ reaching $S_{=1}$ in max. $n$ transition steps} \\
+  x^{(n)} &= A x^{(n-1)} + b \tag{\itshape states of $C$ reaching $S_{=1}$ in max. $n$ transition steps} \\
   &\dots \notag \\
   x &= Ax+b \notag \\
-  x &= (\sum_{s' \in S} \Delta(s, s') \cdot x_{s'} + \Delta(s, S_{=1}))_{s \in S_?} \tag{\itshape state of $C$ eventually reaching $S_{=1}$}
+  x &= (\sum_{s' \in S} \Delta(s, s') \cdot x_{s'} + \Delta(s, S_{=1}))_{s \in S_?} \tag{\itshape states of $C$ eventually reaching $S_{=1}$}
 \end{flalign}
 \begin{remark}[\textit{Choosing $S_{=0}$ and $S_{=1}$}]\label{remarkS0S1}
 For efficiency reasons, it is a good idea to deal with the largest subsets $S_{=0}$ and $S_{=1}$. Indeed, this allows to reduce
-the size of the matrix $A$ and allows faster computations to solve the linear equation defined by $x = Ax + b$.
-However, for computational reasons, we need to deal with the largest set $S_{=0}$ as possible, i.e., $S_{=0} = \{ s \in S \; | \; \mathbb{P}_s(C \U T) = 0 \}$. Indeed, for some instance, choosing $S_0 = S \setminus (C \cup T)$ is not sufficient.
-Let $\mathcal{M}$ be the MC of the figure \ref{s0s1} and $T = \{t\}$.
+the size of the matrix $A$ and allows faster computations to solve the system of linear equations defined by $x = Ax + b$.
+However, for computational reasons, we need to deal with the largest set $S_{=0}$ as possible, i.e., $S_{=0} = \{ s \in S \; | \; \mathbb{P}_s(C \U T) = 0 \}$. Indeed, for some instance, choosing the smallest set $S_0$, i.e., $S_0 = S \setminus (C \cup T)$ is not sufficient.
+Let $\mathcal{M}$ be the MC of Figure \ref{s0s1} and $T = \{t\}$.
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.3\linewidth]{resources/S0S1}
@@ -249,7 +256,7 @@ we have $x = Ax$, with $A = 1$ (because $\Delta(s, s) = 1$). The related operato
 % \end{definition}
 Unique fixed point is actually guaranteed if $\mathcal{M}$ is finite and if we take the largest subset for $S_{=0}$, i.e., $S_{=0}=\{s \in S \; | \; \mathbb{P}_s(C \U T) =0 \}$. We will now provide a way to compute this subset.
 \begin{definition}[\textbf{Path satisfiability relation of constrained reachability events}]
-Let $\mathcal{M}$ be an MC with state space $S$ and $\pi \in Paths(s)$ be a path starting from any state $s \in S$. The path $\pi$ \textit{satisfies} $C \U T$ iff there exists a prefix $\hat{\pi}\in pref(\pi)$ and a number of steps $k \in \mathbb{N}$ such that $\hat{\pi} \in Paths_{fin}^{C,\, k,\, T}(s)$. This relation is denoted by $\models$, with $\pi \models C \U T$.
+Let $\mathcal{M}$ be an MC with state space $S$ and $\pi \in Paths(s)$ be a path starting from any state $s \in S$. The path $\pi$ \textit{satisfies} $C \U T$ iff there exists a prefix $\hat{\pi}\in Pref(\pi)$ and a number of steps $k \in \mathbb{N}$ such that $\hat{\pi} \in Paths_{fin}^{C,\, k,\, T}(s)$. This relation is denoted by $\models$, with $\pi \models C \U T$.
 \end{definition}
 \begin{lemma}[Zero probability equivalence of constrained reachability events] Let $s \in S$ be a state in an MC with state space $S$ and $C, T \subseteq S$, the two following propositions are equivalent:
   \begin{enumerate}[(a)]
@@ -259,15 +266,15 @@ Let $\mathcal{M}$ be an MC with state space $S$ and $\pi \in Paths(s)$ be a path
 \end{lemma}
 
  \begin{proof2}$ $\\
-    ($\ref{p2}\implies\ref{p1}$). Let assume that $\forall \pi \in
+    ($\ref{p2}\implies\ref{p1}$). Assume that $\forall \pi \in
     Paths(s)$, $\pi \centernot\models C \U T$. So, by definition of the satisfaction relation $\models$, that
     means there does not exist finite path $\hat{\pi} \in
     Paths_{fin}(s)$ and a number of steps $k \in \mathbb{N}$ such that
     $\hat{\pi} \in Paths_{fin}^{C, \, k,\, T}(s)$. By definition
     of $C \U T$, that implies $C \U T = \emptyset$ and then
     $\mathbb{P}_s(\emptyset) = 0$.\\
-    ($\neg\ref{p2}\implies\neg\ref{p1}$). Let assume there exists a path $\pi \in Paths(s)$ such that $\pi \models C \U T$.
-    Then, that means there exists a prefix $\hat{\pi} = s_0 \dots s_k \in pref(\pi)$ and a number of steps $k \in \mathbb{N}$ such that
+    ($\neg\ref{p2}\implies\neg\ref{p1}$). Assume there exists a path $\pi \in Paths(s)$ such that $\pi \models C \U T$.
+    Then, that means there exists a prefix $\hat{\pi} = s_0 \dots s_k \in Pref(\pi)$ and a number of steps $k \in \mathbb{N}$ such that
     $\hat{\pi} \in Paths_{fin}^{C, \, k, \, T}(s)$. So, we have at least one cylinder set in the union forming the event $C \U T$ (i.e., $Cyl(s_0\dots s_k)$), and then $\mathbb{P}_s(C \U T) \geq \prod_{i = 0}^{k-1} \Delta(s_i , s_{i+1}) > 0$.
  \end{proof2}
 
@@ -284,21 +291,24 @@ The set $B = \{ s \in S \; | \; \exists \pi \in Paths(s), \;\; \pi \models (C \U
 \end{itemize}
 Indeed,
 \begin{enumerate}
-  \item Let assume that $B = \{s \in S \; | \; \exists \pi \in Paths(s), \; \pi \models C\U T\}$. We obviously have that $T \subseteq B$ because all path starting from $t \in T$ satisfies $C \U T$: take the finite path consisting in the single state $t$, we have that
-  $t \in Paths_{fin}^{C, \, 0,\, T}(t)$. Then, let $s \in S$. Let assume that $s \in C$ and $Succ(s) \cap B \neq \emptyset$. That means there exists a successor $s'$ of $s$ such that $s' \in B$. Thus, there exists
-  a path $\pi \in Paths(s')$ such that $\pi \models C\U T$, by definition of $B$. Furthermore, we have by definition of the satisfaction relation $\models$ that there exists a prefix $\hat{\pi}\in pref(\pi)$ and a steps number $k \in \mathbb{N}$ such that $\hat{\pi} \in Paths_{fin}^{C, \, k,\, T}(s')$. So, let take the finite path $s.\hat{\pi}$, we have that $s.\hat{\pi} \in Paths^{C, \, k+1, \, T}_{fin}(s)$
+  \item Assume that $B = \{s \in S \; | \; \exists \pi \in Paths(s), \; \pi \models C\U T\}$. We obviously have that $T \subseteq B$ because all path starting from $t \in T$ satisfies $C \U T$: take the finite path consisting in the single state $t$, we have that
+  $t \in Paths_{fin}^{C, \, 0,\, T}(t)$.
+  Then, let $s \in S$ and assume that $s \in C \setminus T$ and $Succ(s) \cap B \neq \emptyset$. That means there exists a successor $s'$ of $s$ such that $s' \in B$. Thus, there exists
+  a path $\pi \in Paths(s')$ such that $\pi \models C\U T$, by definition of $B$. Furthermore, we have by definition of the satisfaction relation $\models$ that there exists a prefix $\hat{\pi}\in Pref(\pi)$ and a steps number $k \in \mathbb{N}$ such that $\hat{\pi} \in Paths_{fin}^{C, \, k,\, T}(s')$. So, let take the finite path $s.\hat{\pi}$, we have that $s.\hat{\pi} \in Paths^{C, \, k+1, \, T}_{fin}(s)$
   and thus that $s.\pi \models C \U T$. That yields $s \in B$.
-  \item Let $B \subseteq S$. Let assume that $T \subseteq B$ and that if we have $s \in C \; \wedge \; Succ(s) \cap B \neq \emptyset$, then we have $s \in B$. Let $s \in \{s\in S \; | \; \exists \pi \in Paths(s) \; \pi \models C \U T\}$. If $s \in T$, then $s \in B$ by our assumptions.
+  \item Let $B \subseteq S$. Assume that $T \subseteq B$ and that if we have $s \in C \; \wedge \; Succ(s) \cap B \neq \emptyset$, then we have $s \in B$. First, if $\{s \in S \; | \; \exists \pi \in Paths(s), \; \pi \models C \U T\} = \emptyset$,
+  then we trivially have that our assumptions are verified. Then, assume that $\{s\in S \; | \; \exists \pi \in Paths(s), \; \pi \models C \U T\} \neq \emptyset$ and let $s \in \{s\in S \; | \; \exists \pi \in Paths(s), \; \pi \models C \U T\}$. If $s \in T$, then $s \in B$ by our assumptions.
   Else, we have that there exists a path $\pi = s_0 s_1 s_2 \dots \in Paths(s)$ starting from the state $s_0=s$ such that  $\pi \models C \U T$.
   By definition of the satisfaction relation $\models$, that means there exists
-  $\hat{\pi} \in pref(\pi)$ and a number of steps $k \in \mathbb{N}$ such that $\hat{\pi} \in Paths_{fin}^{C, \, k, \, T}(s)$, i.e., such that $\forall i \in \mathbb{N}$, $i < k$, $s_i \in C$ and $s_k \in T$.
+  $\hat{\pi} \in Pref(\pi)$ and a number of steps $k \in \mathbb{N}$ such that $\hat{\pi} \in Paths_{fin}^{C, \, k, \, T}(s)$, i.e., such that $\forall i \in \mathbb{N}$, $i < k$, $s_i \in C \setminus T$ and $s_k \in T$.
 % \begin{itemize}
 %   \item If $s_1 \in T$, then $s_1 \in B$, and $s_0=s \in B$ by our assumptions.
     %\item
     Let $i \in \{0, \dots, k-1\}$.
-    Let assume that $s_{i+1} \in B$. Then, since $s_i \in C$ and $s_{i+1} \in Succ(s_i)$, we have $s_i \in B$ by our assumptions.
+    Assume that $s_{i+1} \in B$. Then, since $s_i \in C$ and $s_{i+1} \in Succ(s_i)$, we have $s_i \in B$ by our assumptions.
 %  \end{itemize}
-  Since $s_k \in T$ and $T \subseteq B$, we have by induction on $i$ that $s_0=s \in B$. Thus, we finally have that $\{s \in S \; | \; \exists \pi \in Paths(s), \; \pi \models C \U T\} \subseteq B$.
+  Since $s_k \in T$ and $T \subseteq B$, we have by induction (from $k$ to $0$) on $i$ that $s_0=s \in B$.
+  Thus, we finally have that $\{s \in S \; | \; \exists \pi \in Paths(s), \; \pi \models C \U T\} \subseteq B$.
 \end{enumerate}
 Then, we can compute the set $B$ with the following algorithm:
 \begin{algorithm}[H]
@@ -319,18 +329,18 @@ Finally, the set \[\{s \in S \; | \; \mathbb{P}_s(C \U T) = 0 \} = \{s \in S \; 
 \begin{theorem}[\bfseries\itshape Unique solution] \label{unique-sol}
 Let $\mathcal{M}$ be a finite Markov chain with state space $S$, the subsets $T, C \subseteq S$,
 \[
-  S_{=0} = \{s \in S \; | \; \forall \pi \in Paths(s), \; \pi \centernot \models (C \U T) \}, \quad
+  S_{=0} = \{s \in S \; | \; \mathbb{P}_s(C \U T) = 0 \}, \quad
   T \subseteq S_{=1} \subseteq \{s \in S \; | \; \mathbb{P}_s(C \U T) = 1 \},
 \]
 and $S_? = S \setminus (S_{=0} \cup S_{=1})$. Then , the vector $(\mathbb{P}_s(C \U T))_{s \in S_?}$ is the unique solution of the equation system $x = Ax+b$, where $A = (\Delta(s, s'))_{s, s' \in S_?}$ and $b = (\Delta(s, S_{=1}))_{s \in S_?}$.
 \end{theorem}
 
 \begin{remark}[\textit{Reachability problem}]
-  Remind the reachability problem addressed in the first chapter (i.e., computing $\mathbb{P}_s(\Diamond T)$ for a subset of target states $T$ and for any $s \in S$, cf. subsection \ref{obj-MC}), the linear equations system resolving the problem (cf. appendix \ref{app-reach}) is actually derived from the theorem \ref{unique-sol}.
+  Remind the reachability problem addressed in the first chapter (i.e., computing $\mathbb{P}_s(\Diamond T)$ for a subset of target states $T$ and for any $s \in S$, cf. subsection \ref{obj-MC}), the linear equations system resolving the problem (cf. Appendix \ref{app-reach}) is actually derived from the theorem \ref{unique-sol}.
 \end{remark}
 
-\begin{example}[\textit{Bounded until on an MC modelling the production of solar panels according to weather}]
-Let $\mathcal{M}_{sp} = (S, \Delta, w, AP, L)$ be the MC of the figure \ref{solarpanel} (cf. example \ref{solar-panel} in the first chapter for more details about this MC).
+\begin{example}[\textit{Constrained reachability of an MC modelling the production of solar panels according to weather}]
+Let $\mathcal{M}_{sp} = (S, \Delta, w, AP, L)$ be the MC of Figure \ref{solarpanel} (cf. Example \ref{solar-panel} in the first chapter for more details about this MC).
   \begin{figure}[h!]
     \centering
     \includegraphics[width=0.5\linewidth]{resources/weather-solar-pannel}
@@ -349,7 +359,7 @@ Let $\mathcal{M}_{sp} = (S, \Delta, w, AP, L)$ be the MC of the figure \ref{sola
   with $x^{(2)} = \mathbb{P}_{s_0}(\{s_0\} \U^{\leq 2} \{s_3\})$.
 \end{example}
 \begin{example}[\textit{Measuring constrained reachability event in an MC}] \label{constrained-reach-example}
-Let $\mathcal{M}=(S, \Delta)$ be the MC of the figure \ref{CUTexample},
+Let $\mathcal{M}=(S, \Delta)$ be the MC of Figure \ref{CUTexample},
  $C = \{s_0, s_2, s_3\}$ and $T = \{s_1\}$. We are interested in the probability of the constrained reachability $C$ until $T$.
   \begin{figure}[H]
     \centering
@@ -416,6 +426,10 @@ Let $Paths(s, \phi) = \{ \pi \in Paths(s) \; | \; \pi \models \phi \}$.
 \end{enumerate}
 As cylinder sets and constrained reachability events are measurable, $Paths(s, \phi)$ is measurable, for any path formula $\phi$.
 \end{proof2}
+\\
+
+In order to optimise the resolution of systems of linear equations defined to compute the probabilities of constrained reachability events,
+we need to compute the largest subset $S_{=1}$, and this can be done by looking at the limit behaviour of Markov chains.
 
 \subsection{Limit behaviour}
 Now, we will focus on events characterising the \textit{long-run} behaviour of Markov chains. We will address here two events : $\Box\Diamond T$ ($T$ is reached \textit{infinitely often})
@@ -427,22 +441,22 @@ computations during the resolution of problems requiring linear equations system
 \begin{definition}[\textbf{Infinitely often event}]
   Let $\mathcal{M}=(S, \Delta, w, AP, L)$ be an MC, $T \subseteq S$, be a subset of states of $\mathcal{M}$, and
   $s \in S$ be a state of $\mathcal{M}$ from which events start. For any path $\pi = s_0 s_1 s_2 \dots \in Paths(s)$,
-encountering \textit{infinitely often} $T$ actually means that, for all index $n \in \mathbb{N}$ (and thus, for any step $s_n$ of $\pi$), there exists an index $m \geq n$ such that $s_m \in T$. Then, let
+encountering \textit{infinitely often} $T$ actually means that, for all step $n \in \mathbb{N}$ (and thus, for any step $s_n$ of $\pi$), there exists a step $m \geq n$ such that $s_m \in T$. Then, let
   \begin{align*}
     Paths_{fin}^{m,\, T}(s) &= \{ s_0\dots s_m \in Paths_{fin}(s) \; | \; s_m \in T \}, \text{ and} \\
     Cyl^{m,\, T}(s) &= \bigcup_{s_0 \dots s_m \in Paths_{fin}^{m, \, T}(s)} Cyl(s_0\dots s_m)
   \end{align*}
-  for any number of steps $m \in \mathbb{N}$. The infinitely often event for $T$ is defined as follows:
+  for any $m \in \mathbb{N}$. The infinitely often event for $T$ is defined as follows:
   \[
     \Box \Diamond T = \bigcap_{n \in \mathbb{N}} \bigcup_{m \geq n} Cyl^{m, \, T}(s).
   \]
-  Since $\Box \Diamond T$ is formed by intersections of unions of cylinder sets, this event is measurable, and $\mathbb{P}_s(\Box\Diamond T)$ actually denotes the probability measure of this event, starting from the state $s \in S$.
+  Since $\Box \Diamond T$ is formed by intersections of unions of cylinder sets, this event is measurable, and $\mathbb{P}_s(\Box\Diamond T)$ actually denotes the probability of this event, starting from the state $s \in S$.
 \end{definition}
 
 \begin{definition}[\textbf{Persistence event}]
   Let $\mathcal{M}=(S, \Delta, w, AP, L)$ be an MC, $T \subseteq S$, be a subset of states of $\mathcal{M}$, and
   $s \in S$ be a state of $\mathcal{M}$ from which events start. For any path $\pi = s_0 s_1 s_2 \dots \in Paths(s)$,
- $T$ is \textit{persistent} actually means there exists an index $n \in \mathbb{N}$ such that, for all $i\geq n$, $s_i \in T$. The persistence event for $T$ is defined as follows:
+ $T$ is \textit{persistent} actually means there exists a step $n \in \mathbb{N}$ such that, for all $i\geq n$, $s_i \in T$. The persistence event for $T$ is defined as follows:
  \[
   \Diamond \Box T = \overline{\Box \Diamond (S \setminus T)}.
  \]
@@ -470,17 +484,18 @@ SCCs and BSCCs of any Markov chain can be computed with
 purely graph theory algorithms (e.g., with depth-first search algorithms based).
 
 \begin{example}[\textit{Difference between SCCs and BSCCs}]
-Let $\mathcal{M}=(S, \Delta)$ be the MC of the figure \ref{bsccex}. We have that the subset $T = \{s_1, s_2, s_3\} \subseteq S$ is an SCC because $T$ is the largest subset containing the state $s_1$ such that all states are connected to each other.
-However, $T$ is not a BSCC because the state $s_3 \in T$ is connected by an edge in the underlying graph of $\mathcal{M}$ (we have $\Delta(s_3, s_4) > 0$), and $s_4$ is not connected to $T$.
-Furthermore, the subset $B = \{s_5, s_6, s_7, s_8\} \subseteq S$ is a BSCC. Indeed, $B$ is the largest subset of $S$ containing $s_5$ such that all states are connected to each other. Moreover, each state $s \in B$ verify the following assertion:
-$\Delta(s, B)=1$.
-  \begin{figure}[h!]
+Let $\mathcal{M}=(S, \Delta)$ be the MC of Figure \ref{bsccex}.
+  \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\linewidth]{resources/BSCC}
     \captionsetup{justification=centering}
     \caption{Markov chain $\mathcal{M}$ with state space composed by nine states, containing two SCCs and one BSCC}\label{bsccex}
   \end{figure}
 \end{example}
+\noindent We have that the subset $T = \{s_1, s_2, s_3\} \subseteq S$ is an SCC because $T$ is the largest subset containing the state $s_1$ such that all states are connected to each other.
+However, $T$ is not a BSCC because the state $s_3 \in T$ is connected by an edge in the underlying graph of $\mathcal{M}$ (we have $\Delta(s_3, s_4) > 0$), and $s_4$ is not connected to $T$.
+Furthermore, the subset $B = \{s_5, s_6, s_7, s_8\} \subseteq S$ is a BSCC. Indeed, $B$ is the largest subset of $S$ containing $s_5$ such that all states are connected to each other. Moreover, each state $s \in B$ verify the following assertion:
+$\Delta(s, B)=1$.
 
 \begin{theorem}[\textit{\textbf{Limit behaviour of Markov chains}}]\label{MCbehav}
 Let $\mathcal{M}$ be an MC with state space $S$ and $s \in S$
@@ -510,13 +525,13 @@ Let $BSCC(\mathcal{M})$ denotes the set of BSCCs of $\mathcal{M}$.
 \begin{enumerate}
 \item
 Let $B \in BSCC(\mathcal{M})$ be a BSCC of $\mathcal{M}$.
-In particular, let assume there exists a state $t \in T$ such that $t \in B$, then $\mathbb{P}_s(\Diamond B) = \mathbb{P}_s(\{ \pi \in Paths(s) \; | \; t \in inf(\pi) \; \wedge \; inf(\pi) = B \})$. Following the definition of BSCCs, we have that $B$ is the largest subset containing $t$ such that all states of $B$ are connected to each other and such that $\forall s' \in B, \, \Delta(s', B)=1$. Then, $B$ is the only BSCC containing $t$. So,
+In particular, assume there exists a state $t \in T$ such that $t \in B$, then $\mathbb{P}_s(\Diamond B) = \mathbb{P}_s(\{ \pi \in Paths(s) \; | \; t \in inf(\pi) \; \wedge \; inf(\pi) = B \})$. Following the definition of BSCCs, we have that $B$ is the largest subset containing $t$ such that all states of $B$ are connected to each other and such that $\forall s' \in B, \, \Delta(s', B)=1$. Then, $B$ is the only BSCC containing $t$. So,
 $\mathbb{P}_s(\Diamond B) = \mathbb{P}_s(\{ \pi \in Paths(s) \; | \; t \in inf(\pi)\}) = \mathbb{P}_s(\Box \Diamond \{t\})$,
 by definition of $inf(\pi)$ and $\Box\Diamond \{t\}$.
 \label{B1}
 %\item Furthermore, let $t \in T$, it stills to show that if $\mathbb{P}_s(\Box \Diamond \{t\}) > 0$, then we always have that there exists a BSCC $B$ such that $\mathbb{P}_s(\Diamond B)>0$, $t \in B$. By contraposition, let assume that for all BSCC $B$ such that $\mathbb{P}_s(\Diamond B) > 0$, $t \centernot\in B$.
 \item
-Furthermore, let assume that for all BSCC $B$, $t \notin B$. As we have \[\mathbb{P}_s(\{\pi \in Paths(s)\; | \; t \notin inf(\pi), \, inf(\pi) \in BSCC(\mathcal{M})\}) = 1,\]
+Furthermore, assume that for all BSCC $B$, $t \notin B$. As we have \[\mathbb{P}_s(\{\pi \in Paths(s)\; | \; t \notin inf(\pi), \, inf(\pi) \in BSCC(\mathcal{M})\}) = 1,\]
 we obviously have $\mathbb{P}_s(\{\pi \in Paths(s)\; | \; t \in inf(\pi)\}) = 0$, i.e., $t$ is never visited infinitely often with a positive probability, and $\mathbb{P}_s(\Box\Diamond \{t\}) = 0$.
 \label{B2}
 \end{enumerate}
@@ -525,14 +540,15 @@ we obviously have $\mathbb{P}_s(\{\pi \in Paths(s)\; | \; t \in inf(\pi)\}) = 0$
 %= 1$. Then, there exists $B \in BSCC(\mathcal{M})$ such
 %that $\mathbb{P}_s(\Diamond B) > 0$. If $t \in B$, then we
 %have $\mathbb{P}_s(\Box\Diamond\{t\})>0$.
-We can generalise \ref{B1} and \ref{B2} for all states in the set $T$:
+By \ref{B1}, we have that if $t$ is in a BSCC $B$, then the BSCC $B$ is the only one containing $t$ and the probability to reach $B$ is equals to the probability to encounter infinitely often $t$. Furthermore, by \ref{B2}, we have that if $t$ is encountered infinitely often, then $t$ is necessarily in a BSCC. Thus,
+we can generalise \ref{B1} and \ref{B2} for all states in the set $T$:
 \[\mathbb{P}_s(\Box \Diamond T) = \mathbb{P}_s(\Diamond \bigcup_{B \in BSCC(\mathcal{M}) \; | \; \exists t \in T, \, t \in B } B)\]
 The second assertion can be shown in a similar way.
 %\vspace{-0.1\linewidth}
 \end{proof2}\\
 
 Now, we will come back on a problem addressed previously in the remark \ref{remarkS0S1}. Indeed, following an MC $\mathcal{M}$ with state space $S$ and two subsets $C, T \subseteq S$, we have presented a graph theory based solution to compute the largest subset $S_{=0}$, i.e., $\{s \in S \; | \; \mathbb{P}_s(C \U T) = 0\}$, but we have not yet presented a solution to compute the largest subset $S_{=1}$, i.e., $\{s \in S \; | \; \mathbb{P}_s(C \U T) = 1\}$.
-We will see that qualitative properties can be verified thanks to the notion of BSCC.
+We will see that this qualitative property can be verified thanks to the notion of BSCC.
 
 \begin{notation}[\textit{Absorbing state}]
   Let $\mathcal{M}=(S, \Delta, w, AP, L)$ be an MC and $s \in S$ be a state of $\mathcal{M}$. We say that $s$ is absorbing iff $\Delta(s, s') = 1$.
@@ -565,7 +581,7 @@ We can easily derivate from the definitions of the sets $Succ^*$ and $Pred^*$ th
 ($\neg\ref{succ2}\implies\neg\ref{succ1}$). Let $s' \in Succ^*(s)$ such that $Succ^*(s') \cap T = \emptyset$ Following the figure \ref{spred}, we have that $s$ is in the subset represented by a red tiling pattern or $s$ is in the red subset and we have that $s'$ is in the red subset. Thus, $s'$ is a successor of $s$ from which $T$ can not be reached. Then, we have $\mathbb{P}_s(\Diamond T) \leq 1 - \mathbb{P}_s(\Diamond \{s'\}) < 1$.
 %Furthermore, referring the figure
 %\ref{spred}, we have that $1 - \mathbb{P}_s(\Diamond T) = \mathbb{P}_s(\Diamond (S \setminus Pred^*(T)))$.\\
-($\ref{succ2} \implies \ref{succ1}$). Let assume that $Succ^*(s') \cap T \neq \emptyset$, for any successor $s'$ of $s$. By the theorem \ref{MCbehav}, we reach a BSCC from $s$ with a probability one. Since each state in $t \in T$ is absorbing, each BSCC $B$ of $\mathcal{M}$ consists in $B = \{t\}$ or it satisfies $T \cap B = \emptyset$. We will show that the latter case can not occur from $s$.
+($\ref{succ2} \implies \ref{succ1}$). Assume that $Succ^*(s') \cap T \neq \emptyset$, for any successor $s'$ of $s$. By the theorem \ref{MCbehav}, we reach a BSCC from $s$ with a probability one. Since each state in $t \in T$ is absorbing, each BSCC $B$ of $\mathcal{M}$ consists in $B = \{t\}$ or it satisfies $T \cap B = \emptyset$. We will show that the latter case can not occur from $s$.
 Consider $T \cap B = \emptyset$ for BSCC $B$.
 As $B$ is a BSCC, $Succ^*(u)\cap T = \emptyset$, for each $u \in B$.
 However, as $T$ is reachable for any $s' \in Succ^*(s)$, there is no BSCC with $T \cap B = \emptyset$ that is reachable from $s$. So, we almost surely have a state in $T$ that will be reached from the state $s$.
@@ -597,7 +613,7 @@ The theorem \ref{asr} allows to compute the largest subset $S_{=1} = \{s \in S \
 , for inputs $G^{\mathcal{M}_T}$ and $T$, explores $G^{\mathcal{M}_T}$ from the set $T$: it starts by marking all states of $T$, and then iteratively marks all unmarked predecessors of marked states (\textit{backward breadth-first search}). All marked states are thus connected to $T$. An alternative recursive version of this algorithm exists (\textit{backward depth-first search}).
 The time complexity of this algorithm is in $\mathcal{O}(|\mathcal{M}_T|)$.
 
-\begin{corollary}[\textbf{\textit{Qualitative constrained reachability}}] Let $\mathcal{M}$ be a finite MC with state space $S$ and $C, T \subseteq S$, the sets
+\begin{corollary}[\textbf{\textit{Qualitative constrained reachability}}]\label{qualitative-const-reach} Let $\mathcal{M}$ be a finite MC with state space $S$ and $C, T \subseteq S$, the sets
 \[
   S_{=0} = \{ s \in S \; | \; \mathbb{P}_s (C \U T) = 0 \} \text{ and } S_{=1} = \{ s \in S \; | \; \mathbb{P}_s (C \U T ) = 1 \}
   \]
@@ -627,15 +643,15 @@ The time complexity of this algorithm is in $\mathcal{O}(|\mathcal{M}_T|)$.
 \end{enumerate}
 \end{proof2}\\
 
-Thus, check if each temporal events presented in this section holds with a probability one or zero can be done through simple graph theory algorithms in $\mathcal{O}(|\mathcal{M}|)$, without referring to probabilities of transitions.
+Thus, check if each temporal events presented in this section holds with probability one or zero can be done through simple graph theory algorithms in $\mathcal{O}(|\mathcal{M}|)$, without referring to probabilities of transitions.
 
 \section{PCTL model checking}
 \begin{definition}[\bfseries PCTL model checking]
-Let $\mathcal{M}$ be an MC with state space $S$, $s \in S$ be a state of $\mathcal{M}$, and $\Phi$ be a PCTL state formula. The model checking problem for $\mathcal{M}$, $s$ and $\Phi$ consists of deciding if $s \models \Phi$, i.e., if $s \in Sat(\Phi)$.
+Let $\mathcal{M}$ be an MC with state space $S$, $s \in S$ be a state of $\mathcal{M}$, and $\Phi$ be a PCTL state formula. The model checking problem for $\mathcal{M}$, $s$ and $\Phi$ consists in deciding if $s \models \Phi$, i.e., if $s \in Sat(\Phi)$.
 \end{definition}
 Following an MC $\mathcal{M}$, a state $s$ of this MC and a state formula $\Phi$, determine if $s \models \Phi$ can be done through a bottom-up traversal of the \textit{parse tree} of $\Phi$.
 Indeed, according to the PCTL syntax, we recursively decompose $\Phi$ following its sub-formulae. Moreover, each sub-formula of $\Phi$ is actually represented by a node of this tree. For each PCTL state formula $\Phi$, we compute its satisfaction set from the node representing the formula, according to each satisfaction set computed from each of its child and the characterisation of $Sat(\Phi)$.
-\begin{property}[Characterisation of Sat]
+\begin{property}[Characterisation of $Sat$]
 Let $\mathcal{M} = (S, \Delta, w, AP, L)$ be an MC, $\Phi, \Psi$ be PCTL state formulae over $AP$, and $\phi$ be a  PCTL path formula over $AP$. The satisfaction set $Sat$ is characterised as follows:
 \begin{flalign*}
   Sat(true) &= S,\\
@@ -662,9 +678,9 @@ Sat(\mathcal{P}_J(\Diamond \mathcal{P}_{=1}(\Box a))) &= \{ s \in S \; | \; \mat
 for $J \subseteq [0, 1]$ and $a \in AP$.
 \end{property}
 
-\begin{example}[\textit{PCTL model checking of an MC via its parse tree}]
-  Let $\mathcal{M}=(S, \Delta, w, AP, L)$ be the MC of the figure \ref{CUTexample2} and the state formula $\Phi = c \vee \mathcal{P}_{\geq \frac{1}{2}}(a \U (b \wedge c))$.
-  \begin{figure}[h!]
+\begin{example}[\textit{PCTL model checking of an MC via its parse tree}] \label{exCUT}
+  Let $\mathcal{M}=(S, \Delta, AP, L)$ be the MC of Figure \ref{CUTexample2} and the state formula $\Phi = c \vee \mathcal{P}_{\geq \frac{1}{2}}(a \U (b \wedge c))$.
+  \begin{figure}[H]
   \begin{minipage}{0.4\linewidth}
     \centering
     \includegraphics[width=\linewidth]{resources/CUTexample2}
@@ -681,52 +697,52 @@ for $J \subseteq [0, 1]$ and $a \in AP$.
     \label{parse-tree-example}
   \end{minipage}
   \end{figure}
-  We are interested to know if $s_0 \models \Phi$. To do that, we build the parse tree of $\Phi$.
-  This one is given in the figure \ref{parse-tree-example}. We can compute $Sat(\Phi)$ through a bottom up traversal of this tree: we begin at the leaves of the tree, i.e., by computing $Sat(a)$, $Sat(b)$, and $Sat(c)$. Then, we compute $Sat(b \wedge c)$, that equals $Sat(b)\cap Sat(c)$, according to the characterisation of the satisfaction set.
+  \noindent We are interested to know if $s_0 \models \Phi$. To do that, we build the parse tree of $\Phi$.
+  This one is given in Figure \ref{parse-tree-example}. We can compute $Sat(\Phi)$ through a bottom up traversal of this tree: we begin at the leaves of the tree, i.e., by computing $Sat(a)$, $Sat(b)$, and $Sat(c)$. Then, we compute $Sat(b \wedge c)$, that equals $Sat(b)\cap Sat(c)$, according to the characterisation of the satisfaction set.
   After that, we compute
   $Sat(\mathcal{P}_{\geq \frac{1}{2}}(a \U (b \wedge c)))$ by computing $\{ s \in S \; | \; \mathbb{P}_s(Sat(a) \U Sat(b \wedge c)) \geq \frac{1}{2}\} = \{ s \in S \; | \; \mathbb{P}_s(\{s_0, s_2, s_3\} \U \{s_1\}) \geq \frac{1}{2}\}$.
-  We actually have already computed these probabilities (cf. example \ref{constrained-reach-example}).
+  We actually have already computed these probabilities (cf. Example \ref{constrained-reach-example}).
   So, this set equals $\{ s_0, s_1 \}$.
   Finally, since we have already computed $Sat(c)$ and $Sat(\mathcal{P}_{\geq \frac{1}{2}}(a \U (b \wedge c)))$, we can compute $Sat(\Phi) = \{s_1, s_4\} \cup \{s_0, s_1\} = \{s_0, s_1, s_4\}$.
   As $s_0 \in Sat(\Phi)$, then $s_0 \models \Phi$.
 \end{example}
 
 \section{PCTL for Markov decision processes}
-The PCTL syntax for MDPs is exactly the same as for MCs with the exception of the probabilistic operator $\mathcal{P}_J(.)$ due to the nondeterminism of MDPs:
+The PCTL syntax for MDPs is almost the same as for MCs with the exception of the probabilistic operator $\mathcal{P}_J(.)$ due to the nondeterminism of MDPs:
 we can not verify probabilistic properties without referring to the notion of strategy.
-Then, we replace this operator with $\mathcal{P}^{\max}_J(.)$, referring to the strategy offering the maximum probability of satisfying a given property.
+Then, we replace this operator with $\mathcal{P}^{\max}_J(.)$, referring to the probability measure in the MC induced by the strategy offering the maximum probability of satisfying a given property.
 Thus, the formula $\mathcal{P}^{\max}_J(\phi)$ asserts \[\mathbb{P}^{\max}_s(\{\pi \in Paths(s) \; | \; \pi \models \phi \}) \in J .\]
-\textit{Note: remind that $\mathbb{P}_s^{\max}(E)$ refers to the probability measure defined on the MC induced by the strategy maximising the probability of the event $E$ in this MC, i.e., $\max_{\sigma} \mathbb{P}_s^\sigma(E)$.}
+\textit{Note: remind that $\mathbb{P}_s^{\max}(E)$ refers to the probability measure defined on paths of the MC induced by the strategy maximising the probability of the event $E$ in this MC, i.e., $\max_{\sigma} \mathbb{P}_s^\sigma(E)$.}
 
 \begin{definition}[\textbf{Syntax of PCTL for MDPs}]
-Let $AP$ be a set of atomic propositions,
+Let $\mathcal{M}$ be an MDP with space of atomic propositions $AP$,
 \begin{itemize}
-  \item PCTL \textit{state formulae} are formed according the following grammar:
+  \item PCTL \textit{state formulae} over $AP$ are formed according to the following grammar:
   \[
     \Phi ::= true \;\; | \;\; a \;\; | \;\; \Phi_1 \wedge \Phi_2 \;\; | \;\; \neg \Phi \;\; | \;\; \mathcal{P}^{\max}_J(\phi)
   \]
   where $a \in AP$ is an atomic proposition, $J \subseteq [0, 1]$ gives probability bounds and $\phi$ is a path formula.
-  \item PCTL \textit{path formulae} are formed according
-  to the same grammar than for MCs.
+  \item PCTL \textit{path formulae} over $AP$ are formed according
+  to the same grammar as for path formulae in Markov chains context.
 \end{itemize}
 \end{definition}
 \begin{definition}[\textbf{Semantic of PCTL for MDPs}]
-  Let $\mathcal{M} = (S, A, \Delta, AP, L)$ be an MDP and $s \in S$, be a state of $\mathcal{M}$,
+  Let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be an MDP, $s \in S$, $\Phi, \Psi$ be PCTL state formulae over $AP$, and $\phi$ be a PCTL path formula over $AP$,
   \begin{flalign*}
   \intertext{$s \models \Phi$ iff the state formula $\Phi$ holds in the state $s$, i.e.,}
     &\bigcdot\; s \models true, &&&\\
     &\bigcdot\; s \models a &\text{ iff }& a \text{ is a label of $s$, i.e., } a \in L(s),&\\
-    &\bigcdot\; s \models \Phi_1 \wedge \Phi_2&\text{ iff }& s \models \Phi_1 \text{ and } s \models \Phi_2,&\\
+    &\bigcdot\; s \models \Phi \wedge \Psi &\text{ iff }& s \models \Phi \text{ and } s \models \Psi,&\\
     &\bigcdot\; s \models \neg \Phi &\text{ iff }& s \not\models \Phi, &\\
     &\bigcdot\; s \models \mathcal{P}^{\max}_J(\phi) &\text{ iff }& \mathbb{P}^{\max}_s(\{ \pi \in Paths(s) \; | \; \pi \models \phi \}) \in J.&
-  \intertext{$\pi \models \phi$ iff the $\pi$ satisfies $\phi$ in the induced MC.}
   \end{flalign*}
+  $\pi \models \phi$ iff the path $\pi$ satisfies $\phi$ in the induced MC.
 \end{definition}
-In the first chapter, we have addressed a way to compute the strategy $\sigma$ to resolve the SR problem, i.e., compute the strategy $\sigma$ following an MDP $\mathcal{M}$ with state space $S$, a state $s \in S$, and a subset of target states $T$, such that $\mathbb{P}_s^\sigma(\Diamond T) = \mathbb{P}^{\max}_s(\Diamond T)$.
-We have seen that this can be done in polynomial time in the size of $\mathcal{M}$, through a linear program (cf. theorem \ref{thm-sr} and appendix \ref{app-sr}).
-We can generalise this computation of optimal strategy for the constrained reachability events. To this purpose, we need to address the equation system from which the linear program used to compute this strategy is derived (cf. appendix \ref{app-sr}).
+In the first chapter, we have addressed a way to compute the optimal strategy $\sigma$ for the \SR{} problem, i.e., compute the strategy $\sigma$ following an MDP $\mathcal{M}$ with state space $S$, a state $s \in S$, and a subset of target states $T$, such that $\mathbb{P}_s^\sigma(\Diamond T) = \mathbb{P}^{\max}_s(\Diamond T)$.
+We have seen that this can be done in polynomial time in the size of $\mathcal{M}$, through a linear program (cf. theorem \ref{thm-sr} and Appendix \ref{app-sr}).
+We can generalise this computation of optimal strategy for the constrained reachability events. To this purpose, we need to address the equation system from which the linear program used to compute this strategy is derived (cf. Appendix \ref{app-sr}).
 
-\begin{theorem}[\textbf{Equation system for max reachability probabilities}]
+\begin{theorem}[\textbf{Bellman equation system for max. reachability probabilities}] \label{bellman1}
   Let $\mathcal{M}$ be a finite MDP with state space $S$ and with a probability transition function $\Delta$, $s \in S$ be a state of $\mathcal{M}$ and $T \subseteq S$ be a subset of target states. The vector $(x_s)_{s \in S}$ with $x_s = \mathbb{P}_s^{\max}(\Diamond T)$ yields the unique solution of the following equation system: let the subset $S_{=1} \subseteq S$ be a subset of states such that $T \subseteq S_{=1} \subseteq \{s \in S \; | \; \mathbb{P}^{\max}_s(\Diamond T) = 1 \}$,
   \begin{itemize}
     \item if $s \in S_{=1}$, then $x_s=1$,
@@ -740,7 +756,7 @@ This theorem suggests an iterative approximation technique, called \textit{value
 where
 \[x_s^{(0)} = 0 \quad \text{and} \quad x_s^{(n+1)} = \max_{\alpha \in A(s)} \sum_{s' \in Succ(s, \alpha)} \Delta(s, \alpha, s') \cdot x_{s'}^{(n)}. \]
 This yields $x_s^{(n)} \leq x_s^{(n+1)}$ for any $n \in \mathbb{N}$, and the values of $\mathbb{P}^{\max}_s(\Diamond T)$ can be approximated by iteratively computing vectors $x_s^{(n+1)}$
-with vectors $x_s^{(n)}$ for all states $s \in S$ until $\max_{s \in S} |x_s^{(n+1)} - x_s{(n)}| < \varepsilon$ for a small threshold value $\varepsilon > 0$.
+with vectors $x_s^{(n)}$ for all states $s \in S$ until $\max_{s \in S} |x_s^{(n+1)} - x_s^{(n)}| < \varepsilon$ for a small threshold value $\varepsilon > 0$.
 \begin{theorem}[\textbf{Value iteration for step-bounded reachability}]
   Let $\mathcal{M}$ be a finite MDP with state space $S$ and with a probability transition function $\Delta$, and a subset of target states $T \subseteq S$. The value iteration approach can be used to compute the maximal probabilities for the event $\Diamond^{\leq n}T$.
   Indeed, the vector $(x_s)^{(n)}_{s \in S}$ with $x_s^{(n)} = \mathbb{P}^{\max}_s(\Diamond^{\leq n} T)$ yields the unique solution of the following equation system:
@@ -756,15 +772,486 @@ with vectors $x_s^{(n)}$ for all states $s \in S$ until $\max_{s \in S} |x_s^{(n
   \[
     \sigma_\alpha(m_i, s) =
     \begin{cases}
-      \alpha \; \text{ such that } \alpha \in A(s) &\text{if }i=0,\\
-      \arg \max_{\alpha \in A(s)} \sum_{s' \in Succ(s, \alpha)} \Delta(s, \alpha, s') \cdot x_{s'}^{(i-1)}
+      \alpha \text{ such that } \alpha \in A(s) &\text{if }i = n,\\
+      \arg \max_{\alpha \in A(s)} \sum_{s' \in Succ(s, \alpha)} \Delta(s, \alpha, s') \cdot x_{s'}^{(i)}
       & \text{else.}
     \end{cases}
   \]
-  Intuitively, $\sigma$ is initialised in mode $m_0$, and when the strategy is in mode $m_i$, $i \in \{1, \dots, n-1\}$,
-  it chooses the action that maximises $\sum_{s' \in Succ(s, \alpha)} \Delta(s, \alpha, s') \cdot x_{s'}^{(i-1)}$ and then changes its mode $m_i$ to the next mode $m_{i+1}$. When the strategy is in mode $m_n$, it stays inside it forever.
+  Intuitively, $\sigma$ is initialised in mode $m_0$, and when the strategy is in mode $m_i$ for $i \in \{0, \dots, n-1\}$,
+  it chooses the action that maximises $\sum_{s' \in Succ(s, \alpha)} \Delta(s, \alpha, s') \cdot x_{s'}^{(i)}$ and then go to the next mode $m_{i+1}$. When the strategy enters in mode $m_n$, it stays inside it forever and always chooses an arbitrary enabled action.
 \end{theorem}
-As for MCs, we can compute constrained reachability events $C \U T$ or $C \U^{\leq n} T$ by reduction to the reachability to $T$ as follows:
-we make all states of $s \in S \setminus (C \cup T)$ absorbing i.e., we replace all the enabled actions of $A(s)$
+As for MCs, we can compute $\mathbb{P}_s^{\max}(C \U T)$ (or $\mathbb{P}_s^{\max}(C \U^{\leq n} T)$) for any state $s$ of the system by reduction to the reachability to $T$ as follows:
+we make all states $s \in S \setminus (C \cup T)$ absorbing, i.e., we replace all enabled actions in $A(s)$
 by an unique action $\alpha_s$ such that $\Delta(s, \alpha_s, s) = 1$.
-Then, we compute $\mathbb{P}^{\max}_s(\Diamond T)$ in this modified MDP to get the linked strategy.
+Then, we compute $\mathbb{P}^{\max}_s(\Diamond T)$ (or $\mathbb{P}^{\max}_s(\Diamond^{\leq n} T)$) for all $s \in C \cup T$ in this modified MDP to get the linked
+strategy, corresponding to the optimal strategy built for the \SR{} problem for the subset of target states $T$ (cf. Appendix \ref{app-sr} for more details on the computation of this maximum probability).
+
+\begin{remark}[\textit{Choosing $S_{=1}$ for reachability properties}]
+  In similar fashion to Markov chains, it is possible to compute the largest set $S_{=1}$ to optimise the linear program defined to compute $\mathbb{P}_s^{\max}(\Diamond T)$, for all $s \in S$.
+  Then, we compute $S_{=1} = \{s \in S \; | \; \mathbb{P}_s^{\max}(\Diamond T) = 1 \}$ according to the algorithm \ref{prMax1} (cf. Appendix \ref{app-sr}).
+\end{remark}
+
+PCTL model checking for MDPs is also done almost the same way as for MCs. Indeed, just the satisfiability set $Sat$ characterisation is slightly different, due to the semantic of the probabilistic operator $\mathcal{P}^{\max}_J(.)$.
+\begin{property}[Characterisation of $Sat$ for MDPs]
+Let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be an MDP, $\Phi, \Psi$ be PCTL state formulae over $AP$, and $\phi$ be a  PCTL path formula over $AP$. The satisfaction set $Sat$ is characterised as follows:
+\begin{flalign*}
+  Sat(true) &= S,\\
+  Sat(a) &= \{s \in S \; | \; a \in L(s)\} \text{ for } a \in AP,\\
+  Sat(\Phi) \, \wedge \, Sat(\Psi) &= Sat(\Phi) \cap Sat(\Psi),\\
+  Sat(\neg \Phi) &= S \setminus Sat(\Phi), \text{ and} \\
+  Sat(\mathcal{P}^{\max}_J(\phi)) &= \{ s \in S \; | \; \mathbb{P}^{\max}_s (Paths(s, \phi)) \in J \} \text{ for } J \subseteq [0, 1],
+\end{flalign*}
+where $Paths(s, \phi) = \{ \pi \in Paths(s) \; | \; \pi \models \phi \}$.
+$\mathcal{P}^{\max}_J(\phi)$ is computed according to the formula $\phi$ as follows:
+let $s \in S$ be a state of $\mathcal{M}$,
+\begin{flalign*}
+  \mathbb{P}^{\max}_s(Paths(s,\, \bigcirc \Phi)) &= \max_{\alpha \in A(s)} \sum_{s' \in Sat(\Phi)} \Delta(s, \alpha, s'), \\
+  \mathbb{P}^{\max}_s(Paths(s,\, \Phi \U \Psi)) &= \mathbb{P}^{\max}_s(Sat(\Phi) \U Sat(\Psi)), \text{ and}\\
+  \mathbb{P}^{\max}_s(Paths(s, \, \Phi \U^{\leq n} \Psi)) &=
+    \mathbb{P}^{\max}_s(Sat(\Phi) \U^{\leq n} Sat(\Psi)).
+\end{flalign*}
+\end{property}
+
+\section{Probabilistic computation tree logic with rewards extension} \label{PRCTL-MC}
+To handle properties involving weights of systems, there exists a variant of PCTL incorporating the truncated sum function.
+This logic is named \textit{probabilistic-reward computation tree logic} (\textbf{PRCTL}).
+This logic introduces the expectation operator $\mathcal{E}_C(.)$, and additionally include the \textit{cost-bounded until} operator $\U_{\leq l}$.\\
+
+As for PCTL, we will define PRCTL in Markov chains and then describe the slight changes of the syntax and semantic induced by the nondeterminism for Markov decision processes.
+
+
+\begin{definition}[\textbf{Syntax of PRCTL}]
+Let $AP$ be a set of atomic propositions,
+\begin{itemize}
+  \item PRCTL \textit{state formulae} are formed according to the following grammar:
+  \[
+    \Phi ::= true \;\; | \;\; a \;\; | \;\; \Phi_1 \wedge \Phi_2 \;\; | \;\; \neg \Phi \;\; | \;\; \mathcal{P}_J(\phi) \;\; | \;\; \mathcal{E}_C(\Phi)
+  \]
+  where $a \in AP$ is an atomic proposition, $J \subseteq [0, 1]$ gives probability bounds, $C \subseteq \mathbb{N} \cup \{+\infty\}$ gives cost bounds, and $\phi$ is a path formula.
+  \item PRCTL \textit{path formulae} are formed according to the following grammar:
+  \[
+  \phi ::= \bigcirc \Phi \;\; | \;\; \Phi_1 \U \Phi_2 \;\; | \;\; \Phi_1 \U^{\leq n} \Phi_2
+  \;\; | \;\; \Phi_1 \U_{\leq l}\, \Phi_2
+  \]
+  where $\Phi$, $\Phi_1$ and $\Phi_2$ are state formulae, and $n, l \in \mathbb{N}$.
+\end{itemize}
+\end{definition}
+\begin{definition}[\textbf{Semantic of PRCTL}]
+  Let $\mathcal{M} = (S, \Delta, w, AP, L)$ be an MC, $s \in S$, $\pi \in Paths(s)$, and $\Phi, \Psi$ be PRCTL state formulae, the semantic of PRCTL is exactly the same as the semantic of PCTL, with the additional expectation operator $\mathcal{E}_C(.)$ and the additional cost bounded operator $\U_{\leq l}$, for which the semantic is defined as follows:
+  \begin{align*}
+  s &\models \mathcal{E}_C(\Phi) &\text{ iff }\quad& \mathbb{E}_s(\TS^{Sat(\Phi)}) \in C,\\
+  \pi &\models \Phi \U_{\leq l} \Psi &\text{ iff }\quad&
+  \exists j \in \mathbb{N}, \, s_j \models \Psi, \; \forall i \in \mathbb{N}, \, i<j, \, s_i \models \Phi,
+  \text{ and } \TS^{Sat(\Psi)}(\pi) \leq l.
+  \end{align*}
+\end{definition}
+As for the classical constrained and
+step-bounded constrained reachability events, there
+exists a cost-bounded constrained reachability event, formed by a countable union of cylinder sets, ensuring the measurability of the event related to the path formula $\Phi \U_{\leq l} \Psi$ for state formulae $\Psi$ and $\Phi$ and a cost threshold $l$.
+\begin{definition}[\textbf{Cost-bounded constrained reachability event}]
+  Let $\mathcal{M}$ be an MC with state space $S$, $s \in S$, $C, T \subseteq S$, and $l \in \mathbb{N}$, the constrained cost-bounded reachability is defined as follows:
+    \[C \U_{\leq l}\, T = \bigcup_{s_0 \dots s_n \in Paths^{C, \, T}_{\leq l}(s)} Cyl(s_0 \dots s_n),
+  \]
+  where
+  $
+    Paths^{C, \,  T}_{\leq l}(s)= \{ s_0 \dots s_n \in Paths_{fin}(s) \; | \; \forall i \in \mathbb{N}, \, i<n, \, s_i \in C \setminus T,\,   \; \wedge \; s_n \in T \; \wedge \; \TS^T(s_0\dots s_n) \leq l \}$.
+\end{definition}
+
+We have already presented a way to compute $\mathbb{P}_s(\Diamond_{\leq l} T)$ for a set of target states $T \subseteq S$ (cf. theorem \ref{cost-bounded-thm} in the first chapter).
+Following this,
+we can compute the probability of a cost-bounded constrained reachability event $C \U_{\leq l} T$ for $C, T \subseteq S$, with the same key idea as for the classical cost bounded reachability:
+we make all states of $T$ and $S \setminus (C \U T)$ absorbing and we resolve the cost-bounded reachability in the MC induced by these modifications (cf.  proof of the corollary \ref{qualitative-const-reach}).\\
+
+The PRCTL model checking is also an extension of the PCTL model checking. We just need to describe the changes in the
+characterisation of $Sat$ including the new notions introduced in PRCTL.
+\begin{property}[PRCTL characterisation of $Sat$]
+  Let $\mathcal{M}=(S, \Delta, w, AP, L)$ be an MC, $\Phi$, $\Psi$ be PRCTL state formula over $AP$ and $\phi$ be a PRCTL path formula over $AP$. The satisfaction set $Sat$ is characterised the same way as in PCTL, with the following additional statements:
+  \begin{align*}
+    Sat(\mathcal{E}_C(\Phi)) &= \{ s \in S \; | \; \mathbb{E}_s(\TS^{Sat(\Phi)}) \in C \} \text{ for } C \subseteq \mathbb{N} \cup \{+\infty\}, \text{ and} \\
+    Sat(\mathcal{P}_J(\phi)) &= \{ s \in S \; | \; \mathbb{P}_s (Paths(s, \phi)) \in J \} \text{ for } J \subseteq [0, 1],
+  \end{align*}
+    where $Paths(s, \phi) = \{ \pi \in Paths(s) \; | \; \pi \models \phi \}$.
+    $\mathcal{P}_J(\phi)$ is computed according to the formula $\phi$ as in PCTL, with the following additional statement:
+  \[
+    \mathbb{P}_s(Paths(s, \Phi \U_{\leq l} \Psi)) = \mathbb{P}_s(Sat(\Phi) \U_{\leq l} \, Sat(\Psi)) \text{ for } l \in \mathbb{N}.
+  \]
+\end{property}
+
+\begin{example}[\textit{PRCTL model checking: expectation operator}]
+  Let $\mathcal{M}=(S, \Delta, w, AP, L)$ be the MC of Figure \ref{CUTexample3} and the state formula $\Phi = \mathcal{E}_{\leq{5}}(c \vee \mathcal{P}_{\geq \frac{1}{2}}(a \U (b \wedge c)))$.
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{resources/CUTexample3}
+    \captionsetup{justification=centering}
+    \caption{MC $\mathcal{M}$ with state space $S = \{s_0, s_1, s_2, s_3, s_4\}$ and atomic propositions of the set $AP = \{a, b, c\}$}
+    \label{CUTexample3}
+  \end{figure}
+  We are interested to know if $s_2 \models \Phi$.
+  Let $\Psi = c \vee \mathcal{P}_{\geq \frac{1}{2}}(a \U (b \wedge c)))$.
+  Thus, we compute $Sat(\mathcal{E}_{\leq 5}(\Psi)) = \{s \in S \; | \; \mathbb{E}_s(\TS^{Sat(\Psi)}) \leq 5\}$. The set $Sat(\Psi)$
+  has already been computed in Example \ref{exCUT}.
+  Then, the set $Sat(\mathcal{E}_{\leq 5}(\Psi)) = \{s \in S \;|\; \mathbb{E}_s(\TS^{\{s_0, s_1, s4\}})\leq 5\}$.
+  We can compute
+  $\mathbb{E}_s(\TS^{\{s_0, s_1, s_4\}})$ for all $s \in S$, according to the equation system defined in Appendix \ref{app-expMC}.
+  Let $S_{=?} = \{ s \in S \; | \; \mathbb{P}_s(\Diamond \{s_0, s_1, s_4\}) = 1 \} \setminus \{s_0, s_1, s_4\} =
+  \{s_2, s_3\}$ and $(x_s)_{s \in S} \in [0, 1]^{|S|}$ such that $x_s = \mathbb{E}_s(\TS^{\{s_0, s_1, s_4\}})$ for all $s \in S$, we firstly have $x_{s_0} = x_{s_1} = x_{s_4} = 0$.
+  We additionally have
+  \begin{align*}
+    \begin{pmatrix}
+      x_{s_2}\\[0.3em]
+      x_{s_3}
+  	\end{pmatrix} &=
+    \begin{pmatrix}
+      0 & \frac{9}{10} \\[0.3em]
+      0  & 0
+    \end{pmatrix}
+    \begin{pmatrix}
+      x_{s_2}\\[0.3em]
+      x_{s_3}
+  	\end{pmatrix}
+    +
+    \begin{pmatrix}
+      \frac{3}{10}\\[0.3em]
+      2
+    \end{pmatrix},
+  \end{align*}
+  and we thus have $x_{s_3} = \mathbb{E}_{s_3}(\TS^{\{s_0, s_1, s_4\}}) = 2 \leq 5$ and $
+    x_{s_2} = \mathbb{E}_{s_2}(\TS^{\{s_0, s_1, s_4\}}) = \frac{9}{10} (x_{s_3} + 3) + \frac{3}{10}
+    = \frac{9}{10} \cdot 5 + \frac{3}{10}
+    = \frac{48}{10}\leq 5$. Then, $Sat(\mathcal{E}_{\leq 5}(\Psi)) = S$ what implies $s_2 \models \Phi$.
+\end{example}
+
+\section{PRCTL for Markov decision processes}\label{PRCTL-MDP}
+Again, PRCTL for Markov decision processes is slightly different than PRCTL for Markov Chains.
+We need to adapt the syntax and the semantic of PRCTL for Markov chains in order to support Markov Decision processes.
+Indeed, in addition to the probabilistic operator $\mathcal{P}_J(.)$ that changes to $\mathcal{P}_J^{\max}(.)$ for the same reason as in PCTL,
+the expectation operator $\mathcal{E}_C(.)$ becomes ambiguous for Markov decision processes due to nondeterminism.
+In Markov chains, this operator directly refers to the expected cost to reach a set of target states.
+We cannot address the expect cost-to-target in Markov decision process without referring to the notion of strategies.
+Then, we replace this operator with $\mathcal{E}^{\min}_C(.)$, referring to the expected cost-to-target in the Markov chain induced by the strategy minimising this cost in the MDP.
+
+\begin{definition}[\textbf{Syntax of PRCTL for MDPs}]
+Let $\mathcal{M}$ be an MDP with state space of atomic propositions $AP$,
+\begin{itemize}
+  \item PRCTL \textit{state formulae} over $AP$ are formed according to the following grammar:
+  \[
+    \Phi ::= true \;\; | \;\; a \;\; | \;\; \Phi_1 \wedge \Phi_2 \;\; | \;\; \neg \Phi \;\; | \;\; \mathcal{P}^{\max}_J(\phi) \;\; | \;\; \mathcal{E}^{\min}_C(\Phi)
+  \]
+  where $a \in AP$ is an atomic proposition, $J \subseteq [0, 1]$ gives probability bounds, $C \subseteq \mathbb{N} \cup \{+\infty\}$ gives cost bounds, and $\phi$ is a path formula.
+  \item PRCTL \textit{path formulae} over $AP$ are formed according to the same grammar as for PRCTL path formulae in Markov chains context.
+\end{itemize}
+\end{definition}
+\begin{definition}[\textbf{Semantic of PRCTL for MDPs}]
+  Let $\mathcal{M} = (S,A, \Delta, w, AP, L)$ be an MDP, $s \in S$, and $\Phi$ be a PRCTL state formula over $AP$,
+  the semantic of PRCTL state formulae for MDPs is exactly the same as the PCTL state formulae semantic for MDPs, with the additional expectation operator $\mathcal{E}^{\min}_C(.)$ for which the semantic is defined as follows:
+  \[
+  s \models \mathcal{E}^{\min}_C(\Phi) \quad \text{ iff }\quad \mathbb{E}^{\min}_s(\TS^{Sat(\Phi)}) \in C.
+  \]
+  The PRCTL semantic of paths formulae for MDPs is the same as the PRCTL semantic of paths formulae for MCs.
+\end{definition}
+
+In order to compute the maximum probability of paths formed by a cost-bounded constrained path formula (i.e., a path formula of the form $\Phi \U_{\leq l} \Psi$),
+we compute $\mathbb{P}_s^{\max}(C \U_{\leq l} T)$ for any state $s$ of the system, $C, T \subseteq S$, and $l \in \mathbb{N}$, by reduction to the cost-bounded reachability to $T$ the same way as we compute the classical constrained reachability by reduction to the reachability to $T$:
+we make all states $s^* \in S \setminus (C \cup T)$ absorbing, i.e., we replace all enabled actions in $A(s^*)$
+by a unique action $\alpha_{s^*}$ such that $\Delta(s^*, \alpha_{s^*}, s^*) = 1$.
+Then, we compute $\mathbb{P}^{\max}_s(\Diamond_{\leq l} T)$ in this modified MDP to get the linked strategy, corresponding to the optimal strategy built for the \SSPP{} problem for the subset of target states $T$ and the cost threshold $l$ (cf. theorem \ref{sspp-thm} in the first chapter). \\
+
+Furthermore, as the PRCTL model checking is done
+through the recursive computation of the satisfaction set, we just need to slightly adapt the characterisation of the PCTL satisfiability set for MDPs.
+\begin{property}[PRCTL characterisation of $Sat$ for MDPs]
+  Let $\mathcal{M}=(S,A, \Delta, w, AP, L)$ be an MDP, $\Phi$, $\Psi$ be PRCTL state formulae over $AP$ and $\phi$ be a PRCTL path formula over $AP$. The satisfaction set $Sat$ is characterised the same way as in PCTL, with the following additional statements:
+  \begin{align*}
+    Sat(\mathcal{E}^{\min}_C(\Phi)) &= \{ s \in S \; | \; \mathbb{E}^{\min}_s(\TS^{Sat(\Phi)}) \in C \} \text{ for } C \subseteq \mathbb{N} \cup \{+\infty\}, \text{ and} \\
+    Sat(\mathcal{P}^{\max}_J(\phi)) &= \{ s \in S \; | \; \mathbb{P}^{\max}_s (Paths(s, \phi)) \in J \} \text{ for } J \subseteq [0, 1],
+  \end{align*}
+    where $Paths(s, \phi) = \{ \pi \in Paths(s) \; | \; \pi \models \phi \}$.
+    $\mathcal{P}_J(\phi)$ is computed according to the formula $\phi$ as in PCTL, with the following additional statement:
+  \[
+    \mathbb{P}^{\max}_s(Paths(s, \Phi \U_{\leq l} \Psi)) = \mathbb{P}^{\max}_s(Sat(\Phi) \U_{\leq l} \, Sat(\Psi)) \text{ for } l \in \mathbb{N}.
+  \]
+\end{property}
+
+\begin{remark}[\textit{PRCTL model checking and \SSPE{} problem}]
+  Let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be an MDP, $s \in S$, $l \in \mathbb{N}$, and $\Phi$ be a PRCTL state formula over $AP$,
+  verify $s \models \mathcal{E}^{\min}_{\leq l}(\Phi)$ is equivalent to solve the \SSPE{} problem for the state $s$, the cost threshold $l$ and the subset of target states $Sat(\Phi)$.
+\end{remark}
+\begin{remark}[\textit{PRCTL model checking and \SSPP{} problem}]
+  Let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be an MDP, $s \in S$, $l \in \mathbb{N}$, $\alpha \in [0, 1]$, and $\Phi$ be a PRCTL state formula over $AP$,
+  verify $s \models \mathcal{P}^{\max}_{\geq \alpha}(\Diamond_{\leq l} \Phi)$ is equivalent to solve the \SSPP{} problem for the state $s$, the cost threshold $l$, the probability threshold $\alpha$ and the set of target states $Sat(\Phi)$.
+\end{remark}
+
+\begin{example}[\textit{PRCTL model checking: cost-bounded until operator}] \label{cost-bounded-example}
+Let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be the MDP of Figure \ref{cost-bounded-until1}, we are interested to verify $s_0 \models \mathcal{P}^{\max}_{\geq \frac{1}{5}}((a \vee b) \U_{\leq 8} \, c)$.
+First, we begin by computing the sets $Sat(a \vee b)$ and $Sat(c)$. Let $C = Sat(a \vee b)$ and $T = Sat(c)$. We have $C = \{s_0, s_3\}$ and $T = \{ s_1 \}$.
+Then, we make all states of the set $S \setminus C \cup T$ absorbing, i.e., all states of $\{s_2, s_4, s_5, s_6\}$ (cf. Figure \ref{cost-bounded-until2}), to set up the reduction of this problem to the cost-bounded reachability to $T$.
+Now, it stills to compute $\mathbb{P}_{s_0}^{\max}(\Diamond_{\leq 8} \, T)$ in the modified MDP.
+To do that, we unfold it from the state $s_0$ up to the cost threshold $l=8$ (cf. Figure \ref{cost-bounded-until3}). Let $S_l$ be the state space of the unfolding of $\mathcal{M}$ and $T_l = \{(s_1, 2), (s_1, 5), (s_1, 8)\} $
+be the new set of target states.
+We compute $\mathbb{P}^{\max}_{(s_0, 0)}(\Diamond T_l)$ in this unfolded MDP according to the linear program defined in Appendix \ref{app-sr}: let $(x_{(s, v)})_{(s, v) \in S_{l}} \in [0, 1]^{|S_l|}$ such that $x_{(s, v)} = \mathbb{P}^{\max}_{(s_v, 0)}(\Diamond T_l)$ for all $(s, v) \in S_l$, we have that $x_{s_\bot} = x_{(s_3, 8)} = 0$
+because $s_{\bot}$ and $(s_3, 8)$ are not connected to $T_l$ and $x_t = 1$ for all $t \in T_l$. Then, the vector $(x_s)_{s \in S_l}$ is the unique solution of the following linear program:
+\begin{align*}
+\intertext{\centering $\min \, x_{(s_0,0)} + x_{(s_0,3)} + x_{(s_0,6)} + x_{(s_3,2)} + x_{(s_3,5)}$}\\
+\intertext{subject to}
+  x_{(s_0,0)} - \tfrac{1}{2} x_{(s_3,2)} &\geq \tfrac{1}{5} &
+  x_{(s_3,2)} - \tfrac{7}{8} x_{(s_3,5)} &\geq \tfrac{1}{8}\\
+  - \tfrac{4}{5} x_{(s_0,3)} + x_{(s3,2)} &\geq 0 &
+  x_{(s_3,5)} &\geq \tfrac{1}{8}\\
+  - \tfrac{4}{5} x_{(s_0,6)} + x_{(s_3,5)} &\geq 0 &
+  x_{(s_0,6)} &\geq \tfrac{1}{5}\\
+  x_{(s_0,3)} - \tfrac{1}{2} x_{(s_3,5)} &\geq \tfrac{1}{5} && & \\[1em]
+  0 \leq x_{(s_0,0)} &\leq 1 &
+  0 \leq x_{(s_0,3)} &\leq 1 \\
+  0 \leq x_{(s_0,6)} &\leq 1 &
+  0 \leq x_{(s_3,2)} &\leq 1 \\
+  0 \leq x_{(s_3,5)} &\leq 1 & &
+\end{align*}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.7\linewidth]{resources/MDPExample}
+  \captionsetup{justification=centering}
+  \caption{MDP $\mathcal{M}$, with state space $S=\{s_0, s_1, s_2, s_3, s_4, s_5, s_5\}$ and with space of atomic propositions $AP = \{a, b, c\}$}
+  \label{cost-bounded-until1}
+\end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.7\linewidth]{resources/MDPExample2}
+  \captionsetup{justification=centering}
+  \caption{MDP $\mathcal{M}$ modified to verify the property $\mathcal{P}^{\max}_{\geq \frac{1}{5}}((a \vee b) \U_{\leq 8} \, c)$ by reduction to the cost-bounded reachability to $T$}
+  \label{cost-bounded-until2}
+\end{figure}
+We can solve this linear program via the simplex method. This yields ${x_{(s_0, 0)}=0.3325}$. Since $x_{(s_0, 0)} = \mathbb{P}_{(s_0, 0)}^{\max}(\Diamond T_l) = \mathbb{P}^{\max}_{s_0} (\Diamond_{\leq 8}\, T)$ in the modified MDP, we have that $x_{(s_0, 0)} = \mathbb{P}^{\max}_{s_0}(C \U_{\leq 8} \, T)$ in
+$\mathcal{M}$, and $x_{(s_0, 0)} \geq \frac{1}{5}$. Then, $s_0 \models \mathcal{P}_{\geq \frac{1}{5}}^{\max}((a \vee b) \U_{\leq 8}\, c)$.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{resources/MDPExample-unfolded}
+  \captionsetup{justification=centering}
+  \caption{Unfolding of the modified MDP from the state $s_0$ up to the cost threshold $l=8$}
+  \label{cost-bounded-until3}
+\end{figure}
+\end{example}
+
+\section{Model checking in Storm}
+Storm properties are expressed in a language including PRCTL and CSL (i.e., continuous stochastic logic, for continuous Markov models).
+The syntax of the subset of this language supporting PRCTL is slightly different and we will present here the slight changes in comparison to the classical PRCTL syntax presented in the previous section. We name the subset of the Storm language supporting PRCTL ``Storm-PRCTL''.
+
+\begin{notation}[\textit{MC and MDP support by the syntax of Storm-PRCTL}]
+  Let $\mathcal{M}$ be an MDP. In this section, we will cover at a time the syntax of Storm-PRCTL for MCs and MDPs.
+  As a reminder, we can consider an MC as an MDP such that there is only one enabled action for each state.
+  The differences between PRCTL for MCs and for MDPs are probabilistic operator and expected operator that refer to the probability and the expected cost-to-target in the MC context and refer to the maximum probability and the minimum expected cost-to-target in the MDP context.
+  So, let the words
+  $\lambda = \begin{cases}
+    \varnothing &\text{if } \mathcal{M} \text{ is an MC}\\
+    \max & \text{else}
+  \end{cases}$ and
+  $\mu = \begin{cases}
+    \varnothing &\text{if } \mathcal{M} \text{ is an MC}\\
+    \min & \text{else},
+  \end{cases}$ where $\varnothing$ is the empty word, we can now generalise the syntax of these operators with $\mathcal{P}^\lambda_J(.)$ and $\mathcal{E}^\mu_C(.)$ according to $\mathcal{M}$ in PRCTL and we can also use this notation for the syntax of Storm-PRCTL.
+\end{notation}
+
+\begin{definition}[\textbf{Syntax of Storm-PRCTL}]
+Let $\mathcal{M}$ be an MDP with space of atomic propositions $AP$,
+\begin{itemize}
+  \item Storm-PRCTL \textit{state formulae} over $AP$ are formed according to the following grammar:
+  \[
+    \Phi ::= true \;\; | \;\; ``a" \;\; | \;\; \Phi_1 \, \& \, \Phi_2 \;\; | \;\; ! \Phi \;\; | \;\; P\lambda\,{\varphi}\,j \, [\phi] \;\; | \;\; R\mu\,{\varphi}\,c \,[F\, \Phi]
+  \]
+  where $a \in AP$ is an atomic proposition, $\phi$ is a path formula, $\varphi \in \{=, <, >, \leq, \geq \}$, $j \in [0, 1]$, and $c \in \mathbb{N} \cup \{+\infty\}$.
+  \item PRCTL \textit{path formulae} over $AP$ are formed according to the following grammar:
+  \[
+  \phi ::= X \Phi \;\; | \;\; \Phi_1 \, U \, \Phi_2 \;\; | \;\; \Phi_1 \, U\leq n \, \Phi_2
+  \;\; | \;\; \Phi_1 \, U\{ ``d" \}\leq l \, \Phi_2
+  \]
+  where $\Phi$, $\Phi_1$ and $\Phi_2$ are state formulae, $d$ is a \textit{dimension reward} (cf. subsection \ref{prism-subsec} in the second chapter), and $n, l \in \mathbb{N}$.
+\end{itemize}
+\end{definition}
+
+% \begin{definition}[\textbf{Translation of Storm-PRCTL into PRCTL}]
+%   Let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be an MDP, we can \textit{translate} each Storm-PRCTL formula into a classical PRCTL formula with the following functions:
+%   \[
+%     t_{state}: \text{Storm-PRCTL state formula over }AP \rightarrow \text{PRCTL state formula over }AP,
+%   \]
+%   \[
+%     t_{state}(\Phi) = \begin{cases}
+%
+%     \end{cases}
+%   \]
+%
+% \end{definition}
+
+\begin{definition}[\textbf{Equivalence between Storm-PRCTL formulae and PRCTL formulae}]
+Let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be an MDP, and $\Phi, \Psi$ be Storm-PRCTL state formulae over $AP$,
+there exists an equivalence between Storm-PRCTL state formulae and classical PRCTL state formulae:
+\begin{align*}
+  true &\equiv true, & ``a" &\equiv a,  \\
+  \Phi \, \& \, \Psi &\equiv \Phi \wedge \Psi, & !\, \Phi &\equiv \neg \Phi, \\
+  P{\lambda} \, \varphi\, j \, [\phi] &\equiv \mathcal{P}^{\lambda}_{\{i \in [0, 1] \; | \; i \varphi j\}}(\phi),&
+  R{\mu}\,\varphi \, c \, [F \Phi] &\equiv \mathcal{E}^{\mu}_{\{r \in \mathbb{N}\cup\{+\infty\} \; | \; r \varphi c \}} (\Phi),
+  \intertext{where $a \in AP$, $j \in [0, 1]$ and $c \in \mathbb{N}\cup \{+ \infty\}$. Additionally, $\Phi \,|\, \Psi \equiv \Phi \vee \Psi \equiv \neg (\neg \Phi \wedge \neg \Psi)$. Then, there additionally exists an equivalence between Storm-PRCTL path formulae and classical PRCTL path formulae:}
+  X \Phi &\equiv \bigcirc \Phi, & \Phi \, U \, \Psi &\equiv \Phi \U \Psi,\\
+  \Phi\, U \leq n \, \Psi, &\equiv \Phi \U^{\leq n} \Psi, &
+  \Phi\, U\{ ``d" \}\leq l \, \Psi &\equiv \Phi \U_{\leq l} \Psi,
+  \intertext{where $n, l \in \mathbb{N}$ and $d$ is a dimension reward. Additionally,}
+  F \Phi &\equiv \Diamond \Phi, \text{ and} & G \Phi &\equiv \Box \Phi.
+\end{align*}
+\end{definition}
+The semantic of Storm-PRCTL is the same as the semantic of PRCTL following this equivalence between formulae.
+Optimised model checking algorithms are implemented in Storm and the main engine supports all properties formed with this syntax.
+
+\begin{example}[\textit{\SSPE{} problem in Storm}]
+Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be the MDP of Figure \ref{prism-simple2}. This MDP can be defined in the Prism language as follows:\\
+\begin{minipage}{0.4\linewidth}
+  \lstinputlisting[language={Prism},
+      numbers=left,
+      rulesepcolor=\color{black}, rulecolor=\color{black},
+      breaklines=true,
+      breakatwhitespace=true, firstnumber=1, firstline=1, lastline=25]{resources/simple_mdp2.prism}
+\end{minipage}
+\begin{minipage}{0.6\linewidth}
+    \includegraphics[width=\linewidth]{resources/simple-mdp}
+    \captionsetup{justification=centering}
+    \captionof{figure}{MDP $\mathcal{M}$, with $S = \{s_0, s_1, s_2\}$, $A = \{\alpha, \beta, \gamma\}$ and $AP = \{a, b\}$}\label{prism-simple2}
+\end{minipage}
+We are interested to solve the following \SSPE{} problem:
+\[
+  ?\exists \sigma \quad \mathbb{E}_{s_0}^\sigma(\TS^{\{s_1\}}) \leq 10,
+\]
+and we can actually solve this problem by verifying that the following PRCTL property holds in $s_0$:
+\[
+  \mathcal{E}_{\leq 10}^{\min}(b).
+\]
+This property is equivalent to the following one in Storm-PRCTL:
+\[
+  R\min\,\leq 10\, [F \, ``b"].
+\]
+
+We consider that the initial states of the Prism program are the states that we want to verify that properties hold in it.
+As we have specified in the Prism program that the initial state is $s_0$ (cf. line \ref{line:sp}), then Storm will model check the input property for this state, with the following command line:
+
+{\footnotesize
+\begin{verbatim}
+>> storm --prism simple_mdp.prism --prop "Rmin<=10 [F \"b\"]"
+
+Storm 1.2.0
+
+--------------------------------------------------------------
+Model type: 	MDP (sparse)
+States: 	3
+Transitions: 	5
+Choices: 	4
+Reward Models:  weights
+State Labels: 	3 labels
+   * deadlock -> 0 item(s)
+   * init -> 1 item(s)
+   * b -> 1 item(s)
+Choice Labels: 	none
+--------------------------------------------------------------
+
+Model checking property R[exp]min<=10 [F "b"] ...
+Result (for initial states): true
+
+Time for model checking: 0.008s.
+\end{verbatim}
+}
+First, we see that Storm builds the MDP following the input Prism model with the sparse representation. It informs us that the system has five transitions and four nondeterministic choices. Thus, we see that the default dimension reward considered by Storm for this system is the one named \textit{weights} in the program (cf. line \ref{line:weights}), that is actually the only one in this system.
+It also informs us that the system has no deadlock, one initial state (here $s_0$) and one state labelled with $b$ (here $s_1$).
+Finally, Storm gives us the result of the model checking by answering \textit{true} to the satisfiability of the property by the state $s_0$.
+\end{example}
+\begin{example}[\textit{\SSPP{} problem in Storm}]
+Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be the MDP of Figure \ref{prism-simple2}, defined in the Prism language according to the previous example. We are interested to solve the following \SSPP{} problem:
+\[
+  ? \exists \sigma \quad \mathbb{P}_{s_0}^\sigma(\Diamond_{\leq 8}\, \{s_1\}) \geq \frac{7}{10},
+\]
+and we can actually solve this problem by verifying that the following PRCTL property holds in $s_0$:
+\[
+  \mathcal{P}^{\max}_{\geq \frac{7}{10}}(\Diamond_{\leq 8}\, b).
+\]
+This property is equivalent to the following one in Storm-PRCTL:
+\[
+  P{\max}\geq 0.7 \, [F\{``weights"\}\leq 8 \, ``b"].
+\]
+
+As in the previous example, running Storm with the Prism program modelling $\mathcal{M}$ as input with this Storm-PRCTL property will allow to verify that this property hold in $s_0$, and this is done with the following command line:
+
+{\footnotesize
+\begin{verbatim}
+storm --prism simple_mdp.prism --prop "Pmax>=0.7 [F{\"weights\"}<= 8 \"b\"]"
+Storm 1.2.0
+
+--------------------------------------------------------------
+Model type: 	MDP (sparse)
+States: 	3
+Transitions: 	5
+Choices: 	4
+Reward Models:  weights
+State Labels: 	3 labels
+   * init -> 1 item(s)
+   * deadlock -> 0 item(s)
+   * b -> 1 item(s)
+Choice Labels: 	none
+--------------------------------------------------------------
+
+Model checking property Pmax>=7/10 [true Urew{"weights"}<=8 "b"] ...
+Result (for initial states): true
+
+Time for model checking: 0.009s.
+\end{verbatim}
+}
+\noindent Storm confirms that this property holds in $s_0$.
+\end{example}
+Additionally, Storm allows to formulate probabilistic and expectation queries by replacing the probabilistic and expectation operators by $P\lambda=?[.]$ and $R\mu=?[.]$.
+
+\begin{definition}[\textbf{Syntax of Storm-PRCTL queries}]
+Let $\mathcal{M} = (S, A, \Delta, w, AP, L)$ be an MDP, $S_0 \subseteq S$ be a subset of initial states, Storm-PRCTL queries over $AP$ for $S_0$ are formed according to the following grammar:
+\[
+  \Phi^? ::= P\lambda=?\,[\phi] \; \; | \; \; R\mu=?\,[F\,\Phi]
+\]
+where $\Phi$ is a Storm-PRCTL state formula and $\phi$ is a Storm-PRCTL path formula.
+\end{definition}
+
+\begin{definition}[\textbf{Semantic of Storm-PRCTL queries}]
+ Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be an MDP, $S_0 \subseteq S$ be a subset of initial states, $\Phi$ be a Storm-PRCTL state formula over $AP$ and $\phi$ be a Storm-PRCTL path formula over $AP$, the semantic of Storm-PRCTL queries over $AP$ for $S_0$ is defined as follows:
+ \begin{itemize}
+   \item $P\lambda=? \, [\phi] = (x_s)_{s \in S_0}$ such that $x_s = \mathbb{P}^\lambda_s(\{ \pi \in Paths(s) \; | \; \pi \models \phi \})$, where $s \in S_0$.
+   \item $R\mu=? \, [F\,\Phi] = (x_s)_{s \in S_0}$ such that $x_s = \mathbb{E}^\mu_s(\TS^{Sat(\Phi)})$, where $s \in S_0$.
+ \end{itemize}
+\end{definition}
+\begin{example}[\textit{Storm-PRCTL query}]
+  Let $\mathcal{M}$ be the MDP of Figure \ref{cost-bounded-until1} with atomic proposition space $AP$. This MDP can be defined in the Prism language as follows:
+  \lstinputlisting[language={Prism},
+      rulesepcolor=\color{black}, rulecolor=\color{black},
+      breaklines=true,
+      breakatwhitespace=true, firstnumber=1, firstline=1]{resources/mdp3.prism}
+  We have shown in Example \ref{cost-bounded-example} that $s_0 \models \mathcal{P}^{\max}_{\geq \frac{1}{5}}((a \vee b) \U_{\leq 8} \, c)$, and we are interested by the maximum probability with which this property holds in $s_0$. Since $s_0$ is the initial state of the Prism program, we can formulate the following Storm-PRCTL query over $AP$ for $\{s_0\}$:
+  \[
+    P\max =? \, ((``a" \, | \, ``b") \; U\{``weights"\}<= 8 \; ``c").
+  \]
+  We run Storm by passing the Prism program modelling $\mathcal{M}$ as input with this property:
+
+  {\footnotesize
+  \begin{verbatim}
+storm --prism mdp_example.prism
+      --prop "Pmax=? [ (\"a\" | \"b\") U{\"weights\"}<=8 \"c\" ]"
+Storm 1.2.0
+
+--------------------------------------------------------------
+Model type: 	MDP (sparse)
+States: 	6
+Transitions: 	12
+Choices: 	7
+Reward Models:  weights
+State Labels: 	5 labels
+   * init -> 1 item(s)
+   * deadlock -> 0 item(s)
+   * b -> 1 item(s)
+   * c -> 1 item(s)
+   * a -> 1 item(s)
+Choice Labels: 	none
+--------------------------------------------------------------
+
+Model checking property Pmax=? [("a" | "b") Urew{"weights"}<=8 "c"] ...
+Result (for initial states): 0.3325
+Time for model checking: 0.000s.
+\end{verbatim}
+  } \noindent Storm informs us that the result of this request is $0.3325$, that corresponds to the solution of the LP defined to verify that the property hold in $s_0$ in Example \ref{cost-bounded-example}.
+\end{example}
