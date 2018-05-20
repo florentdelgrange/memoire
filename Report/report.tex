@@ -32,11 +32,16 @@
 \usepackage{cite}
 \usepackage{bbm}
 \usepackage{subcaption}
-\usepackage[format=plain, font=it,labelfont={bf,it}, textfont=it]{caption}
+%\usepackage[format=plain, font=it,labelfont={bf,it}, textfont=it, labelsep=period]{caption}
+\usepackage[format=plain,labelfont={bf}, labelsep=period]{caption}
 \usepackage{cprotect}
 \usepackage{wrapfig}
 \usepackage{setspace}
 \usepackage[shortlabels]{enumitem}
+\usepackage{mathrsfs}
+\usepackage{dsfont}
+\usepackage{mathtools}
+\usepackage{empheq}
 
 %\usepackage{kpfonts}
 %\usepackage[explicit]{titlesec}
@@ -49,6 +54,14 @@
 
 \renewcommand\qedsymbol{$\blacksquare$}
 
+\newenvironment{tagcases}[1][]
+  {\empheq[left={#1\empheqlbrace}]{alignat=2}}
+  {\endempheq}
+
+\DeclareFontFamily{OT1}{pzc}{}
+\DeclareFontShape{OT1}{pzc}{m}{it}{<-> s * [1.25] pzcmi7t}{}
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+
 \include{chapter_style3}
 \include{prism}
 
@@ -60,11 +73,15 @@
 \newcommand\U{\,\text{\sffamily U}\,}
 \newcommand\TS{\text{\sffamily TS}}
 \newcommand\SR{\textnormal{\sffamily SR}}
+\newcommand\MOSR{\textnormal{\sffamily MO-SR}}
 \newcommand\SSPE{\textnormal{\sffamily SSP-E}}
 \newcommand\SSPP{\textnormal{\sffamily SSP-P}}
 \newcommand\SPG{\textnormal{\sffamily SP-G}}
 \newcommand\SSPWE{\textnormal{\sffamily SSP-WE}}
 \newcommand\SSPPQ{\textnormal{\sffamily SSP-PQ}}
+\newcommand\MEC{\textnormal{\sffamily MEC}}
+
+\newcommand{\BigWedge}{\mathord{\adjustbox{valign=B,totalheight=.6\baselineskip}{$\bigwedge$}}}
 
 \lstdefinelanguage{json}{
     basicstyle=\normalfont\ttfamily\tiny,
@@ -92,6 +109,7 @@
       {]}{{{\color{delim}{]}}}}{1},
 }
 
+% ALGORITHMS
 \floatname{algorithm}{Algorithm}
 \renewcommand{\algorithmicrequire}{\textbf{Input :}}
 \renewcommand{\algorithmicensure}{\textbf{Output :}}
@@ -106,6 +124,10 @@
 \renewcommand{\algorithmicfor}{\textbf{for}}
 \renewcommand{\algorithmicforall}{\textbf{for all}}
 \renewcommand{\algorithmiccomment}[1]{\hfill \textit{\footnotesize(* ~#1 *)}}
+
+\DeclareCaptionFormat{algor}{\textbf{#1#2}#3}
+\DeclareCaptionStyle{algori}{singlelinecheck=off,format=algor,labelsep=space}
+\captionsetup[algorithm]{style=algori}
 
 %\cxset{style7}
 % Theorem style
@@ -286,11 +308,11 @@ $\quad$ Mickael Randour
 % \include{conclusion}
 
 \include{preliminaries}
-\include{storm-overview}
 \include{model-checking}
 \include{multi-objective-synthesis}
+\include{storm-overview}
 
-\bibliographystyle{plain}
+\bibliographystyle{alpha}
 \bibliography{bib}
 
 \include{annexes}

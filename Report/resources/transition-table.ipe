@@ -1,15 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70206" creator="Ipe 7.2.6">
-<info created="D:20180215123956" modified="D:20180507183316"/>
-<preamble>\usepackage{color}
-%\renewcommand{\rmdefault}{\sfdefault}
-%\usepackage{sansmathfonts}
-\usepackage{latexsym}
-%% The &apos;lf&apos; option for lining figures
-%% The &apos;sfdefault&apos; option to make the base font sans serif
-\usepackage[T1]{fontenc}
-\renewcommand*\oldstylenums[1]{\carlitoOsF #1}</preamble>
+<info created="D:20180514212224" modified="D:20180514212224"/>
 <ipestyle name="basic">
 <symbol name="arrow/arc(spx)">
 <path stroke="sym-stroke" fill="sym-stroke" pen="sym-pen">
@@ -263,88 +255,33 @@ h
 <layer name="alpha"/>
 <view layers="alpha" active="alpha"/>
 <path layer="alpha" stroke="black">
-28.2843 0 0 28.2843 272 800 e
+16 0 0 16 160 736 e
 </path>
-<path matrix="1 0 0 1 -152 -72" stroke="black">
-28.2843 0 0 28.2843 272 800 e
-</path>
-<path matrix="1 0 0 1 0 -136" stroke="black">
-28.2843 0 0 28.2843 272 800 e
-</path>
-<path matrix="1 0 0 1 152 -72" stroke="black">
-28.2843 0 0 28.2843 272 800 e
+<path stroke="black">
+16 0 0 16 272 736 e
 </path>
 <path stroke="black" arrow="normal/normal">
-140.026 708.026 m
-192 688 l
+176 736 m
+256 736 l
 </path>
 <path stroke="black" arrow="normal/normal">
-139.856 748.143 m
-192 768 l
+148.826 747.452 m
+128 768
+96 736
+128 704
+148.863 724.512 c
 </path>
-<use name="mark/disk(sx)" pos="192 688" size="normal" stroke="black"/>
-<use name="mark/disk(sx)" pos="192 768" size="normal" stroke="black"/>
-<path stroke="black" arrow="normal/normal">
-192 688 m
-244.147 668.919 l
+<path matrix="-0.998753 0.0499273 -0.0499273 -0.998753 468.824 1462.95" stroke="black" arrow="normal/normal">
+148.826 747.452 m
+128 768
+96 736
+128 704
+148.863 724.512 c
 </path>
-<path stroke="black" arrow="normal/normal">
-299.97 668.204 m
-352 688 l
-</path>
-<use name="mark/disk(sx)" pos="352 688" size="normal" stroke="black"/>
-<path stroke="black" arrow="normal/normal">
-351.421 687.78 m
-402.735 709.351 l
-</path>
-<path stroke="black" arrow="normal/normal">
-352 688 m
-401.819 708.966
-272 728
-148.281 727.601 c
-</path>
-<path stroke="black" arrow="normal/normal">
-187.887 766.434 m
-245.753 789.46 l
-</path>
-<path stroke="black" arrow="normal/normal">
-298.319 789.641 m
-402.608 746.503 l
-</path>
-<path stroke="black" arrow="normal/normal">
-298.417 789.893 m
-352.055 767.414 l
-</path>
-<use name="mark/disk(sx)" pos="351.964 767.452" size="normal" stroke="black"/>
-<use name="mark/disk(sx)" pos="192 608" size="normal" stroke="black"/>
-<path stroke="black" arrow="normal/normal">
-192 608 m
-120 608
-119.684 699.717 c
-</path>
-<path stroke="black" arrow="normal/normal">
-424.002 699.716 m
-424 608
-352 608
-352 608
-191.746 608 c
-</path>
-<text matrix="1 0 0 1 12 -4" transformations="translations" pos="320 724" stroke="black" type="label" width="6.362" height="8.422" depth="3.43" valign="baseline" style="math">\frac{1}{8}</text>
-<text matrix="1 0 0 1 4 0" transformations="translations" pos="380 692" stroke="black" type="label" width="6.362" height="8.422" depth="3.43" valign="baseline" style="math">\frac{7}{8}</text>
-<text matrix="1 0 0 1 0.985662 37.0884" transformations="translations" pos="108 688" stroke="black" type="label" width="21.407" height="10.674" depth="4.78" valign="baseline" size="Huge" style="math">s_0</text>
-<text matrix="1 0 0 1 -2.02958 0.371591" transformations="translations" pos="416.627 724.738" stroke="black" type="label" width="21.407" height="10.674" depth="4.78" valign="baseline" size="Huge" style="math">s_3</text>
-<text matrix="1 0 0 1 -154.465 73.273" transformations="translations" pos="416.627 724.738" stroke="black" type="label" width="21.407" height="10.674" depth="4.78" valign="baseline" size="Huge" style="math">s_1</text>
-<text matrix="1 0 0 1 -154.439 -64.0364" transformations="translations" pos="416.627 724.738" stroke="black" type="label" width="21.407" height="10.674" depth="4.78" valign="baseline" size="Huge" style="math">s_2</text>
-<text matrix="1 0 0 1 -12.9767 -3.07158" transformations="translations" pos="188.071 779.002" stroke="black" type="label" width="27.993" height="8.965" depth="2.99" valign="baseline" size="large" style="math">\alpha_0 \; | \; 2</text>
-<text matrix="1 0 0 1 -13.1944 70.5079" transformations="translations" pos="186.945 599.182" stroke="black" type="label" width="27.993" height="8.965" depth="2.99" valign="baseline" size="large" style="math">\alpha_1 \; | \; 2</text>
-<text matrix="1 0 0 1 -11.9712 -6.53981" transformations="translations" pos="186.945 599.182" stroke="black" type="label" width="33.846" height="8.965" depth="2.99" valign="baseline" size="large" style="math">\alpha_4 \; | \; 10</text>
-<text matrix="1 0 0 1 146.64 0.133794" transformations="translations" pos="188.071 779.002" stroke="black" type="label" width="27.993" height="8.965" depth="2.99" valign="baseline" size="large" style="math">\alpha_2 \; | \; 6</text>
-<text matrix="1 0 0 1 147.466 -108.997" transformations="translations" pos="188.071 779.002" stroke="black" type="label" width="27.993" height="8.965" depth="2.99" valign="baseline" size="large" style="math">\alpha_3 \; | \; 2</text>
-<text matrix="1 0 0 1 -56 12" transformations="translations" pos="464 752" stroke="darkorange" type="label" width="31.043" height="7.47" depth="2.49" valign="baseline">\{sleep\}</text>
-<text matrix="1 0 0 1 24 12" transformations="translations" pos="80 752" stroke="darkorange" type="label" width="35.414" height="7.47" depth="2.49" valign="baseline">\{active\}</text>
-<text matrix="1 0 0 1 -36 0" transformations="translations" pos="260 760" stroke="darkorange" type="label" width="102.728" height="7.47" depth="2.49" valign="baseline">\{intermediate\_sending,</text>
-<text matrix="1 0 0 1 -20 -144" transformations="translations" pos="260 760" stroke="darkorange" type="label" width="66.678" height="7.47" depth="2.49" valign="baseline">waiting\_ACK\}</text>
-<text matrix="1 0 0 1 0 12" transformations="translations" pos="240 736" stroke="darkorange" type="label" width="66.678" height="7.47" depth="2.49" valign="baseline">waiting\_ACK\}</text>
-<text matrix="1 0 0 1 -24 -132" transformations="translations" pos="260 760" stroke="darkorange" type="label" width="73.125" height="7.47" depth="2.49" valign="baseline">\{direct\_sending,</text>
+<text matrix="1 0 0 1 -0.772148 -13.9461" transformations="translations" pos="156 744" stroke="black" type="label" width="9.476" height="13.319" depth="0" valign="baseline" size="huge" style="math">0</text>
+<text matrix="1 0 0 1 3.22785 2.05386" transformations="translations" pos="264 728" stroke="black" type="label" width="9.476" height="13.319" depth="0" valign="baseline" size="huge" style="math">1</text>
+<text matrix="1 0 0 1 32 28" transformations="translations" pos="80 736" stroke="black" type="label" width="42" height="12.915" depth="4.3" valign="baseline" size="LARGE" style="math">S \setminus T_i</text>
+<text matrix="1 0 0 1 2.06946 24" transformations="translations" pos="208 720" stroke="black" type="label" width="14.371" height="11.766" depth="2.58" valign="baseline" size="LARGE" style="math">T_i</text>
+<text matrix="1 0 0 1 0 -4" transformations="translations" pos="328 736" stroke="black" type="label" width="11.369" height="11.764" depth="0" valign="baseline" size="LARGE" style="math">S</text>
 </page>
 </ipe>

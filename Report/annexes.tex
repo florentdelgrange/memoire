@@ -8,76 +8,78 @@
 \section{Systems of linear equations}
 \subsection{Reachability in a Markov Chain}\label{app-reach}
 Let $\mathcal{M} = (S, \Delta, w, AP, L)$ be an MC, $s \in S$ be a state of $\mathcal{M}$ and $T \subseteq S$ be a set of target states in $\mathcal{M}$.
-We can compute the probability to reach $T$ from $s$:
+We say that \textit{$s$ is not connected to $T$} if and only if, for all $\pi = s_0s_1\dots \in Paths(s)$ and for all $k \in \mathbb{N}$, $s_k \not\in T$.
+This definition allows us to compute the probability to reach $T$ from $s$:
 let $(x_s)_{s \in S} \in [0, 1]$,
 \begin{itemize}
-	\item if $s$ is not connected to $T$ in the underlying graph of $\mathcal{M}$, then we have $x_s = 0$
-	\item else, if $s \in T$, then we have $x_s = 1$
+	\item if $s$ is not connected to $T$, then we have $x_s = 0$,
+	\item else, if $s \in T$, then we have $x_s = 1$,
 	\item else, for all $s \in S \setminus T$  such that $s$ is connected to $T$ in the underlying graph of $\mathcal{M}$,
-		\[
-      x_s = \underbrace{\sum_{s' \in S \setminus T} \Delta(s, s') \cdot x_{s'}}_{\text{reach $T$ via $s' \in S \setminus T$}} + \underbrace{\sum_{t \in T} \Delta(s, t)}_{\text{reach $T$ in one transition}}
-    \]
+		\begin{equation}
+      x_s = \underbrace{\sum_{s' \in S \setminus T} \Delta(s, s') \cdot x_{s'}}_{\text{reach $T$ via $s' \in S \setminus T$}} + \underbrace{\sum_{t \in T} \Delta(s, t).}_{\text{reach $T$ in one transition}}
+			\tag{1}\label{reachability-eq}
+		\end{equation}
 \end{itemize}
 This defines a system of linear equations.
-Let $S_{=0}$ be the subset of states of $S$ that are not connected to $T$ in the underlying graph of $\mathcal{M}$ (i.e., the set of states $s$ from which no path reaching $T$ exists, i.e., for all $\pi = s_0s_1\dots \in Paths(s)$ and for all $k \in \mathbb{N}$, $s_k \not\in T$), $S_{=1} = T$ and $S_{=?} = S \setminus (S_{=0} \cup S_{=1})$.
-The solution $(x_s)_{s \in S_{=?}}$ of this linear equations system is unique and $x_s = \mathbb{P}_s(\Diamond T)$ for all $s \in S$.
+Let $S_{=0}$ be the subset of states of $S$ that are not connected to $T$ in the underlying graph of $\mathcal{M}$, $S_{=1} = T$ and $S_{=?} = S \setminus (S_{=0} \cup S_{=1})$.
+The solution $(x_s)_{s \in S_{=?}}$ of the system of linear equations \ref{reachability-eq} is unique and $x_s = \mathbb{P}_s(\Diamond T)$ for all $s \in S$.
 
 \subsection{Expected cost-to-target paths in a Markov Chain}\label{app-expMC}
-  Let $\mathcal{M} = (S, \Delta, w, AP, L)$ be an MC, $s \in S$ be a state of $\mathcal{M}$ and $T \subseteq$ S be a set of targets states. $\mathbb{E}_s(\Diamond T)$ can be computed through a linear equations system defined as follows:
+  Let $\mathcal{M} = (S, \Delta, w, AP, L)$ be an MC, $s \in S$ be a state of $\mathcal{M}$ and $T \subseteq$ S be a set of target states. $\mathbb{E}_s(\Diamond T)$ can be computed through a linear equations system defined as follows:
   %Soient $x_s = \mathbb{E}_s(TS^T)$ %et $S_{=1} = \{s \in S \; | \; \mathbb{P}_s_s(\Diamond T) = 1 \}$
   let $succ(s) = \{ s' \in S \; | \; \Delta(s, s') > 0 \}$ be the set of successors of $s$,
-  \[ x_s =
-  	\begin{cases}
-  	\infty & \quad \text{if } \mathbb{P}_s(\Diamond T) < 1, \\
-  	0 & \quad \text{if } s \in T, \text{ and} \\
-  	\sum_{s' \in succ(s)} \Delta(s, s') \cdot (w(s, s') + x_{s'}) & \quad \text{else}.
-  	\end{cases}
-  \]
-Let $S_{=?} = \{ s \in S \; | \; \mathbb{P}_s(\Diamond T) = 1 \} \setminus T$. The solution $(x_s)_{s \in S_{=?}}$ of this linear equations system is unique and $x_s = \mathbb{E}_s(\Diamond T)$ for all $s \in S$.
+  %\begin{equation*}
+
+	\begin{tagcases}[x_s=]
+  	&\infty && \qquad \text{if } \mathbb{P}_s(\Diamond T) < 1, \notag \\
+  	&0 && \qquad \text{if } s \in T, \text{ and} \notag \\
+  	&\sum_{s' \in succ(s)} \Delta(s, s') \cdot (w(s, s') + x_{s'}) && \qquad \text{otherwise.} \tag{2} \label{cost-to-tar-eq}
+	\end{tagcases}
+  %\end{equation*}
+Let $S_{=?} = \{ s \in S \; | \; \mathbb{P}_s(\Diamond T) = 1 \} \setminus T$. The solution $(x_s)_{s \in S_{=?}}$ of the system of linear equations \ref{cost-to-tar-eq} is unique and $x_s = \mathbb{E}_s(\Diamond T)$ for all $s \in S$.
 
 \section{Cost bounded reachability in a Markov chain}\label{app-cbrMC}
 
 Let $\mathcal{M} = (S, \Delta, w, AP, L)$ be an MC. We denote by $\mathbb{P}^\mathcal{M}_s$ the probability measure $\mathbb{P}_s$ such that $s \in S$ on $\mathcal{M}$.
-Let $s \in S$ be a state of $\mathcal{M}$, $T \subseteq S$ be a set of target states and $l \in \mathbb{N}$ be a threshold.
-We can compute $\mathbb{P}^{\mathcal{M}}_s(\Diamond_{\leq l} T)$ by reduction to the reachability problem on $\mathcal{M}_l = (S_l, \Delta_l)$ to the set of target states $T_l \subseteq S_l$ that we build as follows:
+Let $s \in S$ be a state of $\mathcal{M}$, $T \subseteq S$ be a set of target states and $\ell \in \mathbb{N}$ be a threshold.
+We can compute $\mathbb{P}^{\mathcal{M}}_s(\Diamond_{\leq \ell}\, T)$ by reduction to the reachability problem on $\mathcal{M}_{\ell} = (S_{\ell}, \Delta_\ell)$ to the set of target states $T_\ell \subseteq S_\ell$ that we build as follows:
 \begin{itemize}
-	\item $S_l$ contains all states $(s, v)$ such that $s \in S $ and $v \in \mathbb{N} \cup \{ \bot \}$. We consider that $\bot > l$, with $\bot + v = \bot$ for all $v \in \mathbb{N}$. Intuitively, we record in $v$ the cost of paths while unfolding $\mathcal{M}$. Target states are states of $T_l = \{ (s, v) \in S_l \; | \; s \in T \wedge v \leq l \}$.
-	\item $\Delta_l: S_l \times S_l \rightarrow [0,1]$ is the probability transition function given by:\\
-	$\forall (s, v), (s', v') \in S_l,$
+	\item $S_\ell$ contains all states $(s, v)$ such that $s \in S $ and $v \in \{0, \dots, \ell\} \cup \{ \bot \}$. We consider that $\bot > \ell$, with $\bot + v = \bot$ for all $v \in \mathbb{N}$. Intuitively, we record in $v$ the cost of paths while unfolding $\mathcal{M}$. Target states are states of $T_\ell = \{ (s, v) \in S_\ell \; | \; s \in T \wedge v \leq \ell \}$.
+	\item $\Delta_\ell: S_\ell \times S_\ell \rightarrow [0,1]$ is the probability transition function given by:\\
+	$\forall (s, v), (s', v') \in S_\ell,$
 	\[
-		\Delta_l((s, v), (s', v')) =
+		\Delta_\ell((s, v), (s', v')) =
 		\begin{cases}
-		\Delta(s, s') & \text{if $v' = v + w(s, s')$ and $v' \leq l$  or} \\
-		 & \text{if $v' = \bot$ and $v + w(s, s') > l$} \\
-		 0 & \text{else}
+		\Delta(s, s') & \text{if $v' = v + w(s, s')$ and $v' \leq \ell$  or} \\
+		 & \text{if $v' = \bot$ and $v + w(s, s') > \ell$}, \\
+		 0 & \text{otherwise}.
 		\end{cases}
 	\]
 \end{itemize}
-\textit{Remark}: here, the weight function is ommited in $\mathcal{M}_l$. So, $\mathcal{M}_l$ is unweighted. \\
-Resolving the cost bounded reachability by the threshold $l$ from $s$ to $T$ in $\mathcal{M}$ can be done by resolving the reachbility problem from $(s, 0)$ to $T_l$ in $\mathcal{M}_l$, i.e., $\mathbb{P}^\mathcal{M}_s(\Diamond_{\leq l} T) = \mathbb{P}^{\mathcal{M}_l}_{(s, 0)}(\Diamond T_l)$
+\textit{Remark}: here, the weight function is omitted in $\mathcal{M}_\ell$. So, $\mathcal{M}_\ell$ is unweighted. \\
+Resolving the cost bounded reachability by the threshold $\ell$ from $s$ to $T$ in $\mathcal{M}$ can be done by resolving the reachability problem from $(s, 0)$ to $T_\ell$ in $\mathcal{M}_\ell$, i.e., $\mathbb{P}^\mathcal{M}_s(\Diamond_{\leq \ell}\, T) = \mathbb{P}^{\mathcal{M}_\ell}_{(s, 0)}(\Diamond T_\ell)$.
 
 \section{Linear programs}\label{LP-app}
 \subsection{Stochastic reachability problem}\label{app-sr}
-Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be an MDP and $T \subseteq S$ be a set of target states of $\mathcal{M}$. Let $\alpha \in [0, 1]$ be a probability threshold.  We will build an optimal strategy $\sigma$ for the SR problem. Indeed, we will compute through an LP $\max_{\sigma} \mathbb{P}_s^\sigma (\Diamond T) = \mathbb{P}_s^{\max}(\Diamond T)$ for all $s \in S$. If $\mathbb{P}_s^\sigma(\Diamond T) \geq \alpha$, $\sigma$
-is obviously optimal for the
+Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be an MDP and $T \subseteq S$ be a set of target states of $\mathcal{M}$. Let $\alpha \in [0, 1]$ be a probability threshold.  We will build an optimal strategy $\sigma$ for the SR problem. Indeed, we will compute through an LP $\max_{\sigma} \mathbb{P}_s^\sigma (\Diamond T) = \mathbb{P}_s^{\max}(\Diamond T)$ for all $s \in S$. If $\mathbb{P}_s^\sigma(\Diamond T) = \mathbb{P}_s^{\max}(\Diamond T) \geq \alpha$, $\sigma$
+is \textit{optimal} for the
 SR problem from $s$ to $T$. Otherwise, no strategy satisfying the SR problem exist. Let $S_{=1}$ be a subset of states such that $T \subseteq S_{=1}\subseteq \{s \in S \; | \; \mathbb{P}^{\max}_s(\Diamond T) = 1$\}
 and $(x_s)_{s \in S} \subseteq [0, 1]^{|S|}$
 be a vector for the following LP:
 \[
 	\min \sum_{s \in S} x_s
 \]
-under the constraints :
+subject to the constraints :
 \begin{flalign*}
 	x_s &= 1 \quad &&\forall s \in S_{=1}, \\
-	x_s &= 0 \quad &&\forall s \not\in S_{=1} \text{ such that $s$ is not connected to $T$ in $G^\mathcal{M}$}, \\
+	x_s &= 0 \quad &&\forall s \not\in S_{=1} \text{ such that $s$ is not connected to $T$}, \\
 	x_s &\geq \sum_{s' \in S} \Delta(s, \alpha, s') \cdot x_{s'}
-	\quad &&\forall s \not \in S_{=1} \text{ such
-		that $s$ is connected to $T$ in $G^\mathcal{M}$} \text{ and } \forall \alpha \in A(s), \text{ and} \\
+	\quad &&\forall s \not \in S_{=1}, \, \forall \alpha \in A(s) \text{ such
+		that $s$ is connected to $T$}, \\
 	0 &\leq x_s \leq 1 && \forall s \in S
 \end{flalign*}
-\textit{Remark}: we denote by $G^\mathcal{M}$ the underlying graph of $\mathcal{M}$. \\
 
-The optimal solution $(v_s)_{s \in S}$ of this LP is unique and gives the following result :
+The optimal solution $(v_s)_{s \in S}$ of this LP is unique and gives the following result:
 \[
 	v_s = \mathbb{P}_s^{\max}(\Diamond T) \quad \forall s \in S
 \]
@@ -90,7 +92,7 @@ $
 $. Thus, since we have $v_s = \mathbb{P}^{\max}_s(\Diamond T)$, actions of $A^{\max}(s)$
 maximise the probability of reaching $T$ from $s$.
 Building a strategy that would arbitrarily choose a state of
-$A^{\max}(s)$ is not sufficient. Indeed, let assume that we have a state $s$ in the MDP
+$A^{\max}(s)$ is not sufficient. Indeed, let us assume that we have a state $s \in S \setminus T$ in the MDP
 such that $A^{\max}(s) = \{\alpha, \beta\}$, where $\Delta(s, \beta, t) = 1$
 for a certain $t \in T$ and $\Delta(s, \alpha, s) = 1$, we obviously have
 that choosing $\alpha$ doesn't allow to reach $T$ passing by $s$.
@@ -119,7 +121,7 @@ actions that prevent $s$ of reaching $T$.
 		$\mathcal{M}^{\max}$ and $||s'|| = n - 1$. An action $\sigma(s) \in A(s)$ is chosen
 		arbitrarely for states $s$ that are not connected to $T$ in the underlying graph of $\mathcal{M}$.
 \end{itemize}
-We build $\sigma$ this way: let $s \in S$ be a state of $\mathcal{M}$ and $\mathbb{A}(s) = \{\alpha \in A^{\max}(s) \; | \; \exists s' \in Succ(s,
+We build $\sigma$ in this way: let $s \in S$ be a state of $\mathcal{M}$ and $\mathbb{A}(s) = \{\alpha \in A^{\max}(s) \; | \; \exists s' \in Succ(s,
 	\alpha), \, ||s'|| = ||s|| - 1 \}$,
 \[
 %\sigma(s) = \arg \max_{\alpha \in \mathbb{A}(s)} \sum_{s' \in Succ(s, \alpha)} \Delta(s,
@@ -134,7 +136,7 @@ Furthermore, we can optimise computations to get the optimal solution of this LP
 \label{prMax1}
 \begin{algorithmic}[1]
 \REQUIRE{
-		$\mathcal{M} = (S, A, \Delta, w, AP, L)$, a finite MDP, and
+		$\mathcal{M} = (S, A, \Delta, w, AP, L)$, an MDP, and
 		$T \subseteq S$, a subset of target states.
 	}
 \ENSURE{
@@ -173,15 +175,16 @@ This algorithm is exact and polynomial in the size of $\mathcal{M}$ (cf. \cite{P
 
 \subsection{Stochastic shortest path expectation problem}\label{app-sspe}
 Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be an MDP and $T \subseteq S$ be a set
-of target states of $\mathcal{M}$. We will build an optimal strategy $\sigma$ that will minimise the expected cost of paths to reach $T$
+of target states of $\mathcal{M}$.
+We build an optimal strategy $\sigma$ that minimises the expected cost of paths to reach $T$
 from all states $s \in S$ of $\mathcal{M}$.
-So, we will first compute $\min_{\sigma}\mathbb{E}^\sigma_s(\Diamond T) = \mathbb{E}^{\min}_s(\Diamond T)$, for all $s \in S$.
-Let $l \in \mathbb{N}$ be a length threshold.
- If $\mathbb{E}_s^\sigma(\Diamond T) \geq l$, $\sigma$ satisfies the
+We thus first compute $\min_{\sigma}\mathbb{E}^\sigma_s(\Diamond T) = \mathbb{E}^{\min}_s(\Diamond T)$, for all $s \in S$.
+Let $\ell \in \mathbb{N}$ be a cost threshold.
+ If $\mathbb{E}_s^\sigma(\Diamond T) \leq \ell$, $\sigma$ satisfies the
 \SSPE{} problem for the state $s$. Otherwise, no strategy satisfying the \SSPE{} problem exist.
 Let $S_{=1} = \{ s \in S \; | \; \mathbb{P}^{\max}_s(\Diamond T) = 1 \}$ be the set of states that reach $T$ with a maximum probability one and $(x_s)_{s \in S}$ be a vector for the following LP:
 		\[ \max \sum_{s \in S_{=1}} x_s \]
-		under the constraints \\
+		subject to the constraints \\
 	%	\begin{equation*}
 	%  \renewcommand{\arraystretch}{1.3}
 	%  \begin{array}{ll}
@@ -190,9 +193,9 @@ Let $S_{=1} = \{ s \in S \; | \; \mathbb{P}^{\max}_s(\Diamond T) = 1 \}$ be the 
 	%\end{equation*}
 	\begin{flalign*}
 		x_s &= 0 && \forall s \in T, \\
-		x_s &= \infty && \text{$\forall s \in S$ such that $\mathbb{P}^{\max}_s(\Diamond T) < 1$}, \text{ and} \\
+		x_s &= \infty && \text{$\forall s \in S$ such that $\mathbb{P}^{\max}_s(\Diamond T) < 1$},\\
 		x_s &\leq w(\alpha) + \sum_{s' \in Succ(s, \alpha) \setminus T} \Delta(s, \alpha, s')
-			\cdot x_{s'} && \forall \alpha \in A(s) \text{ and } \forall s \in S \setminus T \text{ such that } \mathbb{P}^{\max}_s(\Diamond T) = 1.
+			\cdot x_{s'} &&  \forall s \in S_{=1} \setminus T, \, \forall \alpha \in A(s).
 	\end{flalign*}
 The optimal solution $(v_s)_{s \in S}$ of this LP is unique and gives the following result:
 \[
@@ -202,6 +205,49 @@ We can now build an optimal pure memoryless strategy $\sigma$ that minimises the
 \[
 	\sigma(s) = \arg \min_{\alpha \in A(s)} ( w(\alpha) +
 		\sum_{s' \in Succ(s, \alpha) \setminus T} \Delta(s, \alpha, s') \cdot v_{s'} ) \]
+
+\section{Stochastic shortest path percentile problem}
+\label{sspp-appendix}
+We solve an \SSPP{} problem with the following algorithm:
+\begin{algorithm}
+\caption{Solving the \SSPP{} problem}
+\label{sspp-algo}
+\begin{algorithmic}[1]
+\REQUIRE{
+		$\mathcal{M}$, an MDP with state space $S$, $s \in S$, a state of $\mathcal{M}$,
+		$T \subseteq S$, a subset of target states, $\ell \in \mathbb{N}$, a cost threshold, and $\alpha \in [0, 1] \cap \mathbb{Q}$, a probability threshold.
+	}
+\ENSURE{
+	The optimal pure finite-memory strategy for the \SSPP{} problem for the state $s$, the set of target states $T$, the cost threshold $\ell$, and the probability threshold $\alpha$ if such a strategy exists, $False$ else.
+}
+\STATE $\mathcal{M}_\ell \leftarrow$ {\sffamily unfold($\mathcal{M}$, $s$, $\ell$)}
+\COMMENT{build the unfolding of $\mathcal{M}$ from $s$ up to $\ell$}
+\STATE $S_\ell \leftarrow $ state space of $\mathcal{M}_\ell$
+\STATE $T_\ell \leftarrow \{ (s, v) \in S_\ell \; | \; s \in T \; \wedge \; v \leq \ell \}$
+\STATE {\sffamily solve} the \SR{} problem for $(s, 0)$, $T_\ell$, and $\alpha$ in $\mathcal{M}_\ell$
+\COMMENT{cf. Appendix \ref{app-sr}}
+\IF{there exists a strategy satisfying this \SR{} problem}
+	\STATE $\sigma \leftarrow$ {\sffamily build} the optimal strategy for this \SR{} problem
+	\RETURN $\sigma$
+\ELSE
+	\RETURN $False$
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+\addtocounter{chapter}{1}
+\setcounter{section}{0}
+\section{Bellman equation system for minimal expected cost-to-target} \label{bellman2}
+  Let $\mathcal{M}$ be a finite MDP with state space $S$ and with a probability transition function $\Delta$, $s \in S$ be a state of $\mathcal{M}$, $T \subseteq S$ be a subset of target states, and
+	$S_{=1} = \{s \in S \; | \; \mathbb{P}^{\max}_s(\Diamond T) = 1 \}$.
+	The vector $(x_s)_{s \in S}$ with $x_s = \mathbb{E}_s^{\min}(\TS^T)$ yields the unique solution of the following equation system:
+  \begin{itemize}
+    \item if $s \in T$, then $x_s=0$,
+    \item else if $s \not \in S_{=1}$, then $x_s=\infty$,
+    \item else,
+    \[ x_s = \min_{\alpha \in A(s)} \big( w(\alpha) + \sum_{s' \in Succ(s, \alpha)} \Delta(s, \alpha, s') \cdot x_{s'} \big). \]
+  \end{itemize}
+The linear program defined in Appendix \ref{app-sspe} is actually derived from this equation system.
 
 \addtocounter{chapter}{1}
 \setcounter{section}{0}
@@ -221,15 +267,6 @@ The Jani ouput is the following :
 \lstinputlisting[language={json}]
     {resources/simple_mdp.jani}
 
-\section{Bellman equation system for min. expected cost-to-target} \label{bellman2}
-  Let $\mathcal{M}$ be a finite MDP with state space $S$ and with a probability transition function $\Delta$, $s \in S$ be a state of $\mathcal{M}$ and $T \subseteq S$ be a subset of target states. The vector $(x_s)_{s \in S}$ with $x_s = \mathbb{E}_s^{\min}(\TS^T)$ yields the unique solution of the following equation system: let the subset $S_{=1} = \{s \in S \; | \; \mathbb{P}^{\max}_s(\Diamond T) = 1 \}$,
-  \begin{itemize}
-    \item if $s \in T$, then $x_s=0$,
-    \item else if $s \not \in S_{=1}$, then $x_s=\infty$,
-    \item else,
-    \[ x_s = \min_{\alpha \in A(s)} \big( w(\alpha) + \sum_{s' \in Succ(s, \alpha)} \Delta(s, \alpha, s') \cdot x_{s'} \big). \]
-  \end{itemize}
-The linear program defined in Appendix \ref{app-sspe} is actually derived from this equation system.
-In the literature, this equation is often presented with a \textit{discount rate} multiplied with each term of the sum of the equation
-(i.e., $x_s = \min_{\alpha \in A(s)} ( w(\alpha) + \sum_{s' \in Succ(s, \alpha)} \Delta(s, \alpha, s') \cdot \gamma \cdot x_{s'} )$, with $\gamma \in \,]0, 1[ \, \cap \,\mathbb{Q}$).
-This actually refers to another cost function replacing the truncated sum, i.e., the discounted sum function, expressing that short-term costs are most important that long-term ones.
+%In the literature, this equation is often presented with a \textit{discount rate} multiplied with each term of the sum of the equation
+%(i.e., $x_s = \min_{\alpha \in A(s)} ( w(\alpha) + \sum_{s' \in Succ(s, \alpha)} \Delta(s, \alpha, s') \cdot \gamma \cdot x_{s'} )$, with $\gamma \in \,]0, 1[ \, \cap \,\mathbb{Q}$).
+%This actually refers to another cost function replacing the truncated sum, i.e., the discounted sum function, expressing that short-term costs are most important that long-term ones.
