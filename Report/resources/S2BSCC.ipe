@@ -1,0 +1,516 @@
+<?xml version="1.0"?>
+<!DOCTYPE ipe SYSTEM "ipe.dtd">
+<ipe version="70206" creator="Ipe 7.2.6">
+<info created="D:20180328200218" modified="D:20180520213128"/>
+<ipestyle name="basic">
+<symbol name="arrow/arc(spx)">
+<path stroke="sym-stroke" fill="sym-stroke" pen="sym-pen">
+0 0 m
+-1 0.333 l
+-1 -0.333 l
+h
+</path>
+</symbol>
+<symbol name="arrow/farc(spx)">
+<path stroke="sym-stroke" fill="white" pen="sym-pen">
+0 0 m
+-1 0.333 l
+-1 -0.333 l
+h
+</path>
+</symbol>
+<symbol name="arrow/ptarc(spx)">
+<path stroke="sym-stroke" fill="sym-stroke" pen="sym-pen">
+0 0 m
+-1 0.333 l
+-0.8 0 l
+-1 -0.333 l
+h
+</path>
+</symbol>
+<symbol name="arrow/fptarc(spx)">
+<path stroke="sym-stroke" fill="white" pen="sym-pen">
+0 0 m
+-1 0.333 l
+-0.8 0 l
+-1 -0.333 l
+h
+</path>
+</symbol>
+<symbol name="mark/circle(sx)" transformations="translations">
+<path fill="sym-stroke">
+0.6 0 0 0.6 0 0 e
+0.4 0 0 0.4 0 0 e
+</path>
+</symbol>
+<symbol name="mark/disk(sx)" transformations="translations">
+<path fill="sym-stroke">
+0.6 0 0 0.6 0 0 e
+</path>
+</symbol>
+<symbol name="mark/fdisk(sfx)" transformations="translations">
+<group>
+<path fill="sym-fill">
+0.5 0 0 0.5 0 0 e
+</path>
+<path fill="sym-stroke" fillrule="eofill">
+0.6 0 0 0.6 0 0 e
+0.4 0 0 0.4 0 0 e
+</path>
+</group>
+</symbol>
+<symbol name="mark/box(sx)" transformations="translations">
+<path fill="sym-stroke" fillrule="eofill">
+-0.6 -0.6 m
+0.6 -0.6 l
+0.6 0.6 l
+-0.6 0.6 l
+h
+-0.4 -0.4 m
+0.4 -0.4 l
+0.4 0.4 l
+-0.4 0.4 l
+h
+</path>
+</symbol>
+<symbol name="mark/square(sx)" transformations="translations">
+<path fill="sym-stroke">
+-0.6 -0.6 m
+0.6 -0.6 l
+0.6 0.6 l
+-0.6 0.6 l
+h
+</path>
+</symbol>
+<symbol name="mark/fsquare(sfx)" transformations="translations">
+<group>
+<path fill="sym-fill">
+-0.5 -0.5 m
+0.5 -0.5 l
+0.5 0.5 l
+-0.5 0.5 l
+h
+</path>
+<path fill="sym-stroke" fillrule="eofill">
+-0.6 -0.6 m
+0.6 -0.6 l
+0.6 0.6 l
+-0.6 0.6 l
+h
+-0.4 -0.4 m
+0.4 -0.4 l
+0.4 0.4 l
+-0.4 0.4 l
+h
+</path>
+</group>
+</symbol>
+<symbol name="mark/cross(sx)" transformations="translations">
+<group>
+<path fill="sym-stroke">
+-0.43 -0.57 m
+0.57 0.43 l
+0.43 0.57 l
+-0.57 -0.43 l
+h
+</path>
+<path fill="sym-stroke">
+-0.43 0.57 m
+0.57 -0.43 l
+0.43 -0.57 l
+-0.57 0.43 l
+h
+</path>
+</group>
+</symbol>
+<symbol name="arrow/fnormal(spx)">
+<path stroke="sym-stroke" fill="white" pen="sym-pen">
+0 0 m
+-1 0.333 l
+-1 -0.333 l
+h
+</path>
+</symbol>
+<symbol name="arrow/pointed(spx)">
+<path stroke="sym-stroke" fill="sym-stroke" pen="sym-pen">
+0 0 m
+-1 0.333 l
+-0.8 0 l
+-1 -0.333 l
+h
+</path>
+</symbol>
+<symbol name="arrow/fpointed(spx)">
+<path stroke="sym-stroke" fill="white" pen="sym-pen">
+0 0 m
+-1 0.333 l
+-0.8 0 l
+-1 -0.333 l
+h
+</path>
+</symbol>
+<symbol name="arrow/linear(spx)">
+<path stroke="sym-stroke" pen="sym-pen">
+-1 0.333 m
+0 0 l
+-1 -0.333 l
+</path>
+</symbol>
+<symbol name="arrow/fdouble(spx)">
+<path stroke="sym-stroke" fill="white" pen="sym-pen">
+0 0 m
+-1 0.333 l
+-1 -0.333 l
+h
+-1 0 m
+-2 0.333 l
+-2 -0.333 l
+h
+</path>
+</symbol>
+<symbol name="arrow/double(spx)">
+<path stroke="sym-stroke" fill="sym-stroke" pen="sym-pen">
+0 0 m
+-1 0.333 l
+-1 -0.333 l
+h
+-1 0 m
+-2 0.333 l
+-2 -0.333 l
+h
+</path>
+</symbol>
+<pen name="heavier" value="0.8"/>
+<pen name="fat" value="1.2"/>
+<pen name="ultrafat" value="2"/>
+<symbolsize name="large" value="5"/>
+<symbolsize name="small" value="2"/>
+<symbolsize name="tiny" value="1.1"/>
+<arrowsize name="large" value="10"/>
+<arrowsize name="small" value="5"/>
+<arrowsize name="tiny" value="3"/>
+<color name="red" value="1 0 0"/>
+<color name="green" value="0 1 0"/>
+<color name="blue" value="0 0 1"/>
+<color name="yellow" value="1 1 0"/>
+<color name="orange" value="1 0.647 0"/>
+<color name="gold" value="1 0.843 0"/>
+<color name="purple" value="0.627 0.125 0.941"/>
+<color name="gray" value="0.745"/>
+<color name="brown" value="0.647 0.165 0.165"/>
+<color name="navy" value="0 0 0.502"/>
+<color name="pink" value="1 0.753 0.796"/>
+<color name="seagreen" value="0.18 0.545 0.341"/>
+<color name="turquoise" value="0.251 0.878 0.816"/>
+<color name="violet" value="0.933 0.51 0.933"/>
+<color name="darkblue" value="0 0 0.545"/>
+<color name="darkcyan" value="0 0.545 0.545"/>
+<color name="darkgray" value="0.663"/>
+<color name="darkgreen" value="0 0.392 0"/>
+<color name="darkmagenta" value="0.545 0 0.545"/>
+<color name="darkorange" value="1 0.549 0"/>
+<color name="darkred" value="0.545 0 0"/>
+<color name="lightblue" value="0.678 0.847 0.902"/>
+<color name="lightcyan" value="0.878 1 1"/>
+<color name="lightgray" value="0.827"/>
+<color name="lightgreen" value="0.565 0.933 0.565"/>
+<color name="lightyellow" value="1 1 0.878"/>
+<dashstyle name="dashed" value="[4] 0"/>
+<dashstyle name="dotted" value="[1 3] 0"/>
+<dashstyle name="dash dotted" value="[4 2 1 2] 0"/>
+<dashstyle name="dash dot dotted" value="[4 2 1 2 1 2] 0"/>
+<textsize name="large" value="\large"/>
+<textsize name="Large" value="\Large"/>
+<textsize name="LARGE" value="\LARGE"/>
+<textsize name="huge" value="\huge"/>
+<textsize name="Huge" value="\Huge"/>
+<textsize name="small" value="\small"/>
+<textsize name="footnote" value="\footnotesize"/>
+<textsize name="tiny" value="\tiny"/>
+<textstyle name="center" begin="\begin{center}" end="\end{center}"/>
+<textstyle name="itemize" begin="\begin{itemize}" end="\end{itemize}"/>
+<textstyle name="item" begin="\begin{itemize}\item{}" end="\end{itemize}"/>
+<gridsize name="4 pts" value="4"/>
+<gridsize name="8 pts (~3 mm)" value="8"/>
+<gridsize name="16 pts (~6 mm)" value="16"/>
+<gridsize name="32 pts (~12 mm)" value="32"/>
+<gridsize name="10 pts (~3.5 mm)" value="10"/>
+<gridsize name="20 pts (~7 mm)" value="20"/>
+<gridsize name="14 pts (~5 mm)" value="14"/>
+<gridsize name="28 pts (~10 mm)" value="28"/>
+<gridsize name="56 pts (~20 mm)" value="56"/>
+<anglesize name="90 deg" value="90"/>
+<anglesize name="60 deg" value="60"/>
+<anglesize name="45 deg" value="45"/>
+<anglesize name="30 deg" value="30"/>
+<anglesize name="22.5 deg" value="22.5"/>
+<opacity name="10%" value="0.1"/>
+<opacity name="30%" value="0.3"/>
+<opacity name="50%" value="0.5"/>
+<opacity name="75%" value="0.75"/>
+<tiling name="falling" angle="-60" step="4" width="1"/>
+<tiling name="rising" angle="30" step="4" width="1"/>
+</ipestyle>
+<page>
+<layer name="alpha"/>
+<layer name="beta"/>
+<layer name="hidden"/>
+<view layers="alpha beta" active="hidden"/>
+<path layer="beta" matrix="1 0 0 1 106.129 17.14" stroke="darkred" fill="darkred" opacity="50%">
+96 636
+104 600
+188 600
+228 640
+292 588
+100 472 u
+</path>
+<path matrix="1 0 0 1 -64.2625 -0.0325542" fill="seagreen" opacity="30%">
+297.327 707.542 m
+284.777 704.512
+284.653 715.921
+281.294 729.679
+279.69 734.992
+278.431 741.217
+280.474 753.578
+284.082 758.776
+293.436 766.528
+304.612 772.627
+313.764 776.56
+327.218 781.398
+340.623 785.521
+352.951 788.897
+365.919 792.108
+383.227 795.933
+403.273 799.77
+414.776 801.694
+425.013 803.236
+438.501 805.013
+459.87 807.194
+481.833 808.503
+506.169 808.552
+526.842 806.979
+542.658 804.247
+555.043 800.61
+571.533 791.532
+578.345 784.205
+579.964 781.717
+585.325 765.968
+585.569 752.416
+581.904 734.329
+575.113 716.92
+568.781 704.87
+554.628 684.003
+542.547 670.156
+526.332 655.838
+511.902 647.12
+498.161 642.644
+479.303 642.304
+465.935 645.709
+451.3 652.248
+427.989 666.098
+408.873 676.063
+398.469 678.676
+393.787 679.061
+391.081 682.763
+386.881 691.111
+384.461 694.757
+377.498 701.71
+364.702 708.518
+346.351 712.081
+334.324 712.522
+320.517 711.514
+306.415 709.385
+297.277 707.53 c
+</path>
+<path layer="alpha" matrix="1 0 0 1 106.712 17.2063" stroke="black" pen="heavier">
+96 640
+128 704
+72 760
+496 832
+336 568
+232 688
+168 632 u
+</path>
+<path matrix="1 0 0 1 106.712 17.2063" stroke="darkred">
+114.064 687.306 m
+208 712
+221.503 661.877 c
+</path>
+<path matrix="1 0 0 1 106.712 17.2063" fill="darkred" opacity="30%" tiling="falling">
+114.651 687.46 m
+118.834 688.525
+120.175 688.854
+126.786 690.389
+130.541 691.19
+134.489 691.974
+141.128 693.144
+151.342 694.533
+154.498 694.848
+164.715 695.429
+170.566 695.412
+184.302 694.046
+190.834 692.526
+198.863 689.534
+201.826 688.009
+208.548 683.318
+210.781 681.236
+213.28 678.456
+218.119 670.912
+219.521 667.8
+219.228 661.816
+208.963 660.257
+201.83 658.09
+196.433 655.989
+192.607 654.321
+187.878 652.122
+184.073 650.298
+173.198 645.244
+167.374 642.92
+165.182 642.158
+147.969 638.45
+139.817 638.105
+127.873 639.648
+118.512 643.766
+117.84 644.256
+113.575 648.916
+111.097 661.012
+112.612 674.937
+114.035 686.896 c
+</path>
+<path matrix="1 0 0 1 2.50148 0.0787132" stroke="black">
+10.6728 -1.41295 1.41295 10.6728 296.873 754.479 e
+</path>
+<text matrix="1 0 0 1 118.508 18.148" transformations="translations" pos="176 732" stroke="black" type="label" width="9.855" height="10.741" depth="0" valign="baseline" size="Large" style="math">s&apos;</text>
+<path stroke="black" dash="dash dotted" arrow="normal/small">
+310.139 753.379 m
+330.536 766.482
+346.582 753.79
+358.097 739.506
+367.628 757.124
+378.712 769.206
+394.712 753.206
+408.939 753.291 c
+</path>
+<text matrix="1 0 0 1 94.129 25.14" transformations="translations" pos="128 560" stroke="white" type="label" width="96.361" height="12.915" depth="4.3" valign="baseline" size="LARGE" style="math">S \setminus Pred^*(T)</text>
+<path matrix="1 0 0 1 106.129 17.14" stroke="black" arrow="normal/small">
+128.429 639.506 m
+116 624
+127.699 603.041 c
+</path>
+<path matrix="1 0 0 1 106.129 17.14" stroke="black" arrow="normal/small">
+160.439 640.741 m
+152 624
+159.52 602.324 c
+</path>
+<path matrix="1 0 0 1 106.129 17.14" stroke="black" arrow="normal/small">
+256.957 607.001 m
+272 624
+304 608
+272 576
+257.283 592.428 c
+</path>
+<text matrix="1 0 0 1 -16 36" transformations="translations" pos="16 676" stroke="darkred" type="label" width="152.872" height="12.915" depth="4.3" valign="baseline" size="LARGE" style="math">Pred^*(S \setminus Pred^*(T))</text>
+<text matrix="1 0 0 1 4 20" transformations="translations" pos="4 672" stroke="darkred" type="label" width="117.161" height="12.915" depth="4.3" valign="baseline" size="LARGE" style="math">\setminus(S \setminus Pred^*(T))</text>
+<path matrix="1 0 0 1 -64 0" stroke="darkred" dash="dashed" pen="heavier">
+281.832 678.933 m
+196 700 l
+</path>
+<path matrix="1 0 0 1 106.129 17.1399" stroke="black">
+96 636
+104 600
+188 600
+228 640
+292 588
+100 472 u
+</path>
+<text matrix="1 0 0 1 308 144" transformations="translations" pos="16 676" stroke="darkgreen" type="label" width="180.5" height="12.915" depth="4.3" valign="baseline" size="LARGE" style="math">S \setminus Pred^*(S \setminus Pred^*(T))</text>
+<text matrix="1 0 0 1 76 -32" transformations="translations" pos="100 804" stroke="black" type="label" width="29.767" height="16.938" depth="0" valign="baseline" size="Huge" style="math">\mathcal{M}</text>
+<text matrix="1 0 0 1 -72.0599 -11.8021" transformations="translations" pos="512 592" stroke="black" type="label" width="143.788" height="10.756" depth="3.59" valign="baseline" size="Large">(states connected to $T$)</text>
+<path stroke="black" dash="dashed" pen="heavier">
+472.9 664.643 m
+504 612 l
+</path>
+<path stroke="black" dash="dashed" cap="1">
+516 596 m
+516 596 l
+</path>
+<text matrix="1 0 0 1 20 4" transformations="translations" pos="460 596" stroke="black" type="label" width="58.125" height="10.756" depth="3.59" valign="baseline" size="Large" style="math">Pred^*(T)</text>
+<text matrix="1 0 0 1 0 -4" transformations="translations" pos="316 772" stroke="black" type="label" width="66.379" height="6.136" depth="1.99" valign="baseline" size="footnote" style="math">Succ^*(s&apos;) \cap T \neq \emptyset</text>
+<path matrix="1 0 0 1 -52.1084 -17.7381" stroke="black">
+10.6728 -1.41295 1.41295 10.6728 296.873 754.479 e
+</path>
+<text matrix="1 0 0 1 64.0782 1.15038" transformations="translations" pos="176 732" stroke="black" type="label" width="6.617" height="6.177" depth="0" valign="baseline" size="Large" style="math">s</text>
+<path stroke="black" dash="dash dotted" arrow="normal/small">
+251.076 745.463 m
+255.639 755.293
+269.86 738.936
+273.181 759.304
+288.76 756.357 c
+</path>
+<text matrix="1 0 0 1 -24.696 0.654475" transformations="translations" pos="256 760" stroke="black" type="label" width="54.309" height="6.136" depth="1.99" valign="baseline" size="footnote" style="math">\forall s&apos; \in Succ^*(s)</text>
+<path layer="hidden" matrix="1 0 0 1 -6.47148 -69.0633" stroke="black" fill="1">
+10.6728 -1.41295 1.41295 10.6728 296.873 754.479 e
+</path>
+<text matrix="1 0 0 1 109.715 -50.1749" transformations="translations" pos="176 732" stroke="black" type="label" width="7.995" height="6.177" depth="0" valign="baseline" size="Large" style="math">u</text>
+<path stroke="red" dash="dash dotted" pen="heavier" arrow="normal/small">
+293.453 675.091 m
+301.967 663.123
+290.605 655.183
+314.096 654.601
+306.115 643.587
+312.981 635.7 c
+</path>
+<text matrix="1 0 0 1 6.40387 -13.2278" transformations="translations" pos="304 660" stroke="red" type="label" width="67.366" height="6.136" depth="1.99" valign="baseline" size="footnote" style="math">Succ^*(u&apos;) \cap T = \emptyset</text>
+<text matrix="1 0 0 1 -1.59613 -5.22779" transformations="translations" pos="312 660" stroke="red" type="label" width="58.635" height="6.136" depth="1.99" valign="baseline" size="footnote" style="math">\exists u&apos; \in Succ^*(u),</text>
+<path layer="alpha" matrix="1 0 0 1 112.881 19.9605" stroke="black">
+320 672
+272 728
+368 808
+372.371 653.503
+312 656 u
+</path>
+<text matrix="1 0 0 1 120.881 47.9604" transformations="translations" pos="320 712" stroke="black" type="label" width="14.668" height="14.119" depth="0" valign="baseline" size="huge" style="math">T</text>
+<path matrix="1 0 0 1 126.061 -14.9836" stroke="black">
+10.6728 -1.41295 1.41295 10.6728 296.873 754.479 e
+</path>
+<text matrix="1 0 0 1 242.247 3.90538" transformations="translations" pos="176 732" stroke="black" type="label" width="10.552" height="8.826" depth="2.15" valign="baseline" size="Large" style="math">t_1</text>
+<path matrix="1 0 0 1 6.16935 10.7544" stroke="black" arrow="normal/tiny">
+423.675 736.997 m
+428 744
+444 732
+432 716
+425.989 723.19 c
+</path>
+<path matrix="1 0 0 1 143.214 -51.9506" stroke="black">
+10.6728 -1.41295 1.41295 10.6728 296.873 754.479 e
+</path>
+<text matrix="1 0 0 1 259.4 -33.0616" transformations="translations" pos="176 732" stroke="black" type="label" width="11.551" height="8.826" depth="2.15" valign="baseline" size="Large" style="math">t_n</text>
+<path matrix="1 0 0 1 23.3223 -26.2126" stroke="black" arrow="normal/tiny">
+423.675 736.997 m
+428 744
+444 732
+432 716
+425.989 723.19 c
+</path>
+<path matrix="1 0 0 1 159.214 -23.9506" stroke="black">
+10.6728 -1.41295 1.41295 10.6728 296.873 754.479 e
+</path>
+<text matrix="1 0 0 1 275.4 -5.06162" transformations="translations" pos="176 732" stroke="black" type="label" width="10.552" height="8.826" depth="2.15" valign="baseline" size="Large" style="math">t_2</text>
+<path matrix="1 0 0 1 39.3223 1.78738" stroke="black" arrow="normal/tiny">
+423.675 736.997 m
+428 744
+444 732
+432 716
+425.989 723.19 c
+</path>
+<path layer="hidden" stroke="black" dash="dash dotted" arrow="normal/normal">
+300.063 690.166 m
+316.779 712.097
+347.694 691.263
+356.495 727.389
+388.845 698.591
+412.534 717.365 c
+</path>
+<text matrix="1 0 0 1 27.6245 -79.5992" transformations="translations" pos="316 772" stroke="black" type="label" width="64.682" height="5.98" depth="1.99" valign="baseline" size="footnote" style="math">Succ^*(u) \cap T \neq \emptyset</text>
+</page>
+</ipe>

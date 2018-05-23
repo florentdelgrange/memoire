@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70206" creator="Ipe 7.2.6">
-<info created="D:20180215123956" modified="D:20180501175900"/>
+<info created="D:20180215123956" modified="D:20180522164829"/>
 <preamble>\usepackage{color}
 %\renewcommand{\rmdefault}{\sfdefault}
 \usepackage{latexsym}
@@ -329,7 +329,7 @@ h
 </path>
 <text matrix="1 0 0 1 24 -4" transformations="translations" pos="160 788" stroke="black" type="label" width="29.542" height="7.473" depth="2.49" valign="baseline" style="math">\mathbb{C}(s, k)</text>
 <text matrix="1 0 0 1 68 -96" transformations="translations" pos="160 788" stroke="black" type="label" width="32.337" height="7.49" depth="2.49" valign="baseline" style="math">\mathbb{C}(s&apos;, k)</text>
-<text matrix="1 0 0 1 -28 12" transformations="translations" pos="132 648" stroke="darkcyan" type="label" width="56.155" height="8.307" depth="2.32" valign="baseline" size="large" style="math">k+1 \text{ steps}</text>
+<text matrix="1 0 0 1 22.1281 8" transformations="translations" pos="132 648" stroke="darkcyan" type="label" width="56.155" height="8.307" depth="2.32" valign="baseline" size="large" style="math">1 + k\text{ steps}</text>
 <text matrix="1 0 0 1 50.168 163.585" transformations="translations" pos="132 648" stroke="darkorange" type="label" width="35.885" height="8.307" depth="2.32" valign="baseline" size="large" style="math">k \text{ steps}</text>
 <text matrix="1 0 0 1 88 28" transformations="translations" pos="132 648" stroke="darkcyan" type="label" width="52.454" height="7.353" depth="0" valign="baseline" size="large" style="math">\textit{worst case}</text>
 </page>

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70206" creator="Ipe 7.2.6">
-<info created="D:20180328153250" modified="D:20180328154745"/>
+<info created="D:20180328153250" modified="D:20180520183132"/>
 <ipestyle name="basic">
 <symbol name="arrow/arc(spx)">
 <path stroke="sym-stroke" fill="sym-stroke" pen="sym-pen">
@@ -268,13 +268,7 @@ h
 508 476
 256 564 u
 </path>
-<path layer="alpha" matrix="1 0 0 1 -112 -80" stroke="black">
-16 0 0 16 160 736 e
-</path>
-<path matrix="1 0 0 1 112 -208" stroke="black">
-16 0 0 16 160 736 e
-</path>
-<path matrix="0.984353 -0.176206 0.176206 0.984353 -244.529 -29.4344" stroke="black">
+<path layer="alpha" matrix="0.984353 -0.176206 0.176206 0.984353 -244.529 -29.4344" stroke="black">
 16 0 0 16 224 688 e
 </path>
 <path matrix="0.984353 -0.176206 0.176206 0.984353 -276.028 -23.7958" stroke="black">
@@ -294,15 +288,6 @@ h
 </path>
 <path matrix="1 0 0 1 320 -32" stroke="black">
 16 0 0 16 160 736 e
-</path>
-<path matrix="1 0 0 1 16 -96" stroke="black" arrow="normal/normal">
-48 752 m
-64 752
-126.596 775.939 c
-</path>
-<path matrix="1 0 0 1 16 -96" stroke="black" arrow="normal/normal">
-43.438 740.812 m
-69.206 714.925 l
 </path>
 <path matrix="1 0 0 1 16 -96" stroke="black" arrow="normal/normal">
 90.1854 691.094 m
@@ -346,22 +331,9 @@ h
 463.849 784.001 m
 464.362 687.996 l
 </path>
-<path matrix="1 0 0 1 16 -96" stroke="black" arrow="normal/normal">
-176.108 671.42 m
-176 624
-240 623.887 c
-</path>
-<path matrix="1 0 0 1 16 -96" stroke="black" arrow="normal/normal">
-271.998 623.771 m
-296 624
-304 640
-323.723 661.739 c
-</path>
-<text matrix="1 0 0 1 -3.07016 1.74188" transformations="translations" pos="44 652" stroke="black" type="label" width="14.291" height="7.415" depth="2.58" valign="baseline" size="LARGE" style="math">s_0</text>
 <text matrix="1 0 0 1 44.9298 -46.2581" transformations="translations" pos="44 652" stroke="black" type="label" width="14.291" height="7.415" depth="2.58" valign="baseline" size="LARGE" style="math">s_1</text>
 <text matrix="1 0 0 1 106.844 24.4277" transformations="translations" pos="44 652" stroke="black" type="label" width="14.291" height="7.415" depth="2.58" valign="baseline" size="LARGE" style="math">s_2</text>
 <text matrix="1 0 0 1 140.247 -62.9005" transformations="translations" pos="44 652" stroke="black" type="label" width="14.291" height="7.415" depth="2.58" valign="baseline" size="LARGE" style="math">s_3</text>
-<text matrix="1 0 0 1 220.756 -126.32" transformations="translations" pos="44 652" stroke="black" type="label" width="14.291" height="7.415" depth="2.58" valign="baseline" size="LARGE" style="math">s_4</text>
 <text matrix="1 0 0 1 300.93 -78.2581" transformations="translations" pos="44 652" stroke="black" type="label" width="14.291" height="7.415" depth="2.58" valign="baseline" size="LARGE" style="math">s_5</text>
 <text matrix="1 0 0 1 300.93 49.7419" transformations="translations" pos="44 652" stroke="black" type="label" width="14.291" height="7.415" depth="2.58" valign="baseline" size="LARGE" style="math">s_6</text>
 <text matrix="1 0 0 1 428.93 49.7419" transformations="translations" pos="44 652" stroke="black" type="label" width="14.291" height="7.415" depth="2.58" valign="baseline" size="LARGE" style="math">s_7</text>
@@ -381,5 +353,45 @@ h
 <text matrix="1 0 0 1 328 60" transformations="translations" pos="88 672" stroke="black" type="label" width="6.362" height="8.422" depth="3.43" halign="center" valign="baseline" style="math">\frac{2}{3}</text>
 <text matrix="1 0 0 1 356 92" transformations="translations" pos="132 552" stroke="black" type="label" width="4.981" height="6.42" depth="0" halign="center" valign="baseline" style="math">1</text>
 <text matrix="1 0 0 1 296 92" transformations="translations" pos="132 552" stroke="black" type="label" width="4.981" height="6.42" depth="0" halign="center" valign="baseline" style="math">1</text>
+<path stroke="lightblue" fill="lightblue" opacity="30%">
+60 680
+76 656
+40 616
+16 680 u
+</path>
+<path matrix="1 0 0 1 -112 -80" stroke="black">
+16 0 0 16 160 736 e
+</path>
+<path matrix="1 0 0 1 16 -96" stroke="black" arrow="normal/normal">
+48 752 m
+64 752
+126.596 775.939 c
+</path>
+<path matrix="1 0 0 1 16 -96" stroke="black" arrow="normal/normal">
+43.438 740.812 m
+69.206 714.925 l
+</path>
+<text matrix="1 0 0 1 -3.07016 1.74188" transformations="translations" pos="44 652" stroke="black" type="label" width="14.291" height="7.415" depth="2.58" valign="baseline" size="LARGE" style="math">s_0</text>
+<path stroke="lightblue" fill="lightblue" opacity="30%">
+256 576
+336 512
+256 496
+240 528 u
+</path>
+<path matrix="1 0 0 1 112 -208" stroke="black">
+16 0 0 16 160 736 e
+</path>
+<path matrix="1 0 0 1 16 -96" stroke="black" arrow="normal/normal">
+176.108 671.42 m
+176 624
+240 623.887 c
+</path>
+<path matrix="1 0 0 1 16 -96" stroke="black" arrow="normal/normal">
+271.998 623.771 m
+296 624
+304 640
+323.723 661.739 c
+</path>
+<text matrix="1 0 0 1 220.756 -126.32" transformations="translations" pos="44 652" stroke="black" type="label" width="14.291" height="7.415" depth="2.58" valign="baseline" size="LARGE" style="math">s_4</text>
 </page>
 </ipe>

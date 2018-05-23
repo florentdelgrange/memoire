@@ -1,8 +1,9 @@
 \chapter{Multi-objective problems}
-In real-world environments, considering a single reachability or shorter path problem might not be sufficient for a given situation.
-Indeed, building an optimal strategy satisfying one problem could negatively affect other relevant problems.
+In real-world environments, considering a single reachability or shortest path problem might not be sufficient for some situations.
+Indeed, building an optimal strategy satisfying one problem could negatively affect the results of applying this same strategy to satisfy other relevant problems.
 For instance, we should be interested in a strategy that does not fail to reach a target with a cost bounded and that however optimises the expected cost to this target.
-Moreover, we should also be interested in getting a strategy satisfying at a time many reachability problems, and furthermore, many percentile problems. This chapter will introduce \textit{multi-objective} problems, where we are interested in solving \textit{simultaneously} multiple sub-problems introduced in the previous chapters.
+Moreover, we should also be interested in getting a strategy satisfying at a time many reachability problems, and furthermore, many percentile problems.
+This chapter introduces \textit{multi-objective} problems, where we are interested in solving \textit{simultaneously} multiple sub-problems introduced in previous chapters.
 \begin{example}[\textit{Communication between nodes in a wireless sensor network}]\label{main-example}
 Consider a wireless sensor network containing three nodes $n_0,\, n_1$ and $n_2$. Assume that $n_0, \, n_1$ and $n_3$ are separated by the same distance, that the sensor $n_0$ has to send messages to $n_2$ at regular intervals and that a wall stands between $n_0$ and $n_2$ (cf. Figure \ref{sensor_net}).
 \begin{figure}[h!]
@@ -14,62 +15,62 @@ There are two possibilities for $n_0$. First, it can send directly the message t
 Moreover, this sending has a risk of packet corruption due to the possible noise induced when the signal goes through the wall standing between the two sensors.
 The second possibility is to send the message to an intermediate node (i.e., $n_1$). This sending is obviously slower due to the sending in two steps, but requires less energy in total that a direct sending.
 In that case, the risk of packet corruption is negligible. \par
-This example induces some questions. Firstly, we should be interested by a strategy ensuring a bounded duty cycle for the emitter sensor $n_0$ (i.e., a bounded time for its active state).
+This example induces some questions. Firstly, we should be interested by a strategy ensuring a bounded duty cycle for the emitter sensor $n_0$ (i.e., a bounded time for its active session).
 Thus, we should be interested by a strategy minimising the expected energy of sending the message while ensuring this duty cycle.
 Finally, we should be interested by a strategy offering a good probability to have a bounded duty cycle while having a good probability to minimise the energy used by the sensor to send the message.
 \end{example}
 \section{Worst case guarantee}
 Firstly, we are going to be interested in having a worst case guarantee to reach some states in a Markov decision process, i.e., a guarantee to reach these states with a cost bounded.
-To do that, we will approach the problem by considering it as a \textit{shortest path game} problem \cite{DBLP:journals/corr/RandourRS14a}.
+To do that, we approach the problem by considering it as a \textit{shortest path game} problem \cite{DBLP:journals/corr/RandourRS14a}.
 \begin{definition}[\textbf{\SPG{} problem}]
-  Let $\mathcal{M}$ be an MDP with state space $S$, $s \in S$, $T \subseteq S$, and $l \in \mathbb{N}$.
-  The shortest path game problem (\SPG{}, for short) consists in deciding if there exists a strategy $\sigma$ ensuring to reach the subset of target states $T$ from the state $s$ with a cost bounded $l$, i.e.,
+  Let $\mathcal{M}$ be an MDP with state space $S$, $s \in S$, $T \subseteq S$, and $\ell \in \mathbb{N}$.
+  The shortest path game problem (\SPG{}, for short) consists in deciding if there exists a strategy $\sigma$ ensuring to reach the subset of target states $T$ from the state $s$ with a cost bounded $\ell$, i.e.,
   \begin{align*}
-    \forall \pi \in Paths^\sigma(s), \, \TS^T(\pi) \leq l.
+    \forall \pi \in Paths^\sigma(s), \, \TS^T(\pi) \leq \ell.
   \end{align*}
 \end{definition}
 
 \begin{theorem}[\textbf{\textit{\SPG{} problem and qualitative cost bounded reachability}}] \label{spg-thm1}
-  Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be an MDP, $s \in S$, $T \subseteq S$, $l \in \mathbb{N}$, and $\sigma$ be a strategy for $\mathcal{M}$.
+  Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be an MDP, $s \in S$, $T \subseteq S$, $\ell \in \mathbb{N}$, and $\sigma$ be a strategy for $\mathcal{M}$.
   The following two propositions are equivalent:
   \begin{enumerate}[(a)]
-    \item $\forall \pi \in Paths^\sigma(s), \, \TS^T(\pi) \leq l$. \label{qsspp1}
+    \item $\forall \pi \in Paths^\sigma(s), \, \TS^T(\pi) \leq \ell$. \label{qsspp1}
     \item $\mathbb{P}_s^\sigma(\Diamond_{\leq \ell}\, T) = 1$. \label{qsspp2}
   \end{enumerate}
 \end{theorem}
 \begin{proof2}$ $\\
-  ($\ref{qsspp1}\implies\ref{qsspp2}$). Assume that for all $\sigma$-path $\pi \in Paths^\sigma(s)$, the truncated sum of this path is lower than or equals $l$, i.e., $\TS^T(\pi)\leq l$.
-  We have that $\mathbb{P}_s^\sigma(\Diamond_{\leq \ell}\, T) = \mathbb{P}_s^\sigma(\{ \pi \in Paths(s) \; | \; \TS^T(\pi) \leq \ell \})$. As all $\sigma$-path starting from $s$ have a truncated sum lower than or equals $l$, we have $\{\pi \in Paths^\sigma(s) \; | \; \TS^T(\pi) \leq \ell \} = Paths^\sigma(s)$.
+  ($\ref{qsspp1}\implies\ref{qsspp2}$). Assume that for any $\sigma$-path $\pi \in Paths^\sigma(s)$, the truncated sum of this path is lower than or equal to $\ell$, i.e., $\TS^T(\pi)\leq \ell$.
+  We have $\mathbb{P}_s^\sigma(\Diamond_{\leq \ell}\, T) = \mathbb{P}_s^\sigma(\{ \pi \in Paths(s) \; | \; \TS^T(\pi) \leq \ell \})$. As all $\sigma$-paths starting from $s$ have a truncated sum lower than or equal to $\ell$, we have $\{\pi \in Paths^\sigma(s) \; | \; \TS^T(\pi) \leq \ell \} = Paths^\sigma(s)$.
   Then, $\mathbb{P}_s^\sigma(\Diamond_{\leq \ell}\, T) = \mathbb{P}_s^\sigma(Paths(s)) = 1$. \\
-  ($\neg \ref{qsspp1} \implies \neg \ref{qsspp2}$). Assume there exists a $\sigma$-path $\pi \in Paths^\sigma(s)$ such that $\TS^T(\pi)>l$. Thus, consider this path $\pi$ and let $\hat{\pi} = s_0\xrightarrow{\alpha_1}\dots \xrightarrow{\alpha_n} s_n \in Pref(\pi)$, where $\alpha_i$ is
-  chosen by the strategy $\sigma$ for each $i \in \{1, \dots, n \}$, such that $\sum_{i=1}^n w(\alpha_i) > l$.
+  ($\neg \ref{qsspp1} \implies \neg \ref{qsspp2}$). Assume there exists a $\sigma$-path $\pi \in Paths^\sigma(s)$ such that $\TS^T(\pi)>\ell$. Thus, consider this path $\pi$ and let $\hat{\pi} = s_0\xrightarrow{\alpha_1}\dots \xrightarrow{\alpha_n} s_n \in Pref(\pi)$, where $\alpha_i$ is
+  chosen by the strategy $\sigma$ for each $i \in \{1, \dots, n \}$, such that $\sum_{i=1}^n w(\alpha_i) > \ell$.
   We have $\pi \in Cyl(\hat{\pi})$ and $\mathbb{P}_s^\sigma(Cyl(\hat{\pi})) = \prod_{i=0}^{n-1} \Delta(s_i, s_{i+1}) > 0$.
   We obviously additionally have that $Cyl(\hat{\pi}) \cap \{ \pi \in Paths^\sigma(s) \; | \; \TS^T(\pi) \leq \ell \} = \emptyset$, because %$s_i \not \in T$ for all $i \in \{0, \dots, n\}$ and
   %$\sum_{i=1}^n w(\alpha_i) > l$.
-  $\TS^T(\hat{\pi}) > l$.
+  $\TS^T(\hat{\pi}) > \ell$.
   Then, we have
    \[\mathbb{P}_s^\sigma(\Diamond_{\leq \ell}\, T) = \mathbb{P}_s^\sigma(\{ \pi \in Paths(s) \; | \; \TS^T \leq \ell \}) \leq 1 - \mathbb{P}_s^\sigma(Cyl(\hat{\pi})) < 1.\]
 \end{proof2}
 \\
 
-With the theorem \ref{spg-thm1}, it is possible to solve the \SPG{} problem by reduction to the \SSPP{} problem.
-However, the \SSPP{} problem is computed in pseudo-polynomial time in $\mathcal{M}$ and in the size of length of $l$, and we want to avoid this class of time complexity.
-Here, we consider the MDP as a two players game.
+Referring to Theorem \ref{spg-thm1}, it is possible to solve the \SPG{} problem by reduction to the \SSPP{} problem.
+However, the \SSPP{} problem is computed in pseudo-polynomial time in $\mathcal{M}$ and in the size of the length of $\ell$, and we want to avoid this time complexity.
+For this approach, we consider the MDP as a two players game.
 In each step, the system is in state $s$ and the player one chooses an enabled action $\alpha$ of $s$.
 Then, the player two chooses the $\alpha$-successor of $s$ leading the worst case in terms of truncated sum.
 Thus, we do not consider probabilities for this problem but rather consider the worst case of choosing each action.
-Finding an optimal strategy for the player one allowing to reach $T$ with a cost less than or equals $l$
+Finding an optimal strategy for the player one allowing to reach $T$ with a cost less than or equal to $\ell$
 under the choices of the player two solves the \SPG{} problem. \\
 
-We compute the shortest path in this game from $s$ to $T$ by dynamic programming in order to build a strategy solving the \SPG{} problem.
-Let $|S| = n$ and $\mathbb{C}: S \times \{0, \dots, n-1 \}$ be a function such that $\mathbb{C}(s, i)$ is the shortest path from $s$ to $T$ in this game after maximum
-$i$ playing steps.
+We compute the shortest path in this game from $s$ to $T$ by dynamic programming in order to build a strategy satisfying the \SPG{} problem.
+Let $|S| = n$ and $\mathbb{C}: S \times \{0, \dots, n-1 \}$ be a function such that $\mathbb{C}(s, i)$ is the shortest path from $s$ to $T$ after maximum
+$i$ playing steps in this game.
 Obviously, $\mathbb{C}$ can be represented with a matrix of size $n \times n$.
 We have \[\mathbb{C}(s, 0) = \begin{cases}
   0 & \text{if } s \in T\\
   +\infty & \text{else}.
 \end{cases}\]
-Thus, let $k \in \mathbb{N}$, such that $0 \leq k < n - 1$,
+Then, let $k \in \mathbb{N}$, such that $0 \leq k < n - 1$,
 \[
   \mathbb{C}(s,\, k+1) = \min \big[\mathbb{C}(s,\, k),\, \min_{\alpha \in A(s)} \max_{s' \in Succ(s,\alpha)} \big(w(\alpha) + \mathbb{C}(s',\, k)\big)\big].
 \]
@@ -78,37 +79,41 @@ This recursive definition of $\mathbb{C}$ actually means that the shortest path 
   \centering
   \includegraphics[width=0.6\linewidth]{resources/sp-g}
   \captionsetup{justification=centering}
-  \caption{Intuitive representation of  the function $\mathbb{C}$ to solve the \SPG{} problem}
+  \caption{Intuitive representation of  the function $\mathbb{C}$, used to solve the \SPG{} problem}
 \end{figure}
 The minimisation term according to an action in this definition corresponds to the choice of the strategy (i.e., the player one).
 The maximisation term in this definition corresponds to the adversary (i.e., the player two), choosing the worst $\alpha$-successor of $s$.
-As the weight of each action is strictly positive, the strategy never chooses an action leading to a cycle in this game if it is possible to avoid it.
-Then, choosing an action leading to a cycle necessarily yields an infinite truncated sum, and if a strategy satisfying this problem exists, it wins in at most $n - 1$ steps. It is why we only need to consider the $n$ first steps.
+As the weight of each action is strictly positive, the strategy never chooses an action possibly leading to a  cycle in this game if it can avoid it.
+Indeed, choosing an action possibly leading to a cycle necessarily yields an infinite truncated sum since the player two will necessarily choose the transition yiedling this cycle.
+Thus, if a strategy satisfying this problem exists, it wins in at most $n$ steps. It is why we only need to consider the $n$ first steps.
 
-\begin{theorem}[\textit{\textbf{Solving the \SPG{} problem}}] The \SPG{} problem can be decided in polynomial time in the size of $\mathcal{M}$ and % with the recursive function $\mathbb{C}$ (and more precisely in $\mathcal{O}(n^2)$ with memoization).
-an optimal pure memoryless strategy always exists.% and can also be built in $\mathcal{O}(n^2)$.
+\begin{theorem}[\textit{\textbf{Solving the \SPG{} problem}}] The \SPG{} problem can be decided in polynomial time in the size of $\mathcal{M}$, and % with the recursive function $\mathbb{C}$ (and more precisely in $\mathcal{O}(n^2)$ with memoization).
+an optimal pure memoryless strategy always exists and can be built in polynomial time in the size of $\mathcal{M}$.
 \end{theorem}
-
-By dynamic programming, we can determine all values of $\mathbb{C}$ for all entries $(s, i) \in S \times \{0, \dots, n-1\}$ with a time complexity in $\mathcal{O}(n^2)$.
+\begin{proof2}
+By dynamic programming, we can determine the value of $\mathbb{C}$ for each entry $(s, i) \in S \times \{0, \dots, n-1\}$ with a time complexity in $\mathcal{O}(|S| \times |A|)$. This result corresponds to the worst case for which the set of enabled action of each state is $A$ and the set of $\alpha$-successor of this state is $S$, for each enabled action $\alpha$ (note that this case rarely happens in practice). Then, as $|S \times \{0, \dots, n-1\}| = |S|^2$, computing all values of $C$ for all entries $(s, i) \in S \times \{0, \dots, n-1\}$ can be done in $\mathcal{O}(|S|^3 \cdot |A|)$.
+\par
 Let $s$ be a state of the MDP. By definition of $\mathbb{C}$, we have $\mathbb{C}(s,\, k + 1) \leq \mathbb{C}(s,\, k)$, for all $k \in \mathbb{N}$ such that $0 \leq k < n-1$.
 Then, we have $\mathbb{C}(s, \, n-1) = \min_{k} \mathbb{C}(s, \, k)$, and
-a strategy satisfying the \SPG{} problem for $s \in S$ exists if and only if $\mathbb{C}(s,\, n-1) \leq l$.
+a strategy satisfying the \SPG{} problem for $s \in S$ exists if and only if $\mathbb{C}(s,\, n-1) \leq \ell$.
 Furthermore, we can build this pure memoryless strategy as follows:
 \[
   \sigma : S \rightarrow A, \; s \mapsto \arg \min_{\alpha \in A(s)} \big[ \max_{s' \in Succ(s, \alpha)} \big(w(\alpha) + \mathbb{C}(s',\, n - 1) \big) \big].
 \]
-The key idea behind this definition is that $\sigma$ will choose the action minimising the weight of the enabled actions plus the smallest cost to reach $T$ in this game from the worst successor, chosen by the player two.
+The key idea behind this definition is that $\sigma$ chooses the action minimising the weight of the enabled actions plus the smallest cost to reach $T$ in this game from the worst successor, chosen by the player two.
+
+\end{proof2}
+$ $\\
 
 \begin{remark}[\textit{\SPG{} problem and PRCTL model checking}]
-  Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be an MDP, $s \in S$, $l \in \mathbb{N}$, and $\Phi$ be a PRCTL state formula over $AP$,
-  verify $s \models \mathcal{P}^{\max}_{=1}(\Diamond_{\leq \ell}\, \Phi)$ is equivalent to solve the \SPG{} problem for the state $s$, the cost threshold $l$ and the subset of target states $Sat(\Phi)$.
+  Let $\mathcal{M}$ be an MDP with state space $S$ and atomic proposition space $AP$, $s \in S$, $\ell \in \mathbb{N}$, and $\Phi$ be a PRCTL state formula over $AP$,
+  verify $s \models \mathcal{P}^{\max}_{=1}(\Diamond_{\leq \ell}\, \Phi)$ is equivalent to solve the \SPG{} problem for the state $s$, the cost threshold $\ell$, the subset of target states $Sat(\Phi)$ and the probability threshold one.
 \end{remark}
 
 \begin{example}[\textit{\SPG{} problem in the wireless sensor network}] \label{spg-example}
-Get back to Example \ref{main-example}.
-For this example, we will only consider the time dimension to model the situation.
+Getting back to Example \ref{main-example}, we will only consider the time dimension to model the situation of this example.
 We focus on the behaviour of the node $n_0$  (cf. Figure \ref{sensor_net_mdp}).
-When $n_0$ becomes active, it has to send a message to $n_2$. We assume here that a standard message sending takes $2$ \textit{mili seconds} ($ms$). If $n_0$ decides to send the message passing by $n_1$, it must wait to receive an acknowledgement of the message sent from $n_1$ to $n_2$. We assume that an acknowledgement message take $2$ $ms$ to be received.
+When $n_0$ becomes active, it has to send a message to $n_2$. We assume here that a standard message sending takes $2$ \textit{mili seconds} ($ms$). If $n_0$ decides to send the message passing by $n_1$, it must wait to receive an acknowledgement of the message sent from $n_1$ to $n_2$. We assume that an acknowledgement message takes $2$ $ms$ to be received.
 Thus, we have that $n_0$ sends the message to $n_1$ ($2$ $ms$), then $n_1$ sends the message to $n_2$ ($2$ $ms$). When $n_2$ receives the message, it sends an acknowledgement to $n_1$ ($2$ $ms$) and $n_1$ sends an acknowledgement to $n_0$ ($2$ $ms$).
 Then, after that $n_0$ has sent the message to $n_1$, he waits $6$ $ms$ the acknowledgement from $n_1$ and go to sleep during $10$ $ms$ after that. If $n_0$ decides to directly send a message to $n_2$, then $n_2$ sends the message and waits $2$ $ms$ the acknowledgement.
 Due to the possible packet corruption, $n_2$ does not receive the acknowledgement with a probability $\frac{1}{8}$. In that case, it has to try sending the message again.
@@ -124,7 +129,7 @@ Assume we want to ensure a duty cycle of $12$ $ms$ for the node $n_0$. Then, let
 \[
   s_0 \overset{?}{\models} \, \mathcal{P}^{\max}_{=1}(\Diamond_{\leq 12} \; \textit{sleep}).
 \]
-To solve this problem, we will recursively compute $\mathbb{C}$ for all $s \in S$ from $k=0$ to $k=3$:
+To solve this problem, we will recursively compute $\mathbb{C}$ for all $s \in S$ from $k=0$ to $k=3$:\\[0.7em]
 \begin{minipage}{0.5\linewidth}
     \begin{itemize}
       \item[$k=0$] \begin{itemize}
@@ -157,22 +162,21 @@ $s_2$  & $+\infty$ & $+\infty$ & $+\infty$ & 10    \\
 $s_3$  & 0         & 0         & 0         & 0
 \end{tabular}
 \captionsetup{justification=centering}
-\captionof{table}{Computing $\mathbb{C}$ by dynamic programming}
+\captionof{table}{Values of $\mathbb{C}$ (dynamic programming)}
 \end{minipage}
 \\$ $\\$ $\\
 The result $\mathbb{C}(s_2,3)=10$ is interesting. It means that the player one firstly chooses the action $\alpha_3$ (with a weight of $2$).
 Then, the player two chooses worst case, i.e., the transition $s_2 \xrightarrow{\alpha_3}s_0$, and the player one next chooses the action surely leading $s_0$ to $s_3$ with a minimal cost (i.e., $\mathbb{C}(s_0, 2)=8$ with $s_0\xrightarrow{\alpha_0}s_1\xrightarrow{\alpha_2}s_3$).
 \par As $\mathbb{C}(s_0,\, 3) \leq 12$, the duty cycle is ensured by the strategy built with $\mathbb{C}$, and we have $s_0 \models \mathcal{P}^{\max}_{=1}(\Diamond_{\leq 12}\; \textit{sleep})$.
-With this strategy, the sensor $n_0$ will always choose to send the message via $n_1$.
-This ensures a duty cycle of $8$ $ms$, but it is possible to have a better expected time to reach the \textit{sleep} state (e.g., with a memory strategy).
-Thus, the next type of strategy that we will study is strategies offering a good expected cost-to-target while ensuring to reach this target with a cost bounded.
+With this strategy, the sensor $n_0$ always chooses to send the message via $n_1$.
+This ensures a duty cycle of $8$ $ms$, but it is possible to have a better expected time to reach the \textit{sleep} state while ensuring the dutty cycle of $12$ $ms$ (e.g., with a memory strategy).
+So, the next type of strategy that we will study is strategies offering a good expected cost-to-target while ensuring to reach this target with a cost bounded.
 \end{example}
 
 \section{Good expectation under a worst case}
-We study now strategies ensuring simultaneously a worst case guarantee (cf. previous section) and a good expected cost-to-target in a Markov decision process \cite{DBLP:journals/corr/RandourRS14a, DBLP:journals/iandc/BruyereFRR17}.
-$ $ \\ $ $ \\
+We now study strategies ensuring simultaneously a worst case guarantee (cf. previous section) and a good expected cost-to-target in a Markov decision process \cite{DBLP:journals/corr/RandourRS14a,DBLP:journals/corr/BruyereFRR13}.
 \begin{definition}[\textbf{\SSPWE{} problem}]
-    Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$, be an MDP, $s \in S$, $T \subseteq S$, and $\ell_1, \ell_2 \in \mathbb{N}$.
+    Let $\mathcal{M}$, be an MDP with state space $S$, $s \in S$, $T \subseteq S$, and $\ell_1, \ell_2 \in \mathbb{N}$.
     The \textit{stochastic shortest path worst case expectation} problem (\SSPWE{}, for short) consists in deciding if there exists a strategy $\sigma$ such that:
     \begin{itemize}
       \item $\forall \pi \in Paths^\sigma(s), \; TS^T(\pi) \leq \ell_1$.
@@ -180,67 +184,78 @@ $ $ \\ $ $ \\
     \end{itemize}
 \end{definition}
 
-The \SSPWE{} problem is thus a \textit{multi-objective} problem: indeed, we want actually to solve simultaneously the \SPG{} problem and the \SSPE{} problem.
-As a reminder, in the previous section we have replaced the probabilities by an adversarial choice to handle the guarantee to reach a set of target states respecting a worst case.
+The \SSPWE{} problem is thus a \textit{multi-objective} problem: indeed, we actually want to solve simultaneously the \SPG{} problem and the \SSPE{} problem.
+As a reminder, in the previous section we have replaced the probabilities by an adversarial choice to handle the guarantee to reach a set of target states according to a worst case.
 Here, we will combine this approach with taking into account probabilities for the expected cost-to-target part.
 Although the \SSPE{} and the \SPG{} problems can both be decided in polynomial time, the \SSPWE{} is more complex due to the strategy having to satisfy both problems at the same time.
-Before introducing an algorithm able to solve the problem, we first define the notion of \textit{attractor}.
+%Before introducing an algorithm able to solve the problem, we first define the notion of \textit{attractor}.
 
+\subsection{Attractors and dynamic programming}
+
+In this subsection, we solve the problem by considering the unfolding of a given MDP $\mathcal{M}$ up to the worst case threshold $\ell_1$ and the set of target states $T$ as a game in order to ensure a worst case guarantee.
+As for the \SPG{} problem, we thus consider at each turn that the player one chooses an enabled action $\alpha$ of a state, and that the player two chooses its $\alpha$-successor.
+Before introducing an algorithm able to solve the \SSPWE{} problem, we first define the notion of \textit{attractor}.
 \begin{definition}[\textbf{Attractor of a set of target states in an MDP}]
-  Let $\mathcal{M}$ be an MDP with state space $S$ and $T \subseteq S$. The set of \textit{attractors} of $T$ is the set of states reaching $T$ with a maximum probability one, i.e., the set $\{ s \in S \; | \; \mathbb{P}^{\max}_s (\Diamond T) = 1 \}$.
+  Let $\mathcal{M}$ be an MDP with state space $S$ and $T \subseteq S$. The \textit{attractor} of $T$ is the set of states almost surely reaching $T$, i.e., the set $\Attr(T) = \{ s \in S \; | \; \mathbb{P}^{\max}_s (\Diamond T) = 1 \}$.
 \end{definition}
+Thus, an attractor is the set of states from which the player one can ensure to reach $T$ no matter what the player two does.
+We restrict the state space of the unfolding of $\mathcal{M}$ to this attractor by computing the \textit{set of safe actions} for each state by dynamic programming, i.e., we compute the set of enabled actions of each state surely leading this state to a successor being in $\Attr(T)$.
+We then compute the minimal expected cost-to-target in this MDP.
+More formally, let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be an MDP, the \SSPWE{} problem for $\mathcal{M}$, the state $s \in S$, the subset of target states $T \subseteq S$, and the cost thresholds $\ell_1, \ell_2 \in \mathbb{N}$ can be solved with the following algorithm:
 
-Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be an MDP, the \SSPWE{} problem for $\mathcal{M}$, the state $s \in S$, the subset of target states $T \subseteq S$, and the cost thresholds $\ell_1, \ell_2 \in \mathbb{N}$ can be solved with the following algorithm:
-
-\begin{center}
-  \hrule height.8pt depth0pt \kern2pt% \@fs@pre for \@fs@ruled
-  \captionof{algorithm}{Solving the \SSPWE{} problem}\label{sspwe-algo}
-  \vspace{-.02\linewidth}
-  \offinterlineskip\hrulefill
+%\begin{center}
+%  \hrule height.8pt depth0pt \kern2pt% \@fs@pre for \@fs@ruled
+%  \captionof{algorithm}{Solving the \SSPWE{} problem}\label{sspwe-algo}
+%  \vspace{-.02\linewidth}
+%  \offinterlineskip\hrulefill
+\begin{algorithm}[H]
+\caption{Solving the \SSPWE{} problem}\label{sspwe-algo}
 \begin{enumerate}
   \item We compute the unfolding of $\mathcal{M}$ from $s$ up to the cost threshold $\ell_1$, i.e., $\mathcal{M}_{\ell_1}$ with state space $S_{\ell_1}$.
-  %\item We compute $\mathbb{A}: S \times \{0, \dots, \ell_1\} \cup \{\bot\} \rightarrow A$, for each state of $S_{\ell_1}$, yielding the set of \textit{safe actions} allowing to surely go to a successor being in the set of attractors of $T_{\ell_1} = \{ (s, v) \in S_{\ell_1} \; | \; s \in T \, \wedge \, v \leq \ell_1 \}$.
-  \item Then, we compute the set of \textit{safe actions} allowing each state in $S_{\ell_1}$ to surely go to a successor being in the set of attractors of
-  $T_{\ell_1} = \{ (s, v) \in S_{\ell_1} \; | \; s \in T \, \wedge \, v \leq \ell_1 \}$.
-  More formally, we compute \[\mathbb{A}: S_{\ell_1} \rightarrow 2^A, \, (s, v) \mapsto \{ \alpha \in A(s) \; | \; \forall (s', v') \in Succ((s, v), \, \alpha), \, \mathbb{P}^{\max}_{(s', v')}(\Diamond T_{\ell_1}) = 1 \}\]
+  %\item We compute $\mathbb{A}: S \times \{0, \dots, \ell_1\} \cup \{\bot\} \rightarrow A$, for each state of $S_{\ell_1}$, yielding the set of \textit{safe actions} allowing to surely go to a successor being in the attractor of $T_{\ell_1} = \{ (s, v) \in S_{\ell_1} \; | \; s \in T \, \wedge \, v \leq \ell_1 \}$.
+  \item Then, we compute the set of \textit{safe actions} allowing each state in $S_{\ell_1}$ to surely go to a successor being in the attractor of
+  $T_{\ell_1} = \{ (s, v) \in S_{\ell_1} \; | \; s \in T \, \wedge \, v \leq \ell_1 \}$, whatever the action chosen in this set by any strategy for $\mathcal{M}_{\ell_1}$.
+  More formally, we compute $\mathbb{A}: S_{\ell_1} \rightarrow 2^A$, \[ (s, v) \mapsto \{ \alpha \in A(s) \; | \; \forall (s', v') \in Succ((s, v), \, \alpha), \, (s', v') \in \Attr(T_{\ell_1}) \}\]
   for all states $(s, v) \in S_{\ell_1}$. Thus, for each state $(s, v) \in S_{\ell_1}$, $\mathbb{A}(s, v)$
-  is the set of actions $\alpha \in A(s)$ ensuring to reach $T_{\ell_1}$ from $(s, v)$ regardless of the evolution of $\mathcal{M}_{\ell_1}$ by the uncertainty associated with the probabilities.
-  \item Next, we compute $\mathcal{M}^\mathbb{A}_{\ell_1}$, the unfolding of $\mathcal{M}$ up to $\ell_1$ restricted by the set of attractors of $T_{\ell_1}$. The key idea is that we remove the states $(s, v)$ such that $\mathbb{A}(s, v) = \emptyset$ from $\mathcal{M}_{\ell_1}$. More formally,
+  is the set of actions $\alpha \in A(s)$ ensuring to almost surely reach $T_{\ell_1}$ from $(s, v)$.
+  \item Next, we compute $\mathcal{M}^\mathbb{A}_{\ell_1}$, the unfolding of $\mathcal{M}$ up to $\ell_1$ restricted by the attractor of $T_{\ell_1}$. The key idea is that we remove the states $(s, v)$ such that $\mathbb{A}(s, v) = \emptyset$ from $\mathcal{M}_{\ell_1}$. More formally,
   we define $\mathcal{M}^\mathbb{A}_{\ell_1} = (S^\mathbb{A}_{\ell_1}, \mathbb{A}^*, \Delta^*_{\ell_1}, w, AP, L_{\ell_1})$ as follows:
   \begin{itemize}
     \item $S^\mathbb{A}_{\ell_1} = \{ (s, v) \in S_{\ell_1} \; | \; \mathbb{A}(s, v) \neq \emptyset \, \vee \, (s, v) \in T_{\ell_1} \}$,
-    \item $\mathbb{A}$ is the set of action of this unfolding such that, for all action $\alpha \in A$, $\alpha \in \mathbb{A}^*$, and the set of enabled actions of each state $(s, v) \in S^\mathbb{A}_{\ell_1}$ is given by %$\mathbb{A}(s, v)$ if $\mathbb{A}(s, v) \neq \emptyset$ and a singleton containing an arbitrary action $\alpha \in A(s)$ else,
+    \item $\mathbb{A}^*$ is the set of action of this unfolding such that, for all action $\alpha \in A$, $\alpha \in \mathbb{A}^*$, and the set of enabled actions of each state $(s, v) \in S^\mathbb{A}_{\ell_1}$ is given by %$\mathbb{A}(s, v)$ if $\mathbb{A}(s, v) \neq \emptyset$ and a singleton containing an arbitrary action $\alpha \in A(s)$ else,
     \[
       \mathbb{A}^*(s, v) = \begin{cases}
         \mathbb{A}(s, v) & \text{if } \mathbb{A}(s, v) \neq \emptyset, \, \\
         \{\alpha\}, \; \text{where } \alpha \in A(s) & \text{else},
       \end{cases}
     \]
-    \item $\Delta^*_{\ell_1}$ is defined as for the classical unfolding $\mathcal{M}_{\ell_1}$, except for $(s, v)$ such that $\mathbb{A}(s, v) = \emptyset$, where $\Delta^*_{\ell_1}((s, v),\, (s, v)) = 1$ and $\Delta^*_{\ell_1}((s, v), \, (s', v')) = 0$ if $(s', v') \neq (s, v)$.
-    \item $w, \, AP, \, L_{\ell_1}$ are defined as for the classical unfolding $\mathcal{M}_{\ell_1}$.
+    \item $\Delta^*_{\ell_1}$ is defined the same way as for the classical unfolding $\mathcal{M}_{\ell_1}$, except for $(s, v)$ such that $\mathbb{A}(s, v) = \emptyset$, where $\Delta^*_{\ell_1}((s, v),\, \alpha, \, (s, v)) = 1$ and $\Delta^*_{\ell_1}((s, v), \, \alpha, \, (s', v')) = 0$ if $(s', v') \neq (s, v)$, for $\alpha \in \mathbb{A}^*(s, v)$.
+    \item $L_{\ell_1}$ is defined as for the classical unfolding $\mathcal{M}_{\ell_1}$.
   \end{itemize}
   Note that we define $\mathbb{A}^*$ and $\Delta_{\ell_1}^*$ this way because we must handle the case of $(s, v) \in T_{\ell_1}$ and $\mathbb{A}(s, v) = \emptyset$.
   \item Finally, we solve the \SSPE{} problem in $\mathcal{M}^\mathbb{A}_{\ell_1}$ for the state $(s, 0)$, the subset of target states $T_{\ell_1}$, and the cost threshold $\ell_2$.
 \end{enumerate}
-$ $\\
-\kern2pt\hrule\relax% \@fs@post for \@fs@ruled
-\end{center}
-\par
+\end{algorithm}
+%$ $\\
+%\kern2pt\hrule\relax% \@fs@post for \@fs@ruled
+%\end{center}
+%\par
 Let $(s, v) \in S_{\ell_1}$, the set of safe actions of $(s, v)$, i.e., $\mathbb{A}(s, v)$, can be computed recursively
-% with the function $\mathbb{A}_i$, for $i \in \mathbb{N}$, %corresponding to the set of actions ensuring to reach a \textit{safe state} in $i$ steps (i.e., a state in the set of attractors of $T_{\ell_1}$),
+% with the function $\mathbb{A}_i$, for $i \in \mathbb{N}$, %corresponding to the set of actions ensuring to reach a \textit{safe state} in $i$ steps (i.e., a state in the attractor of $T_{\ell_1}$),
 %that is defined
 as follows:
-\[
+\begin{equation}
   \mathbb{A}_0(s, v) = \begin{cases}
     A(s) & \text{if }v \leq \ell_1,\\
-    \emptyset & \text{else},
-  \end{cases}
-\]
-then, let $i \in \mathbb{N}$, assume that $\mathbb{A}_i$ has already been computed,
-\[
+    \emptyset & \text{else}.
+  \end{cases} \label{attractor-set-init}
+\end{equation}
+Then, let $i \in \mathbb{N}$, assume that $\mathbb{A}_i$ has already been computed,
+\begin{equation}
   \mathbb{A}_{i+1}(s, v) = \{ \alpha \in \mathbb{A}_i(s, v) \; | \;
     \forall (s', v') \in Succ( (s, v), \alpha ) \setminus T_{\ell_1}, \; \mathbb{A}_i(s', v') \neq \emptyset \}.
-\]
+    \label{attractor-set}
+\end{equation}
 %The key idea behind this definition is that
 %$\mathbb{A}_i(s,v)$ is the set of enabled actions of $(s, v)$ ensuring to not reach a \textit{bad state} in at most $i$ transitions.
 The key idea behind this definition of $\mathbb{A}_i$ is that we inductively disable the unsafe enabled actions of all states.
@@ -248,7 +263,7 @@ We consider that a state that has no more enabled action is a \textit{bad state}
 At the initialisation, i.e., at $i=0$, all enabled actions of each state are safe except if the current cost of a state has exceeded the threshold $\ell_1$. In that case, this state is a bad state.
 %Then, we inductively consider the successors  of $(s, v)$ reachable in $i$ steps from the current state $(s, v)$ and inductively remove the enabled actions of $(s, v)$ ensuring to reach a bad states from one of these successors, in at most $i$ steps.
 %Then, we inductively increase the scope of successors considered up to a \textit{bad state}, i.e., a state exceeding the cost $\ell_1$. Each action
-By induction, at each step and for each state $(s, v)$,
+By induction on $i$, at each step and for each state $(s, v)$,
 %By induction, at the step $i$,
 we disable the actions $\alpha$
 %of each state
@@ -264,10 +279,41 @@ that risk to lead $(s, v)$ to one of its $\alpha$-successor considered as a bad 
   \end{minipage}
   \caption{Intuition of the recursive computation of $\mathbb{A}$}
 \end{figure}
+%The way we compute $\mathbb{A}$ is actually an adaptation of the method used to compute the largest set $S_{=1} = \{ s \in S \; | \; \mathbb{P}^{\max}_s(\Diamond T) = 1 \}$ (cf. Algorithm \ref{prMax1} from Subsection \ref{temp-event-mdp}).
+%Computing $\mathbb{A}$ this way actually particularises Algorithm \ref{prMax1} for $\mathcal{M}_{\ell_1}$ and rather return actions leading to attractors of $T_{\ell_1}$, in order to build $\mathcal{M}^\mathbb{A}_{\ell_1}$ and solve the \SSPE{} problem in it.
 
-The way we compute $\mathbb{A}$ is actually the same
-as when we compute the largest set $S_{=1} = \{ s \in S \; | \; \mathbb{P}^{\max}_s(\Diamond T) = 1 \}$ (cf. algorithm \ref{prMax1} from Appendix \ref{LP-app}).
-Computing $\mathbb{A}$ this way particularises the algorithm \ref{prMax1} for $\mathcal{M}_{\ell_1}$ to only keep the actions leading to attractors of $T_{\ell_1}$, in order to build $\mathcal{M}^\mathbb{A}_{\ell_1}$ and solve the \SSPE{} problem in it.
+\noindent Inspired by Algorithm \ref{prMax1} from Subsection \ref{temp-event-mdp}, we build a matrix $\mathbb{A}$ with algorithm \ref{safe-actions-algorithm}.
+
+\input{algo-attr.tex}
+
+\begin{lemma}[Correctness of Algorithm \ref{safe-actions-algorithm}]
+  Algorithm \ref{safe-actions-algorithm} is exact and computes $\mathbb{A}$.
+\end{lemma}
+
+\begin{proof2}
+The construction of $\mathbb{A}$ by Algorithm \ref{safe-actions-algorithm} exactly behaves like the recursive computation of $\mathbb{A}$, but allows to only consider the interesting states at each step instead of always checking all states of the system.
+The key idea behind this algorithm is that we remember at each iteration $i$ which states $(s',v')$ become bad states, in order to remove at iteration $i+1$ all enabled actions $\alpha$ from each state $(s, v)$ such that a bad state $(s', v')$ is in the set of $\alpha$-successors of $(s, v)$. \\
+More formally, we prove that $\mathbb{A}$ is equal to $\mathbb{A}_i$ at each iteration $i$ of the algorithm.
+\par At the initialisation, i.e., at $i=0$,
+we initialise $\mathbb{A}$ with $\{s_\bot\}$ (lines \ref{attr1} to \ref{attr3}), what exactly agrees with $\mathbb{A}_0$ (cf. Equation \ref{attractor-set-init}).
+Indeed, by definition of $\mathcal{M}_{\ell_1}$, being the unfolding of $\mathcal{M}$ up to $\ell_1$, the state $s_\bot$ exactly captures all the states for which the threshold $\ell_1$ have been exceeded.
+Note that we additionally initialise a variable $U$ with $\{s_\bot\}$ (line \ref{attr4}).\\
+Then, let $i \in \mathbb{N}_0$, we assume that $\mathbb{A}(s, v) = \mathbb{A}_i(s, v)$ for all states $(s, v) \in S_{\ell_1}$ at iteration $i$.
+Moreover, we assume that all bad states $(s', v')$ of $\mathbb{A}_i$ such that $\mathbb{A}_i(s', v')=\emptyset$ are strictly in $U$ at iteration $i$, i.e., \[U = U_i = \{(s', v') \in S_{\ell_1} \; | \; \mathbb{A}_i(s', v') = \emptyset \; \wedge \; \mathbb{A}_{i-1}(s', v') \neq \emptyset \}.\]
+We are going to proof that $\mathbb{A}(s, v) = \mathbb{A}_{i+1}(s, v)$ and that $U = U_{i+1}$ at the end of the iteration $i+1$.\\
+Let $R$ be a new set strictly containing all states of $U_i$ (line \ref{attr5}).
+For all bad states $(s', v')$ of $R$, we start by removing $(s', v')$ from $U$ and $R$ (lines \ref{attr6} and \ref{attr7}).  {\color{umons-red}(*)}\\
+For each predecessor of each state removed from $U$, i.e., for each $((s, v), \alpha) \in Pred((s', v'))$ such that $(s', v') \not \in T_{\ell_1}$ and $\alpha \in \mathbb{A}(s, v)$, we remove $\alpha$ from $\mathbb{A}(s, v)$, i.e., we remove each action $\alpha \in \mathbb{A}(s, v)$ such that there is a bad state $(s', v') \in Succ((s, v), \alpha) \setminus T_{\ell_1}$, where $\mathbb{A}_i(s', v') = \emptyset$
+(lines \ref{attr8} and \ref{attr9}).
+ {\color{umons-red}(**)}\\
+Finally, following this modification of $\mathbb{A}$, if $\mathbb{A}(s, v) = \emptyset$, we add $(s, v)$ in $U$ (line \ref{attr10}). {\color{umons-red}(***)}\\
+First, by {\color{umons-red}(**)}, we exactly have that $\mathbb{A}(s, v) = \mathbb{A}_{i+1}(s, v)$, for all $(s, v) \in S_{\ell_1}$ (cf. Equation \ref{attractor-set}). Indeed, at iteration $i+1$, \[\mathbb{A}(s, v) = \mathbb{A}_{i}(s, v) \setminus
+\{ \alpha \in \mathbb{A}_{i}(s, v) \; | \; \forall (s', v') \in Succ((s, v), \alpha) \setminus T_{\ell_1}, \, (s', v') \in U_i\},\]
+for all $(s, v) \in S_{\ell_1}$.\\
+By {\color{umons-red}(*)}, when $R$ is empty (line \ref{attr13}), all bad states of $U_i$ have been considered, i.e., we have removed each state $(s', v')$ such that $\mathbb{A}_{i}(s, v) = \emptyset$ from $U$.
+Then, by {\color{umons-red}(***)}, we have that $U$ equals to $U_{i+1} = \{(s', v') \in S_{\ell_1} \; | \; \mathbb{A}_{i+1}(s', v') = \emptyset \; \wedge \; \mathbb{A}_{i}(s', v') \neq \emptyset  \}$.
+
+\end{proof2}
 
 \begin{theorem}[\textbf{\textit{Solving the \SSPWE{} problem}}]
   The \SSPWE{} problem can be decided in pseudo-polynomial time in the size of $\mathcal{M}$ and in the size of the length of $\ell_1$.
@@ -278,19 +324,20 @@ By definition, the size of the set $\mathbb{A}_i$ is decreasing with $i$, i.e., 
 \[
   | \mathbb{A}_i | \geq | \mathbb{A}_{i+1} |.
 \]
-By construction, the underlying graph of the unfolding of $\mathcal{M}$ up to $\ell_1$ is a directed acyclic graph (i.e., a DAG). Moreover, the weight of each action is a strictly positive integer. Then, there is no cycle in $\mathcal{M}_{\ell_1}$ and each state reach $T_{\ell_1}$ in at most $\ell_1$ transitions (this worst case corresponds to the case of $w(\alpha)=1$ for all $\alpha \in A$).
-The time complexity of the construction of $\mathbb{A}$ is thus polynomial in the size of $\mathcal{M}_{\ell_1}$ (more precisely in $\mathcal{O}(\ell_1 \times |S_{\ell_1}|) = \mathcal{O}(\ell_1^2 \times |S|)$), and is thus pseudo-polynomial in the size of $\mathcal{M}$ and in the size of the length of $\ell_1$. Then, as solving the \SSPE{} problem in $\mathcal{M}^\mathbb{A}_{\ell_1}$ is polynomial in the size of $\mathcal{M}^\mathbb{A}_{\ell_1}$,
+%By construction, the underlying graph of the unfolding of $\mathcal{M}$ up to $\ell_1$ is a directed acyclic graph (i.e., a DAG). Indeed, the weight of each action is a strictly positive integer. Then, there is no cycle in $\mathcal{M}_{\ell_1}$ and each state reach $T_{\ell_1}$ in at most $\ell_1$ transitions (this worst case corresponds to the case of $w(\alpha)=1$ for all $\alpha \in A$).
+The time complexity of the construction of $\mathbb{A}$ is polynomial in the size of $\mathcal{M}_{\ell_1}$, and is thus pseudo-polynomial in the size of $\mathcal{M}$ and in the length of $\ell_1$.
+So, as solving the \SSPE{} problem in $\mathcal{M}^\mathbb{A}_{\ell_1}$ is polynomial in the size of $\mathcal{M}^\mathbb{A}_{\ell_1}$,
 the entire algorithm presented to solve this problem is pseudo-polynomial in the size of $\mathcal{M}$ and in the size of the length of $\ell_1$.
 Furthermore, as the strategy solving the \SSPE{} problem in $\mathcal{M}_{\ell_1}^\mathbb{A}$ is memoryless in $\mathcal{M}_{\ell_1}^\mathbb{A}$, it requires pseudo-polynomial memory in $\mathcal{M}$ (intuitively, the strategy has $\ell_1 + 1$ modes).
 
 \begin{example}[\textit{\SSPWE{} problem in the wireless sensor network}]
-  Again, get back to Example \ref{main-example}.
+  Again, we get back to Example \ref{main-example}.
   We consider the MDP $\mathcal{M}$ of Figure \ref{sensor_net_mdp}. As in Example \ref{spg-example}, we are interested by a strategy ensuring a duty cycle of $12$ $ms$ for the node $n_0$, but at the same time ensuring a minimal expected time to reach the \textit{sleep} state, allowing it to go to sleep as soon as possible.
   Assume that we are interested by the following \SSPWE{} problem:
   \[
     ?\exists \sigma \; \;  \mathbb{P}^\sigma_{s_0}(\Diamond \{s_2\}) \leq 12 \; \wedge \; \mathbb{E}^\sigma_{s_0}(\TS^{\{s_2\}}) \leq 6,
   \]
-  where $6$ $ms$ is half the time of the duty cycle that we want to ensure. First, we begin by unfolding $\mathcal{M}$ from $s_0$ up to the cost threshold $12$ (cf. Figure \ref{unfolding-sspwe}), yielding the MDP $\mathcal{M}_{\ell_1}$.
+  where $6$ $ms$ is half the time of the duty cycle that we want to ensure. First, we begin by unfolding $\mathcal{M}$ from $s_0$ up to the cost threshold $\ell_1 = 12$ (cf. Figure \ref{unfolding-sspwe}), yielding the MDP $\mathcal{M}_{\ell_1}$.
   \begin{figure}[h]
     \centering
     \includegraphics[width=0.9\linewidth]{resources/main-example-unfolding}
@@ -301,7 +348,7 @@ Furthermore, as the strategy solving the \SSPE{} problem in $\mathcal{M}_{\ell_1
   \begin{table}[h]
   \centering
 \begin{tabular}{l|cccccc}
-$S_{12}$          & \multicolumn{1}{l}{$i=0$} & \multicolumn{1}{l}{$i=1$}                                  & \multicolumn{1}{l}{$i=2$}  & \multicolumn{1}{l}{$i=3$}  & \multicolumn{1}{l}{$i=4$} & \multicolumn{1}{l}{$i=5$} \\ \hline
+$S_{\ell_1}$          & \multicolumn{1}{l}{$i=0$} & \multicolumn{1}{l}{$i=1$}                                  & \multicolumn{1}{l}{$i=2$}  & \multicolumn{1}{l}{$i=3$}  & \multicolumn{1}{l}{$i=4$} & \multicolumn{1}{l}{$i=5$} \\ \hline
 $s_0, \, 0$  & $\alpha_0, \alpha_1$      & $\alpha_0, \alpha_1$                                       & $\alpha_0, \alpha_1$       & $\alpha_0, \alpha_1$       & $\alpha_0, \alpha_1$      & $\alpha_0, \alpha_1$      \\
 $s_1, \, 2$  & $\alpha_2$                & $\alpha_2$                                                 & $\alpha_2$                 & $\alpha_2$                 & $\alpha_2$                & $\alpha_2$                \\
 $s_2, \, 2$  & $\alpha_3$                & $\alpha_3$                                                 & $\alpha_3$                 & $\alpha_3$                 & $\alpha_3$                & $\alpha_3$                \\
@@ -319,21 +366,21 @@ $s_\bot$     & $\varnothing$             & $\varnothing$                        
   \caption{Computation of $\mathbb{A}_i$ by dynamic programming}
   \label{my-table2}
 \end{table}
-Then, we compute iteratively $\mathbb{A}_i$ until reaching an index $i^*$ such that $\mathbb{A}_{i^*} = \mathbb{A}_{i^*+1}$ (all sets $\mathbb{A}_{j}(s, v)$ such that $j \geq i^*$ are equal to $\mathbb{A}_{i^*}(s, v)$ for $(s, v)\in S_{\ell_1}$), and we have $\mathbb{A} = \mathbb{A}_{i^*}$.
+Then, we compute iteratively $\mathbb{A}_i$ until reaching an index $i^*$ such that $\mathbb{A}_{i^*} = \mathbb{A}_{i^*+1}$ (all sets $\mathbb{A}_{j}(s, v)$ such that $j \geq i^*$ are equal to $\mathbb{A}_{i^*}(s, v)$ for $(s, v)\in S_{\ell_1}$), and we thus have $\mathbb{A} = \mathbb{A}_{i^*}$.
 In our case, we compute $\mathbb{A}_i$ by dynamic programming (cf. Table \ref{my-table2}), and we see that $\mathbb{A}_4=\mathbb{A}_5$. Thus, we have $\mathbb{A} = \mathbb{A}_4$.
 Finally, we limit $\mathcal{M}_{\ell_1}$ to the safe actions of $\mathbb{A}$, yielding the MDP $\mathcal{M}_{\ell_1}^\mathbb{A}$ (cf. Figure \ref{safe_actions}).
-We solve the \SSPE{} problem in $\mathcal{M}_{\ell_1}^\mathbb{A}$ for $s_0$, the set of target states $T_{\ell_1} = \{(s_3, 4), \, (s_3, 8), \, (s_3, 12)\}$, and the cost threshold $\ell_2$.
-\begin{figure}[h]
+We solve the \SSPE{} problem in $\mathcal{M}_{\ell_1}^\mathbb{A}$ for $s_0$, the set of target states $T_{\ell_1} = \{(s_3, 4), \, (s_3, 8), \, (s_3, 12)\}$, and the cost threshold $\ell_2 = 6$.
+\begin{figure}[h!]
   \centering
   \includegraphics[width=0.8\linewidth]{resources/main-example-unfoldingA}
   \caption{$\mathcal{M}_{\ell_1}$ limited to safe actions of $\mathbb{A}$}
   \label{safe_actions}
 \end{figure}
-In $\mathcal{M}_{\ell_1}^\mathbb{A}$, we can easily compute the minimal expected cost-to-target for $T_{\ell_1}$ since there is actually only one nondeterministical choice in $\mathcal{M}_{\ell_1}^\mathbb{A}$: either the strategy chooses $\alpha_0$ for the state $(s_0, 0)$ and the expected cost-to-target corresponding to this choice is $8$, or it chooses $\alpha_1$ (we denote this strategy $\sigma^{\alpha_1}$), and the expected cost-to-target is
+In $\mathcal{M}_{\ell_1}^\mathbb{A}$, we can easily compute the minimal expected cost-to-target for $T_{\ell_1}$ since there is actually only one nondeterministical choice: either the strategy chooses $\alpha_0$ for the state $(s_0, 0)$ and the expected cost-to-target corresponding to this choice is $8$, or it chooses $\alpha_1$ (we denote this strategy $\sigma_{\alpha_1}$), and the expected cost-to-target is
 \[
-  \mathbb{E}^{\sigma^{\alpha_1}}_{(s_0, 0)}(\TS^{T_{\ell_1}}) = \frac{7}{8} \cdot 4 + \frac{1}{8} \cdot 12 = 5.
+  \mathbb{E}^{\sigma_{\alpha_1}}_{(s_0, 0)}(\TS^{T_{\ell_1}}) = \frac{7}{8} \cdot 4 + \frac{1}{8} \cdot 12 = 5.
 \]
-Thus, the minimal expected cost from $s$ to $T$ while ensuring to reach $T$ with probability one is $5 \leq 6$, and thus the \SSPWE{} problem is solved. The optimal pure memoryless strategy $\sigma^{\alpha_1}$ in $\mathcal{M}_{\ell_1}^\mathbb{A}$ corresponds
+Thus, the minimal expected cost from $s$ to $T$ while ensuring to reach $T$ with probability one is $5 \leq 6$, and thus the \SSPWE{} problem is solved. The optimal pure memoryless strategy $\sigma_{\alpha_1}$ in $\mathcal{M}_{\ell_1}^\mathbb{A}$ corresponds
 in $\mathcal{M}$ to the memory strategy trying once $\alpha_1$, and then choosing $\alpha_0$ if it has failed, i.e., trying once a direct sending to the node $n_2$, and then sending the message via the intermediate node $n_1$ if it has failed.
 \end{example}
 
@@ -431,11 +478,11 @@ These three choices lead to the three Pareto optimal  vectors
 $(0, 0.6)$, $(0.5, 0.5)$, and $(0.8, 0)$.
 Indeed, none of these vectors can be dominated by
 another vectors yielded from another strategies.
-The three vertices of the Pareto curve of Figure \ref{pareto-curve-example}, describe these three Pareto optimal vectors.
+The three vertices of the Pareto curve of Figure \ref{pareto-curve-example} describe these three Pareto optimal vectors.
 \end{example}
 
 
-\subsection{Randomised strategies}
+\subsection{Randomised strategies} \label{randomised-strategies}
 Before detailing an algorithm to solve the \MOSR{} problem for a given state and given reachability properties in an MDP, we are going to interest us in type of strategies required for such a problem.
 Indeed, let $\mathcal{M}$ be the MDP of Figure \ref{MDP-memory-1} and consider the \MOSR{} problem $\mathcal{Q}:= ?\exists \sigma \; \bigwedge_{i=1}^3 \mathbb{P}^\sigma_{s_0}(\Diamond T_i) = 1$.
 It is clear that this problem requires memory.
@@ -474,11 +521,11 @@ Such strategies, choosing actions randomly, are \textit{randomised strategies}.
 In fact, getting back to Example \ref{pareto-example}, points on the dotted line of the Pareto curve of Figure \ref{pareto-curve-example} refer to strategies using randomisation.
 
 \begin{definition}[\textbf{Randomised finite-memory strategies}]
-  Let \sloppy $\mathcal{M}={(S, A, \Delta, w, AP, L)}$ be an MDP. A \textit{finite-memory randomised strategy} $\sigma = (Q, \sigma_\alpha, \delta, \delta_0)$ is a \textit{stochastic Moore machine}, where
+  Let \sloppy $\mathcal{M}={(S, A, \Delta, w, AP, L)}$ be an MDP. A \textit{finite-memory randomised strategy} $\sigma = (Q, \sigma_{act}, \delta, \delta_0)$ is a \textit{stochastic Moore machine}, where
   \begin{itemize}
     %\item $Q, \delta, \delta_0$ are defined the same way as for pure finite-memory strategies, and
     \item $Q$ is a finite set of \textit{modes},
-    \item $\sigma_\alpha: Q \times S \rightarrow \mathcal{D}(A)$ is the \textit{stochastic next action function} giving, for each $s \in S$, a probability distribution on actions of $A(s)$ following a mode $q \in Q$ in which the machine is currently,
+    \item $\sigma_{act}: Q \times S \rightarrow \mathcal{D}(A)$ is the \textit{stochastic next action function} giving, for each $s \in S$, a probability distribution on actions of $A(s)$ following a mode $q \in Q$ in which the machine is currently,
     \item $\delta: Q \times S \rightarrow \mathcal{D}(Q)$ is the \textit{stochastic transition function},
     \item $\delta_0: S \rightarrow Q$ is the \textit{initialisation function}, defined as for the pure strategy, giving the initial mode $q \in Q$, following a state $s \in S$ from which the machine is initialised.
   \end{itemize}
@@ -487,7 +534,7 @@ In fact, getting back to Example \ref{pareto-example}, points on the dotted line
 According to this definition, the probability distribution defined on the successors of each state $s$ of a Markov chain induced by such a strategy additionally depends on the probability distribution defined on enabled actions of $s$ given by the stochastic next action function as well as the probability distribution defined on modes of the Moore Machine given by the stochastic transition function.
 
 \begin{definition}[\textbf{Markov chain induced by a randomised finite-memory strategy}]
-  Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be an MDP and $\sigma=(Q, \sigma_\alpha, \delta, \delta_0)$ be a randomised finite-memory strategy for $\mathcal{M}$.
+  Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be an MDP and $\sigma=(Q, \sigma_{act}, \delta, \delta_0)$ be a randomised finite-memory strategy for $\mathcal{M}$.
   The product of $\mathcal{M}$ by $\sigma$ is given by
   \[
     \mathcal{M} \times \sigma = \mathcal{M}^\sigma = (S \times Q, \Delta^\sigma, AP, L^\sigma)
@@ -495,7 +542,7 @@ According to this definition, the probability distribution defined on the succes
   where $\mathcal{M}^\sigma$ is the MC induced by the randomised finite-memory strategy $\sigma$ and where, for all states $s, s' \in S$, and for all modes $q, q' \in Q$,
   \begin{itemize}
     \item $\Delta^\sigma((s, q), (s', q')) =
-    \delta(q, s)(q') \cdot \sum_{\alpha \in A(s)} \sigma_\alpha(q, s)(\alpha) \cdot \Delta(s, \alpha, s')$
+    \delta(q, s)(q') \cdot \sum_{\alpha \in A(s)} \sigma_{act}(q, s)(\alpha) \cdot \Delta(s, \alpha, s')$
     \item $L^\sigma(s, q) = L(s)$.
   \end{itemize}
 \end{definition}
@@ -505,7 +552,7 @@ According to this definition, the probability distribution defined on the succes
   Indeed, the weight of a transition depends on the action chosen by the strategy. Here, as actions are chosen randomly following a probability distribution defined on enabled actions of each state, this information is lost in the induced MC.
   It is however possible to define a weight function
   \[
-    \overline{w}^\sigma: (S \times Q)^2 \rightarrow \mathbb{Q}_{>0}, \; ((s, q), (s', q')) \mapsto \delta(q, s)(q') \cdot \sum_{\alpha \in A(s)} \sigma_{\alpha}(q, s)(\alpha) \cdot w(\alpha),
+    \overline{w}^\sigma: (S \times Q)^2 \rightarrow \mathbb{Q}_{>0}, \; ((s, q), (s', q')) \mapsto \delta(q, s)(q') \cdot \sum_{\alpha \in A(s)} \sigma_{act}(q, s)(\alpha) \cdot w(\alpha),
   \]
   referring to the expected weight of each transition in the induced MC, but this definition is irrelevant in this context.
 \end{remark}
@@ -520,7 +567,7 @@ These randomised strategies are \textit{memoryless}.
   $ giving, following a state $s \in S$, a probability distribution defined on the enabled action of $s$.
 \end{definition}
 
-\subsection{Multi-objective reachability with absorbing target \sloppy states}
+\subsection{Multi-objective reachability with absorbing target \sloppy states} \label{MOSR-absorbing}
 
 In this subsection, we present an efficient way to solve an \MOSR{} problem where the set of target states are only composed of absorbing states. More formally, let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be an MDP, and
 $
@@ -649,7 +696,7 @@ and $\mathcal{Q}_{s^*, r}$ be the \MOSR{} problem for the state $s^* \in S$ and 
 \end{proof2}
 
 \subsection{General multi-objective reachability}
-We have presented a way to solve a \MOSR{} problem involving only sets of absorbing target states.
+We have presented a way to solve an \MOSR{} problem only involving sets of absorbing target states.
 We present in this section a more general approach, without the absorbing restriction for target states.\\
 
 Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be an MDP, and
@@ -657,32 +704,54 @@ $
   \mathcal{Q}_{s^*, r} := \,?\exists \sigma\; \bigwedge_{i=1}^r \mathbb{P}^\sigma_{s^*}(\Diamond T_i) \geq \alpha_i
 $
 be a \MOSR{} problem for $s^* \in S$, $r \in \mathbb{N}$, $(T_i)_{i \in \{1, \dots, r\}} \subseteq S^r$, and $\alpha \in ([0, 1] \cap \mathbb{Q})^r$.
-The technique we use to solve $\mathcal{Q}_{s^*, r}$ is inspired of which used in \cite{DBLP:journals/lmcs/EtessamiKVY08} to solve a multi-objective model-checking query for multiple \textit{$\omega$-regular properties} by doing the product of $\mathcal{M}$ with multiple \textit{Büchi automata} representing these properties. \\
-%This technique requires to introduce the notion of
+The technique we use to solve $\mathcal{Q}_{s^*, r}$ is inspired of which used in \cite{DBLP:journals/lmcs/EtessamiKVY08} to solve a multi-objective model-checking query for multiple \textit{$\omega$-regular properties} by doing the product of $\mathcal{M}$ with multiple \textit{Büchi automata} representing these properties.
+Our technique requires to introduce the notion of
 %\textit{transition table} and
-%\textit{end-components} of an MDP.
+\textit{end-components} of an MDP \cite{PMC}.
 
 % \begin{definition}[\textbf{Deterministic transition table}]
 %   A \textit{deterministic transition table} is a tuple $\tau = (\Sigma, Q, \delta)$, where $\Sigma$ is a finite alphabet, $Q$ is a finite set of states
 %   and $\delta: S \times \Sigma \rightarrow S$ is a transition function.
 % \end{definition}
 
-% \begin{definition}[\textbf{End component}]
-%   An \textit{end-component} (EC, for short) of $\mathcal{M}$ is an MDP $\mathcal{C}=(S^*, A^*, \Delta^*)$ such that
-%   \begin{itemize}
-%     \item $S^* \subseteq S$ and $S^* \neq \emptyset$,
-%     \item for all $s \in S^*$, $A^*(s) \subseteq A(s)$, $A^*(s) \neq \emptyset$, and
-%       for each $\alpha \in A^*(s)$, $s' \in S$,
-%       %$\Delta(s, \alpha, s') > 0 \implies s' \in S^*(s)$,
-%       $Succ(s, \alpha) \subseteq S'$,
-%     \item $\Delta^* = \Delta |_{S' \times A'}$, and
-%     \item $\mathcal{C}$ is \textit{strongly connected}, i.e., there exists a path in $\mathcal{C}$ between any pair of states in $S'$.
-%   \end{itemize}
-%   $\mathcal{C}$ is a \textit{maximal end-component} if there is no end-component
-%   $\mathcal{C}'=(S', A', \Delta')$ such that $(S^*, A^*) \neq (S', A')$ and $S^* \subseteq S'$ and $A^*(s) \subseteq A'(s)$ for all $s \in S^*$.
-%   We let \MEC{}($\mathcal{M}$) denote the set of maximal ECs of $\mathcal{M}$, computable in polynomial time in the size of $\mathcal{M}$ \cite{PMC}.
-% \end{definition}
-%
+\begin{definition}[\textbf{End component}]
+  An \textit{end-component} (EC, for short) of an MDP $\mathcal{M} = (S, A, \Delta, w, AP, L)$ is an MDP $\mathcal{C}=(S^*, A^*, \Delta^*)$ such that
+  \begin{itemize}
+    \item $S^* \subseteq S$ and $S^* \neq \emptyset$,
+    \item for all $s \in S^*$, $A^*(s) \subseteq A(s)$, $A^*(s) \neq \emptyset$, and
+      for each $\alpha \in A^*(s)$,
+      %$\Delta(s, \alpha, s') > 0 \implies s' \in S^*(s)$,
+      $Succ(s, \alpha) \subseteq S^*$,
+    \item $\Delta^* = \Delta |_{S^* \times A^*}$, and
+    \item $\mathcal{C}$ is \textit{strongly connected}, i.e., there exists a path in $\mathcal{C}$ between any pair of states in $S'$.
+  \end{itemize}
+\end{definition}
+
+\begin{definition}[\textbf{Maximal end-component}]
+$\mathcal{C}=(S^*, A^*, \Delta^*)$ is a \textit{maximal end-component} of $\mathcal{M}$ if there is no end-component
+$\mathcal{C}'=(S', A', \Delta')$ such that $(S^*, A^*) \neq (S', A')$ and $S^* \subseteq S'$ and $A^*(s) \subseteq A'(s)$ for all $s \in S^*$.
+We let \MEC{}($\mathcal{M}$) denote the set of maximal ECs of $\mathcal{M}$, computable in polynomial time in the size of $\mathcal{M}$.
+\end{definition}
+The key properties of ECs that we are going to exploit in order to build a satisfying strategy for any \MOSR{} are the following.
+\begin{lemma}[Recurrence property of end components]
+  For end component $\mathcal{C}=(S^*, A^*, \Delta^*)$ of MDP $\mathcal{M}$, there exists a finite-memory strategy $\sigma$ for $\mathcal{M}$
+  such that for any $s \in S^*$:
+  \[
+    \mathbb{P}^{\sigma}_s(\{ \pi \in Paths(s) \; | \; \pi \models \square S^* \; \wedge \; inf(\pi) = S^* \}) = 1.
+  \]
+\end{lemma}
+
+\begin{theorem}[\textbf\textit{{Limiting behaviour of MDPs}}]\label{limit-ec-lemma}
+  For each state $s$ of a finite MDP $\mathcal{M}$ and strategy $\sigma$ for $\mathcal{M}$:
+  \[
+  \mathbb{P}_s^\sigma(\{\pi \in Paths(s) \; | \; inf(\pi) \text{ is the state space of an EC
+  of }\mathcal{M} \} ) = 1,
+  \]
+  i.e., whatever the strategy, each path starting in $s$ ends up in an EC of $\mathcal{M}$ almost surely.
+\end{theorem}
+Thus, any strategy of $\mathcal{M}$ almost surely ensures to reach an EC of $\mathcal{M}$, and once a state of this EC $\mathcal{C}$ is reached in $\mathcal{M}$,
+there exists a strategy that almost surely enforces staying forever in $\mathcal{C}$ while visiting all of its states infinitely often.\\
+
 % \begin{property}\label{ec-strategy}
 % For each end-component $\mathcal{C}=(S^*, A^*, \Delta^*)$ of $\mathcal{M}$, once a state $S^*$ is reached in $\mathcal{M}$,
 % there exists a strategy that almost surely enforce staying forever in $S^*$ while visiting all states in $S^*$ infinitely often.
@@ -718,7 +787,7 @@ In order to solve $\mathcal{Q}_{s^*, r}$, we build a new MDP $\mathcal{M}'=(S', 
   \item $S' \subseteq (S\, \cup\, \{s_0\}) \times \{0, 1\}^r$ is composed of states $(s, q_1, \dots, q_r)$ such that $s \in S$, $(q_1, \dots, q_i) \in \{0, 1\}^r$, intuitively recording through the boolean variable $q_i$ if $T_i$ has been reached along a path starting from $s^*$, for each $i \in \{1, \dots, r\}$.
   We additionally add a dummy state $(s_0, 0, \dots,0)$ in $S'$.
   \item $A' = A \cup \{\alpha_0\}$ and $A'(s, q_1, \dots, q_r) = A(s)$ for all $(s, q_1, \dots, q_r) \in S'$, and $A'(s_0, 0, \dots, 0) = \{\alpha_0\}$.
-  \item $\Delta'$ is a probability transition function, defined as follows: let $x=(s, q_1, \dots, q_r) \in S'$, $x' = (s', q_1', \dots, q'_r) \in S'$, and $\alpha \in A'(x)$
+  \item $\Delta'$ is a probability transition function, defined as follows: let $x=(s, q_1, \dots, q_r) \in S'$, $x' = (s', q_1', \dots, q'_r) \in S'$, and $\alpha \in A'(x)$,
   \[
   \Delta(x, \alpha, x') = \begin{dcases*}
     1 & if $s = s_0$, $s'=s^*$, and $\forall i \in \{1, \dots, q\}$, $\delta_i(q_i, s) = q'_i$, \\
@@ -726,13 +795,30 @@ In order to solve $\mathcal{Q}_{s^*, r}$, we build a new MDP $\mathcal{M}'=(S', 
     0 & otherwise.
   \end{dcases*}
   \]
-  This probability transition function suggests the additional probability one dummy transition $(s_0, 0, \dots, 0) \xrightarrow{\alpha_0} (s^*,\, \delta_1(0, s^*), \dots,\, \delta_r(0, s^*))$.
-  If this transition is not added, $s^*$ is never read by the reachability transition functions, which could be a problem if $s^* \in T_i$ for some $i \in \{1, \dots, r\}$.
+  This probability transition function suggests the additional dummy transition $(s_0, 0, \dots, 0) \xrightarrow{\alpha_0} (s^*,\, \delta_1(0, s^*), \dots,\, \delta_r(0, s^*))$, with probability one.
+  If this transition is not added, $s^*$ is never read by the reachability transition function $\delta_i$, which could be a problem if $s^* \in T_i$ for some $i \in \{1, \dots, r\}$.
 \end{itemize}
 Furthermore, as we consider paths of $\mathcal{M}$ starting from $s^*$, we limit the state space $S'$ with the states reachable from $(s_0, 0, \dots, 0)$.
+
+\begin{definition}[\textbf{Favoured reachability property}]
+  Let $\mathcal{C}=(S^*, A^*, \Delta^*)$ be an EC of $\mathcal{M}$, we say that $\mathcal{C}$ favours a set of reachability property $R \subseteq \{1, \dots, r\}$ if and only if
+    for all $(s, q_1, \dots, q_r) \in S^*$ and for all $i \in R$,  $q_i = 1$.
+\end{definition}
+
+\begin{lemma}[Favoured reachability and property of end-components] \label{lemma-favour}  Let $\mathcal{C} = (S^*, A^*, \Delta^*)$ be an EC of $\mathcal{M}'$, and $(s, q_1, \dots, q_r) \in S^*$ be any state of $\mathcal{C}$, then $\mathcal{C}$ favours all the subsets of $R = \{ i \in \{1, \dots, r\} \; | \; q_i = 1\}$ ($R$ included).
+  Moreover, for all $(s', q'_1, \dots, q'_r) \in S^*$, $q'_i = 0$ for $i \in \{1, \dots, r\} \setminus R$.
+\end{lemma}
+\begin{proof2}
+Let $(s, q_1, \dots, q_r)\in S^*$ be any state of $\mathcal{C}$,  $R = \{ i \in \{1, \dots, r\} \; | \; q_i = 1\}$, $S_R = \{ (s, q_1, \dots, q_r) \in S' \; | \; \forall i \in R, \, q_i = 1 \}$ and $s_R = (s, q_1, \dots, q_r) \in S_R$.
+Actually, by definition of $\Delta'$ and $\delta_i$ for all $i \in \{1, \dots, r\}$, for all $\alpha \in A(s_R)$, $Succ(s_R, \alpha) \subseteq S_R$.
+Thus, as any EC is strongly connected,
+if there exists a state $(s, q_1, \dots, q_r) \in S^*$ such that $q_i = 1$ for all $i \in R$, then $S^* \subseteq S_R$. {\color{umons-red}(1.)} \\
+Moreover, let $i \in \{1, \dots, r \} \setminus R$, and assume we have a state $u = (s, q_1, \dots, q_r) \in S^*$ with $q_i = 0$ such that there exists an $\alpha$-successor $(s', q'_1, \dots, q'_r) \in Succ(u, \alpha)$ for $\alpha \in A^*(s)$, with $q'_i = 1$, then, by {\color{umons-red}(1.)}, $q_i = 1$, that leads a contradiction.
+\end{proof2}
+
 \begin{lemma}[Multiple reachability in $\mathcal{M}'$] \label{MOSR-lemme}
 Defined as above, $\mathcal{M}'$ has the following properties: for each $R \in 2^{\{1, \dots, q\}}$, there is a subset of target states $T_R \subseteq S'$ that satisfies the following conditions:
-\begin{enumerate}
+\begin{enumerate}[(1.)]
   \item If a path starting from $(s_0, 0, \dots, 0)$ visit a state in $T_R$ at some point, then
   % all strategy we can apply from that point on ensure that all the sets $T_i$, $i \in R$, are almost surely reached (i.e., with conditional probability one, conditioned on the visit of $T_R$).
   all the sets $T_i$, $i \in R$, have been reached along this path.
@@ -745,57 +831,94 @@ in polynomial time in the size of $\mathcal{M}'$.
 
 \begin{proof2}
   %We compute the set $\MEC{}(\mathcal{M}')$ (in polynomial time in the size of $\mathcal{M}'$), and we look for all the maximal ECs $\mathcal{C}=(S^*, A^*, \Delta^*)$ in this set such that each state $(s, q_1, \dots, q_r) \in S^*$ agrees with $q_i = 1$ for all $i \in R$. The union of the state space of each of these ECs forms the set $T_R$.
-  Let $R \in 2^{\{1, \dots, r\}}$ and consider $T_R = \{ (s, q_1, \dots, q_r) \in S' \; | \; \forall i \in R, \, q_i = 1 \}$.
-  We have that if a state $s_R = (s, q_1, \dots, q_r) \in S'$ agrees with $q_i = 1$ for all $i \in R$, then $s_R \in T_R$, and for all $\alpha \in A'(s_R)$, $Succ(s_R, \alpha) \subseteq  T_R$.
-  Indeed, by definition of $\Delta'$ and by definition of $\delta_i$, for each $i \in R$, if a state $t=(s, q_1, \dots, q_r) \in S'$ is visited at some point with $s \in T_i$, then the boolean value $q_i$ is updated to $1$ and stills $1$ forever, i.e., for all $\pi=s_0 \xrightarrow{\alpha_1} s_1 \xrightarrow{\alpha_2}\dots \in Paths(t)$, for all $k \in \mathbb{N}$,
-  we have $s_k = (s', q'_1, \dots, q'_r)$, with $q'_i =1$.
-  Thus, if a state in $T_R$ is reached along a path $\pi=s_0 \xrightarrow{\alpha_1} s_1 \xrightarrow{\alpha_2}\dots \in Paths((s_0, 0, \dots, 0))$, i.e., if there exists an index $k \in \mathbb{N}$ such that $s_k = (s, q_1, \dots, q_r)$ with $q_i = 1$ for all $i \in R$, then there exists for all $i \in R$ an index $k' \leq k$ such that $s_{k'} = (s', q'_1, \dots, q'_r)$
-  with $s' \in T_i$. We have shown \ref{Mprime1}.
-  \par Now let $\pi$ be a path of $\mathcal{M}'$, and assume that the set of visited states of this path is $S' \setminus T_R = \{(s, q_1, \dots q_r) \in S' \; | \; \exists i \in R, \, q_i = 0 \}$, i.e., we have $\pi = s_0 \xrightarrow{\alpha_1}s_1 \xrightarrow{\alpha_2} \dots \in Paths((s_0, 0, \dots, 0))$, and for all $k \in \mathbb{N}$, $s_k = (s, q_1, \dots, q_r) \in S' \setminus T_R$, and there exists an index $i \in R$ for which the boolean variable $q_i = 0$.
-  That means by definition of $\Delta'$ and $\delta_i$ that there exists an index $i \in R$ for which $T_i$ is never reached along $\pi$.
-  Thus, for all strategy $\sigma$, \[\mathbb{P}^\sigma_{(s_0, 0, \dots, 0)}(\{ \pi \in Paths((s_0, 0, \dots, 0)) \; | \; inf(\pi) \subseteq S' \setminus T_R \; \wedge \; \pi \models (\BigWedge_{i \in R} \Diamond T_i) \})= 0,\]
-  where $\pi=s_0
-  \xrightarrow{\alpha_1}s_1\xrightarrow{\alpha_2}
-  \dots \models (\bigwedge_{i \in R} \Diamond T_i)$
-  if and only if, for all $i \in R$, there exists an
-  index $k \in \mathbb{N}$ such that $s_k = (s, q_1,
-  \dots, q_r)$ with $s \in T_i$. That concludes the proof for \ref{Mprime2}.\flushright
+  Let $R \in 2^{\{1, \dots, r\}}$.
+  We are going to look at all maximal end-components of $\mathcal{M}'$ favouring $R$ in order to define $T_R$.
+  More formally, let $S_R = \{ (s, q_1, \dots, q_r) \in S' \; | \; \forall i \in R, \, q_i = 1 \}$ and $S^{\mathcal{C}}_R = \{ S^* \subseteq S_R \; | \; \exists \mathcal{C} \in \MEC(\mathcal{M'}) \text{ with state space } S^* \}$,
+  \[
+    T_R = \bigcup_{S^* \in S_R^\mathcal{C}} S^*.
+  \]
+  As $\MEC(\mathcal{M'})$ can be computed in polynomial time in the size of $\mathcal{M'}$, we can compute at a time all sets $T_R$ for all $R \in \{1, \dots, r\}$.
+  \\
+  %\ref{Mprime1}
+  %We have that if a state $s_R = (s, q_1, \dots, q_r) \in T_R$ agrees with $q_i = 1$ for all $i \in R$, then $s_R \in T_R$, and for all $\alpha \in A'(s_R)$, $Succ(s_R, \alpha) \subseteq  T_R$.
+  %Indeed,
+  By definition of $\Delta'$ and by definition of $\delta_i$, for each $i \in R$, if a state $t=(s, q_1, \dots, q_r) \in S'$ is visited at some point with $s \in T_i$, then the boolean value $q_i$ is updated with $1$ (this is actually the only condition needed for $q_i$ to go from $0$ to $1$) and remains $1$ forever, i.e., for all
+  $\pi=s_0 \xrightarrow{\alpha_1} s_1 \xrightarrow{\alpha_2}\dots \in Paths(t)$, for all $k \in \mathbb{N}$,
+  we have $s_k = (s', q'_1, \dots, q'_r)$, with $q'_i =1$. {\color{umons-red}(*)} \\
+  Thus, assume that a state in $T_R$ is reached along a path $\pi=s_0 \xrightarrow{\alpha_1} s_1 \xrightarrow{\alpha_2}\dots \in Paths((s_0, 0, \dots, 0))$, i.e., assume there exists an index $k \in \mathbb{N}$ such that $s_k = (s, q_1, \dots, q_r) \in T_R$. We have by definition of $T_R$ that $q_i = 1$ for all $i \in R$.
+  Then, as the path starts from $(s_0, 0, \dots, 0)$ and by {\color{umons-red}(*)}, there exists for all $i \in R$ an index $k' \leq k$ such that $s_{k'} = (s', q'_1, \dots, q'_r)$
+  with $s' \in T_i$. We have shown \ref{Mprime1}.\\
+  Now, let $\sigma$ be a strategy for $\mathcal{M}'$ and $\pi %= s_0 \xrightarrow{\alpha_1}s_1 \xrightarrow{\alpha_2} \dots
+  \in Paths^\sigma((s_0, 0, \dots, 0))$.
+  Assume that all the sets of target states $T_i$ have been reached for $i \in R$ along $\pi$.
+  By Lemma \ref{limit-ec-lemma}, this path ends up in an EC almost surely. By {\color{umons-red}(*)}, we necessarily have that this EC favours $R$, as all the target states $T_i$ have been reached. Thus, as $T_R$ is the union of the state space of each EC favouring $R$,
+  \[
+    \mathbb{P}^\sigma_{(s_0, 0, \dots, 0)}(\{ \pi \in Paths((s_0, 0, \dots, 0)) \; | \; inf(\pi) \subseteq T_R \}) = 1,
+  \]
+  which directly implies
+  \[
+    \mathbb{P}^\sigma_{(s_0, 0, \dots, 0)}(\{ \pi \in Paths((s_0, 0, \dots, 0)) \; | \; inf(\pi) \cap T_R = \emptyset \}) = 0.
+  \]
+  We are done with \ref{Mprime2}. That concludes the proof.
   \end{proof2}
+  $ $\\
 
-The Lemma \ref{MOSR-lemme} allows us to define an algorithm ensuring to solve any \MOSR{} problem:
+The Lemma \ref{lemma-favour} and the Lemma \ref{MOSR-lemme} allow us to define an algorithm ensuring to solve any \MOSR{} problem (cf. Algorithm \ref{mosr-algo}). The key idea behind this algorithm is that we add a new absorbing state $s_R$ in $\mathcal{M'}$ for each subset of constraints $R \subseteq \{1, \dots, r\}$.
+Then, for each state $t \in S'$, and for each maximal subset $R$ such that $t \in T_R$, we add a new transition from $t$ to $s_R$.
+By considering the new sets of target states $F_i = \{ s_R \; | \; i \in R\}$, for $i \in \{1, \dots, r\}$,
+we solve the \MOSR{} problem for these sets of absorbing target states and the thresholds $\alpha \in [0,1]^r$ as described in Subsection \ref{MOSR-absorbing}.
 
 \begin{algorithm}[h!]
 \caption{Multi-objective reachability}\label{mosr-algo}
 \begin{algorithmic}[1]
 \REQUIRE{
-  $\mathcal{M}=(S, A \Delta, AP, L)$, a finite MDP, and $\mathcal{Q}_{s^*, r}$, a \MOSR{} problem.
+  $\mathcal{M}=(S, A, \Delta, AP, L)$, a finite MDP, and $\mathcal{Q}_{s^*, r}$, a \MOSR{} problem.
 }
 \ENSURE{
   A strategy satisfying $\mathcal{Q}_{s^*, r}$ if it is possible to answer $True$ to $\mathcal{Q}_{s^*, r}$, $False$ else.
 }
 \STATE {\sffamily build} $\mathcal{M}'=(S', A', \Delta')$ with $\delta_i$, ${i \in \{1, \dots r\}}$
 \FOR{$R \in 2^{\{1, \dots, r\}}$}
-  \STATE $T_R \leftarrow \{ (s, q_1, \dots, q_r) \in S' \; | \; \forall i \in R,\, q_i=1 \}$
-  \COMMENT{{\scriptsize can be computed at a time for all $R$}}
+  \STATE $T_R \leftarrow \emptyset$
+\ENDFOR
+\FOR{$\mathcal{C}=(S^*, A^*, \Delta^*) \in \MEC(\mathcal{M}')$}
+  \STATE {\sffamily let} $(s, q_1, \dots, q_r)$ be an arbitrary state of $S^*$
+  \COMMENT{cf. Lemma \ref{lemma-favour}}
+  \STATE $R^* \leftarrow \{ i \in \{1, \dots, r\} \; | \; q_i = 1 \}$
+  \COMMENT{maximal subset of $\{1, \dots, r\}$ favoured by $\mathcal{C}$}
+  \FOR{$R \subseteq R^*$}
+    \STATE $T_R \leftarrow T_R \cup S^*$
+  \ENDFOR
+\ENDFOR
+\FOR{$R \in 2^{\{1, \dots, r\}} \setminus \emptyset$}
+  %\STATE $T_R \leftarrow \{ (s, q_1, \dots, q_r) \in S' \; | \; \forall i \in R,\, q_i=1 \}$
+  %\STATE $T_R \leftarrow \{ (s, q_1, \dots, q_r) \in S' \; | \; \forall i \in R,\, q_i=1 \}$
   \STATE $S' \leftarrow S' \cup \{s_R\}$
   \STATE $A' \leftarrow A' \cup \{\alpha_R\} ; \; A'(s_R) \leftarrow \{\alpha_R\}$
   \STATE {\sffamily add} the transition $s_R \xrightarrow{\alpha_R}s_R$ in $\mathcal{M'}$ with $\Delta'(s_R, \alpha_R, s_R) = 1$
   %\COMMENT{we add a new absorbing state $s_R$ for all $R$}
 \ENDFOR
-\FOR{$t \in S'$}
-  \FOR{\textbf{each} maximal subset $R \in 2^{\{1, \dots, r\}}$ such that $t \in T_R$} \label{line-max-subset}
-    \STATE $A'(t) \leftarrow A'(t) \cup \{\alpha_R\}$
-    \STATE {\sffamily add} the transition $t \xrightarrow{\alpha_R}s_R$ in $\mathcal{M}'$ with $\Delta'(t, \alpha_R, s_R) = 1$
-  \ENDFOR
+% \FOR{$\mathcal{C} = (S^*, A^*, \Delta^*) \in \MEC(\mathcal{M'})$}
+%   \STATE {\sffamily let} $(s, q_1, \dots, q_r)$ be an arbitrary state of $S^*$
+%   \STATE $R \leftarrow \{ i \in \{1, \dots, r\} \; | \; q_i = 1 \}$
+%   \COMMENT{maximal subset of $\{1, \dots, r\}$ favoured by $\mathcal{C}$}
+%   %\FOR{$R \in R'$}
+%   \STATE $T_R \leftarrow T_R \cup S^*$
+%   %\ENDFOR
+\FOR{$t \in \bigcup_{\mathcal{C}=(S^*, A^*, \Delta^*) \in \MEC(\mathcal{M'})} S^*$}
+  \STATE {\sffamily let} $R \in 2^{\{1, \dots, r\}}$ be the maximal subset  of $\{1, \dots, r\}$ such that $t \in T_R$ \label{line-max-subset}
+      \STATE $A'(t) \leftarrow A'(t) \cup \{\alpha_R\}$
+      \STATE {\sffamily add} the transition $t \xrightarrow{\alpha_R}s_R$ in $\mathcal{M}'$ with $\Delta'(t, \alpha_R, s_R) = 1$
 \ENDFOR
 \FORALL{$i\leftarrow 1$ to $r$}
   \STATE $F_i \leftarrow \{ s_R \; | \; i \in R \}$
 \ENDFOR
-\STATE {\sffamily let} $\mathcal{Q}_{s_0, r}$ be the \MOSR{} problem for the set of \textbf{absorbing target states} $F_i$ and cost thresholds $\alpha_i$ for $i \in \{1, \dots, r\}$ in $\mathcal{M}'$, from the state $(s_0, 0, \dots, 0)$.
-\STATE {\sffamily solve} $\mathcal{Q}_{s_0, r}$ (cf. Corollary \ref{mosr-absorbing-cor})
-\IF{there exists a strategy $\sigma$ for $\mathcal{Q}_{s_0, r}$}
-  \STATE {\sffamily build} $\sigma$ for $\mathcal{M}'$ (cf. Equation \ref{sigma_rand})
-  \RETURN $\sigma$
+\STATE {\sffamily let} $\mathcal{Q}_{(s_0, 0 \dots, 0),\, r}$ be the \MOSR{} problem for the set of \textbf{absorbing target states} $F_i$ and cost thresholds $\alpha_i$ for $i \in \{1, \dots, r\}$ in $\mathcal{M}'$, from the state $(s_0, 0, \dots, 0)$.
+\STATE {\sffamily solve} $\mathcal{Q}_{(s_0, 0, \dots, 0),\, r}$ \COMMENT{cf. Corollary \ref{mosr-absorbing-cor}}
+\IF{there exists a strategy $\sigma'$ for $\mathcal{Q}_{(s_0,, 0, \dots, 0),\, r}$}
+  \STATE {\sffamily build} $\sigma'$ for $\mathcal{M}'$
+  \COMMENT{cf. Equation \ref{sigma_rand}}
+  \RETURN $\sigma'$
 \ELSE
   \RETURN $False$
 \ENDIF
@@ -812,15 +935,53 @@ The Lemma \ref{MOSR-lemme} allows us to define an algorithm ensuring to solve an
 \end{algorithm}
 
 \begin{lemma}[Recover a strategy for $\mathcal{M}$ from $\mathcal{M}'$]
-  The sets of achievable points $U_{\mathcal{Q}_{s^*, r}} = U_{\mathcal{Q}_{s_0, r}}$. Moreover, from a randomised memoryless strategy $\sigma$ that satisfies $\mathcal{Q}_{s_0, r}$, we can recover a randomised finite-memory strategy $\sigma'$ that satisfies $\mathcal{Q}_{s^*, r}$.
+  The sets of achievable points $U_{\mathcal{Q}_{s^*, r}} = U_{\mathcal{Q}_{(s_0,0, \dots, 0),\, r}}$. Moreover, from a randomised memoryless strategy $\sigma'$ that satisfies $\mathcal{Q}_{(s_0, 0, \dots, 0), \, r}$ in $\mathcal{M}'$, we can recover a randomised finite-memory strategy $\sigma$ that satisfies $\mathcal{Q}_{s^*, r}$ in $\mathcal{M}$.
 \end{lemma}
 
 \begin{proof2}
   Let $\sigma'$ be a strategy for the MDP $\mathcal{M}'$ of Algorithm \ref{mosr-algo}.
-  Assume that $\mathcal{Q}_{s_0, r}$ is satisfied by $\sigma'$. Thus, we have $\bigwedge_{i=1}^r\mathbb{P}_{(s_0, 0, \dots, 0)}^{\sigma'}(\Diamond F_i)$.
-  We skip the first choice of the strategy (necessarily being $\alpha_0$), and we follow then the choices of the strategy in $\mathcal{M}$ from $s^*$ until just before it transitions to a state $s_R$, at which point it must be in a state $t \in T_R$, with $R$ being a maximal set of $\{ R' \subseteq \{1, \dots, r\} \; | \; t \in T_{R'} \}$ (cf. line \ref{line-max-subset}).
-  \flushright
+  Assume that $\mathcal{Q}_{(s_0, 0, \dots, 0),\, r}$ is satisfied by $\sigma'$. Thus, we have $\bigwedge_{i=1}^r\mathbb{P}_{(s_0, 0, \dots, 0)}^{\sigma'}(\Diamond F_i) \geq \alpha_i$.
+  The strategy $\sigma$ for $\mathcal{M}$ skips the first choice of $\sigma'$ (necessarily being $\alpha_0$), and follows then the choices of $\sigma'$ in $\mathcal{M}$ from $s^*$ until just before it transitions to a state $s_R$, at which point it must be in a state $t \in T_R$, with $R$ being a maximal set of $\{ R' \subseteq \{1, \dots, r\} \; | \; t \in T_{R'} \}$, and at
+  that point our strategy $\sigma$ switches to the strategy allowing to almost surely visiting all states of $T_R$. That guarantees that $\mathbb{P}_{s^*}^\sigma(\Diamond T_i) \geq \mathbb{P}_{(s_0, 0, \dots, 0)}^{\sigma'}(\Diamond F_i) \geq \alpha_i$, for all $i \in \{1, \dots, r\}$.
 \end{proof2}
+
+\begin{theorem}[\textbf{\textit{Solving the \MOSR{} problem}}] \label{theorem-mosr-final}
+  Given an MDP $\mathcal{M}$ with state space $S$, we can solve the \MOSR{} problem for the state $s \in S$, the $r \in \mathbb{N}$ reachability properties described by the set of target states $T_i \subseteq S$ and the probability threshold $\alpha_i$ for each $i \in \{1, \dots, r\}$ in polynomial time in the size of $\mathcal{M}'$, i.e., in
+  polynomial time in the size of $\mathcal{M}$ but in exponential time in the number of reachability properties $r$, and if so we can build a randomised exponential-memory strategy satisfying the problem.
+  Moreover, we can build an $\epsilon$-approximated Pareto curve $\mathpzc{P}(\epsilon)$ in time polynomial in $\mathcal{M}$ and in $\frac{1}{\epsilon}$, but exponential time in the number of reachability properties $r$.
+\end{theorem}
+
+\begin{example}[\textit{Applying Algorithm \ref{mosr-algo} on a simple MDP}]
+Let $\mathcal{M}$ be the MDP of Figure \ref{molp-mdp}. We are interested to know if there exists a strategy $\sigma$ such that
+\[
+  \underbrace{\mathbb{P}_{s_0}^{\sigma}(\Diamond \{s_1\}) \geq 0.8}_{\text{reachability property $1$}} \; \wedge \; \underbrace{\mathbb{P}_{s_0}^\sigma (\Diamond \{s_2\}) = 1}_{\text{reachability property $2$}}.
+\]
+\begin{figure}[h!]
+  \centering
+  \captionsetup{justification=centering}
+  \includegraphics[width=0.7\linewidth]{resources/MOLP-simple-mdp}
+  \caption{Simple MDP $\mathcal{M}$ with state space $S = \{s_0, s_1, s_2, s_3\}$ and action space $A = \{\alpha, \beta, \gamma\}$}
+  \label{molp-mdp}
+\end{figure}
+\begin{figure}[h!]
+  \centering
+  \captionsetup{justification=centering}
+  \includegraphics[width=0.9\linewidth]{resources/MOLP-product}
+  \caption{MDP $\mathcal{M}'$ resulting of the modification of $\mathcal{M}$ in Algorithm \ref{mosr-algo}}
+  \label{molp-mdp2}
+\end{figure}
+As $s_1$ is not absorbing, we cannot use the technique described in Subsection \ref{MOSR-absorbing} to solve this \MOSR{} problem.
+We apply Algorithm \ref{mosr-algo} and build the associated MDP $\mathcal{M}'$ to solve the problem (cf. Figure \ref{molp-mdp2}).
+The MECs of $\mathcal{M}'$ are the sub-MDPs highlighted in green, and the state spaces of these MECs form the sets $T_R$, with $R \in 2^{\{1, 2\}}$, following the reachability properties $i \in R$ that each MEC favours.
+Here, the MEC containing the unique state $(s_2, 0, 1)$ and the one containing $(s_3, 0, 1)$ favour the second reachability property and thus are in $T_{\{2\}}$.
+Then, the MEC containing the state $(s_2, 1, 1)$ and the one containing $(s_3, 1, 1)$ favour the properties $1$ and $2$ and thus are is $T_{\{1\}}$, $T_{\{2\}}$, and $T_{\{1, 2\}}$.
+We then add the new absorbing target states $s_R$, for each subset of properties $R \subseteq \{1, \dots, r\}$, and we add a new transition from all states of each MEC $\mathcal{C}$ to $s_R$ such that $R$ is the maximal subset of properties favoured by $\mathcal{C}$ (in Figure \ref{molp-mdp2}, we ignore the target states $s_R$ unconnected to MECs of $\mathcal{M}'$).
+We finally define the new set of absorbing target states $F_i = \{s_R \; | \; i \in R\}$ for $i \in \{1, \dots, r\}$, i.e., $F_1 = \{s_{\{1, 2\}}\}$ and $F_2 = \{s_{\{2\}}, \, s_{\{1, 2\}}\}$.
+It remains to decide if there exists a strategy $\sigma'$ satisfying
+\[
+  \mathbb{P}^{\sigma'}_{(s^*, 0, 0)}(\Diamond F_1) \geq 0.8 \; \wedge \; \mathbb{P}_{(s^*, 0, 0)}^{\sigma'}(\Diamond F_2) = 1.
+\]
+\end{example}
 
 \section{Percentile queries in multi-dimensional Markov decision processes}
 In this section, we define some strategies allowing to deal with multiple \textit{percentile queries} in \textit{multi-dimensional Markov decision processes} \cite{DBLP:journals/fmsd/RandourRS17}.
@@ -952,7 +1113,7 @@ In order to describe this algorithm, we need to define the \textit{multi-dimensi
 The \textit{$d$-dimensional unfolding of the MDP $\mathcal{M}$ from the state $s^*$
 up to the highest cost threshold of $(\ell_i)_{i \in \{1, \dots, q\}}$ on each dimension of $(k_i)_{i \in \{1, \dots, q\}}$} is a $1$-dimensional MDP \sloppy $\mathcal{M}' = {(S', A', \Delta', AP, L')}$ defined as follows:
   \begin{itemize}
-    \item $S'$ is composed of states $(s, v_1, \dots, v_d)$ such that $s \in S$ and, for each dimension $k \in \{1, \dots, d\}$, $v_k \in \{0, \dots, \ell^{\max}_k\} \cup \{\bot\}$, where $\ell^{\max}_k$ is the maximum threshold on the dimension $k$, i.e., \[\ell^{\max}_k = \max_{i \in \{1, \dots, q\} \; | \; k_i = k }  \, \ell_i,\]
+    \item $S' \subseteq S \times (\{ 0, \dots, \ell^{\max} \} \cup \{\bot\})^d$, with $\ell^{\max} = \max_{i \in \{1, \dots, q\}}\ell_i$,  is the set of states composed of states $(s, v_1, \dots, v_d)$ such that $s \in S$ and, for each dimension $k \in \{1, \dots, d\}$, $v_k \in \{0, \dots, \ell^{\max}_k\} \cup \{\bot\}$, where $\ell^{\max}_k$ is the maximum threshold on the dimension $k$, i.e., \[\ell^{\max}_k = \max_{i \in \{1, \dots, q\} \; | \; k_i = k }  \, \ell_i,\]
     and we consider that $\bot > \ell_k^{\max}$
     and $\bot + v = \bot$, for all $v \in \mathbb{N}$.
     Intuitively, the vector $(v_1, \dots, v_d)$ records the cost of paths on all the dimensions while unfolding $\mathcal{M}$.
@@ -985,7 +1146,7 @@ up to the highest cost threshold of $(\ell_i)_{i \in \{1, \dots, q\}}$ on each d
     Furthermore, as we unfold $\mathcal{M}$ from $s^*$, we limit the state space $S'$ with the states reachable from $(s^*, 0, \dots, 0)$.
 \end{definition}
 
-This definition allows us to describe an algorithm defined to solve the \SSPPQ{} problem for the state $s^*$ and the $q$ constraints described above:
+This definition allows us to describe an algorithm defined to solve the \SSPPQ{} problem for the state $s^*$ and the $q$ constraints (cf. Algorithm \ref{ssppq-algo}).
 
 \begin{algorithm}
 \caption{Solving the \SSPPQ{} problem}\label{ssppq-algo}
@@ -998,14 +1159,25 @@ This definition allows us to describe an algorithm defined to solve the \SSPPQ{}
 \end{enumerate}
 \end{algorithm}
 
+\begin{remark}[\textit{\SSPPQ{} problem with single-target queries}] \label{remark-sspp}
+  Assume that all constraints are described by the same set of target states, i.e., $\forall i \in \{1, \dots, r\}$, $\cup_{j=1}^r T_j = T_i$.
+  In that case, as soon as a path visit a target state in the unfolding, it is not useful to consider and visit successors of this target state until that the highest cost thresholds have been exceeded on all the dimensions.
+  Indeed, remind that given any prefix of a path, extending it can never decrease its current cost %regarding to the cost of this prefix
+  (the weights are strictly positive).\par
+  Thus, under the assumption that the constraints of an \SSPPQ{} problem for a given MDP have the same set of target states, we can make absorbing all of these states in the unfolding to avoid visiting some useless states.
+  Solving this \SSPPQ{} problem is then polynomial in the multi-dimensional unfolding of the MDP (cf. Corollary \ref{mosr-absorbing-cor}).
+\end{remark}
+
 \begin{theorem}[\textit{\textbf{Solving the \SSPPQ{} problem}}]
-  The \SSPPQ{} problem can be decided in exponential time in general, and pseudo-polynomial time for simultaneously single-dimension and single-target queries.
+  The \SSPPQ{} problem
+  can be solved in general in polynomial time in the size of $\mathcal{M}$ and exponential time in the query size (exponential in the number of constraints and pseudo-polynomial in the length of the largest threshold). Furthermore, it
+  can be decided in pseudo-polynomial time in the size of $\mathcal{M}$ and in the length of the highest threshold for simultaneously single-dimension and single-target queries (cf. Remark \ref{remark-sspp}, and Corollary \ref{mosr-absorbing-cor}).
   Randomised exponential-memory strategies are always sufficient and in general necessary.
-  A satisfying strategy can be built in exponential time.
+  %A satisfying strategy can be built in exponential time.
 \end{theorem}
 
-\begin{example}[\textit{Complex \SSPPQ{} problem in the wireless sensor network}]
-  We apply the algorithm \ref{ssppq-algo} to answer to the percentile request left open in Example \ref{SSPQ-example1}:
+\begin{example}[\textit{\SSPPQ{} problem in the wireless sensor network}]
+  We apply Algorithm \ref{ssppq-algo} to answer to the percentile request left open in Example \ref{SSPQ-example1}:
   \[
   ?\exists \sigma \;\; \underbrace{\mathbb{P}^{\sigma}_{s_0}(\Diamond_{1: \, \leq 4} \, \{s_3\}) \geq 0.8}_{\mathcal{Q}_1} \; \wedge \;
    \underbrace{\mathbb{P}^{\sigma}_{s_0}(\Diamond_{1: \, \leq 8} \, \{s_3\}) \geq 0.9}_{\mathcal{Q}_2} \; \wedge \;
@@ -1016,21 +1188,21 @@ This definition allows us to describe an algorithm defined to solve the \SSPPQ{}
     \centering
     \includegraphics[width=\linewidth]{resources/SSP-PQ-unfolding}
     \captionsetup{justification=centering}
-    \caption{Unfolding of the MDP of Figure \ref{multi-mdp} from $s_0$ up to the cost thresholds $4, \, 8$ on the time dimension, and $700$ on the energy dimension}
+    \caption{Unfolding of the MDP of Figure \ref{multi-mdp} from $s_0$ up to the cost thresholds $4$ and $8$ on the time dimension, and $700$ on the energy dimension}
     \label{multi-unfolding}
   \end{figure}
   As each constraint describes a percentile problem,
   and as the set of target states for all constraints is $\{s_3\}$, we do not need to consider states after that $\{s_3\}$ is reached in all paths starting from $(s_0, 0, 0)$ in $\mathcal{M}'$.
-  We can thus make all states referring to $s_3$  absorbing in $\mathcal{M}'$.
+  We can thus make all states referring to $s_3$  absorbing in $\mathcal{M}'$ (cf. Remark \ref{remark-sspp}).
   The new sets of target states are $T'_1 = \{(s_3, 4, 394)\}$, $T'_2 = \{(s_3, 8, 296), \, (s_3, 4, 394), \, (s_3, 8, \bot)\}, \, T'_3 = \{ (s_3, 8, 296), \, (s_3, 4, 494) \}$
-  for all query $\mathcal{Q}_i$, with $i \in \{1, \dots, 3\}$. As all target states are absorbing, we can build a satisfying randomised memoryless optimal strategy in polynomial time in the size of $\mathcal{M}'$.
+  for all query $\mathcal{Q}_i$, with $i \in \{1, \dots, 3\}$. As all target states are absorbing, we can build a satisfying randomised memoryless optimal strategy in polynomial time in the size of $\mathcal{M}'$ (cf. Corollary \ref{mosr-absorbing-cor}).
   %The randomised memoryless strategy $\sigma$ such that $\sigma(s')(\alpha) = 1$ for all $s' \in S'$ such that $\alpha \in A(s)$, $|A(s)| = 1$, and
   %$\sigma((s, 0, 0))(\alpha_1) = 1$, $\sigma((s_0, 4, 394))(\alpha_0) = \sigma((s_0, 4, 394))(\alpha_1) = \frac{1}{2}$ satisfies the problem.
   We build the randomised memoryless strategy
   \[
   \sigma(s')(\alpha) = \begin{cases}
     1 & \text{if } \alpha \in A(s) \text{ and } |A(s)| = 1,
-    \text{ or } s'=(s_0, 0, 0), \, \alpha=\alpha_1, \\
+    \text{ or if } s'=(s_0, 0, 0) \text{ and } \alpha=\alpha_1, \\
     \frac{1}{2} & \text{if } s'=(s_0,4,394) \text{ and } \alpha \in \{\alpha_0, \alpha_1\},\\
     0 & \text{otherwise}.
   \end{cases}

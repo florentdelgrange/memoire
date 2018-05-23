@@ -1,10 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70206" creator="Ipe 7.2.6">
-<info created="D:20180403174224" modified="D:20180521122845"/>
-<preamble>\usepackage{amsmath,amsfonts,amsthm}
-\newcommand\U{\,\text{\sffamily U}\,}
-</preamble>
+<info created="D:20180328200218" modified="D:20180520211848"/>
 <ipestyle name="basic">
 <symbol name="arrow/arc(spx)">
 <path stroke="sym-stroke" fill="sym-stroke" pen="sym-pen">
@@ -256,78 +253,101 @@ h
 </ipestyle>
 <page>
 <layer name="alpha"/>
-<view layers="alpha" active="alpha"/>
-<path layer="alpha" stroke="black">
-16 0 0 16 272 784 e
+<layer name="beta"/>
+<view layers="alpha beta" active="alpha"/>
+<text layer="alpha" matrix="1 0 0 1 -4 -16" transformations="translations" pos="340 820" stroke="blue" type="label" width="62.081" height="12.896" depth="4.29" valign="baseline" size="LARGE" style="math">Succ^*(s)</text>
+<path matrix="1 0 0 1 -0.229 -14.618" stroke="black">
+116 656
+220 752
+336 820
+308 600
+160 556 u
 </path>
-<path matrix="1 0 0 1 -64 -64" stroke="black">
-16 0 0 16 272 784 e
+<path matrix="1 0 0 1 120.072 4.75414" stroke="black" fill="lightgreen" opacity="30%">
+320 672
+272 728
+368 808
+372.371 653.503
+312 656 u
 </path>
-<path matrix="1 0 0 1 64 -64" stroke="black">
-16 0 0 16 272 784 e
+<path matrix="1 0 0 1 -0.0877564 -14.4516" stroke="black" fill="red" opacity="10%">
+116 656
+220 752
+336 820
+308 600
+160 556 u
 </path>
-<path matrix="1 0 0 1 64 -128" stroke="black">
-16 0 0 16 272 784 e
+<text matrix="1 0 0 1 -28 -8" transformations="translations" pos="256 560" stroke="red" type="label" width="65.867" height="12.896" depth="4.29" valign="baseline" size="LARGE" style="math">Succ^*(s&apos;)</text>
+<path matrix="1 0 0 1 -0.228976 -14.6178" stroke="black" fill="lightblue" opacity="30%">
+236 692
+220.88 713.159
+178.712 777.206
+602.712 849.206
+468 608
+332 668
+288 680 u
 </path>
-<path matrix="1 0 0 1 0 -192" stroke="black">
-16 0 0 16 272 784 e
+<path matrix="1 0 0 1 120.072 4.75379" stroke="black">
+320 672
+272 728
+368 808
+372.371 653.503
+312 656 u
 </path>
-<path matrix="1 0 0 1 128 -192" stroke="black">
-16 0 0 16 272 784 e
+<text matrix="1 0 0 1 128.072 32.7537" transformations="translations" pos="320 712" stroke="black" type="label" width="14.668" height="14.119" depth="0" valign="baseline" size="huge" style="math">T</text>
+<path matrix="1 0 0 1 133.252 -30.1903" stroke="black">
+10.6728 -1.41295 1.41295 10.6728 296.873 754.479 e
 </path>
-<path matrix="1 0 0 1 64 -256" stroke="black">
-16 0 0 16 272 784 e
+<text matrix="1 0 0 1 249.438 -11.3013" transformations="translations" pos="176 732" stroke="black" type="label" width="10.552" height="8.826" depth="2.15" valign="baseline" size="Large" style="math">t_1</text>
+<path matrix="1 0 0 1 13.3604 -4.45231" stroke="black" arrow="normal/tiny">
+423.675 736.997 m
+428 744
+444 732
+432 716
+425.989 723.19 c
 </path>
-<path matrix="1 0 0 1 192 -256" stroke="black">
-16 0 0 16 272 784 e
+<path matrix="1 0 0 1 150.405 -67.1573" stroke="black">
+10.6728 -1.41295 1.41295 10.6728 296.873 754.479 e
 </path>
-<text transformations="translations" pos="264 776" stroke="black" type="label" width="16.525" height="13.771" depth="0" valign="baseline" size="Huge" style="math">\vee</text>
-<text matrix="1 0 0 1 2.31499 2.54118" transformations="translations" pos="200 712" stroke="black" type="label" width="10.445" height="10.672" depth="0" valign="baseline" size="Huge" style="math">c</text>
-<text matrix="1 0 0 1 -4.16427 6.21642" transformations="translations" pos="328 712" stroke="black" type="label" width="24.588" height="9.804" depth="6.91" valign="baseline" size="Large" style="math">\mathcal{P}_{\geq \frac{1}{2}}</text>
-<text matrix="1 0 0 1 -4 -4" transformations="translations" pos="328 652" stroke="black" type="label" width="24.22" height="17.213" depth="0" valign="baseline" size="Huge" style="math">\U</text>
-<text matrix="1 0 0 1 66.315 -125.459" transformations="translations" pos="200 712" stroke="black" type="label" width="12.741" height="10.672" depth="0" valign="baseline" size="Huge" style="math">a</text>
-<text matrix="1 0 0 1 128 -192" transformations="translations" pos="264 776" stroke="black" type="label" width="16.525" height="13.771" depth="0" valign="baseline" size="Huge" style="math">\wedge</text>
-<text matrix="1 0 0 1 130.315 -189.459" transformations="translations" pos="200 712" stroke="black" type="label" width="10.319" height="17.213" depth="0" valign="baseline" size="Huge" style="math">b</text>
-<text matrix="1 0 0 1 258.315 -189.459" transformations="translations" pos="200 712" stroke="black" type="label" width="10.445" height="10.672" depth="0" valign="baseline" size="Huge" style="math">c</text>
-<path stroke="black">
-219.557 731.065 m
-260.595 772.778 l
-260.709 772.663 l
+<text matrix="1 0 0 1 266.591 -48.2683" transformations="translations" pos="176 732" stroke="black" type="label" width="11.551" height="8.826" depth="2.15" valign="baseline" size="Large" style="math">t_n</text>
+<path matrix="1 0 0 1 30.5134 -41.4193" stroke="black" arrow="normal/tiny">
+423.675 736.997 m
+428 744
+444 732
+432 716
+425.989 723.19 c
 </path>
-<path stroke="black">
-283.266 772.639 m
-324.378 730.997 l
+<path matrix="1 0 0 1 166.405 -39.1573" stroke="black">
+10.6728 -1.41295 1.41295 10.6728 296.873 754.479 e
 </path>
-<path stroke="black">
-335.683 704.003 m
-335.8 671.999 l
+<text matrix="1 0 0 1 282.591 -20.2683" transformations="translations" pos="176 732" stroke="black" type="label" width="10.552" height="8.826" depth="2.15" valign="baseline" size="Large" style="math">t_2</text>
+<path matrix="1 0 0 1 46.5134 -13.4193" stroke="black" arrow="normal/tiny">
+423.675 736.997 m
+428 744
+444 732
+432 716
+425.989 723.19 c
 </path>
-<path stroke="black">
-324.416 644.963 m
-283.372 603.255 l
+<path matrix="1 0 0 1 0.238846 -14.7334" stroke="black" opacity="30%">
+236 692
+220.88 713.159
+178.712 777.206
+602.712 849.206
+468 608
+332 668
+288 680 u
 </path>
-<path stroke="black">
-347.156 644.531 m
-388.332 602.948 l
+<path matrix="1 0 0 1 13.8976 -0.112922" stroke="black" pen="heavier">
+16 0 0 16 272 744 e
 </path>
-<path stroke="black">
-388.776 580.597 m
-347.725 538.887 l
+<text matrix="1 0 0 1 13.8976 -0.112922" transformations="translations" pos="268 740" stroke="black" type="label" width="7.94" height="7.412" depth="0" valign="baseline" size="LARGE" style="math">s</text>
+<path matrix="1 0 0 1 -22.1024 -44.1129" stroke="black" pen="heavier">
+16 0 0 16 272 744 e
 </path>
-<path stroke="black">
-411.138 580.513 m
-452.707 539.334 l
+<text matrix="1 0 0 1 -22.1024 -44.1129" transformations="translations" pos="268 740" stroke="black" type="label" width="11.726" height="12.889" depth="0" valign="baseline" size="LARGE" style="math">s&apos;</text>
+<path matrix="1 0 0 1 -2.10243 -16.1129" stroke="black" fill="red" dash="dashed" pen="heavier" arrow="normal/normal">
+278.206 747.348 m
+262.141 728.376 l
 </path>
-<text matrix="1 0 0 1 -88 60" transformations="translations" pos="316 504" stroke="black" type="label" width="88.082" height="7.473" depth="2.49" valign="baseline" style="math">Sat(a) = \{s_0, s_2, s_3\}</text>
-<text matrix="1 0 0 1 -24 -4" transformations="translations" pos="316 504" stroke="black" type="label" width="87.091" height="7.473" depth="2.49" valign="baseline" style="math">Sat(b) = \{s_1, s_2, s_3\}</text>
-<text matrix="1 0 0 1 113.632 -4.26206" transformations="translations" pos="316 504" stroke="black" type="label" width="73.56" height="7.473" depth="2.49" valign="baseline" style="math">Sat(c) = \{s_1, s_4\}</text>
-<text matrix="1 0 0 1 28 -24" transformations="translations" pos="392 612" stroke="black" type="label" width="154.869" height="7.473" depth="2.49" valign="baseline" style="math">Sat(b \wedge c) = Sat(b) \cap Sat(c) = \{s_1\}</text>
-<text matrix="1 0 0 1 -0.587726 0.770643" transformations="translations" pos="260 552" stroke="black" type="label" width="18.349" height="6.808" depth="0" valign="baseline" style="math">= C</text>
-<text matrix="1 0 0 1 -2.37702 -2.694" transformations="translations" pos="468 580" stroke="black" type="label" width="17.722" height="6.808" depth="0" valign="baseline" style="math">= T</text>
-<text matrix="1 0 0 1 0 -8" transformations="translations" pos="356 716" stroke="black" type="label" width="119.135" height="8.422" depth="3.43" valign="baseline" style="math">=\{ s \in S \; | \; \mathbb{P}_s(C \U T) \geq \frac{1}{2} \})</text>
-<text transformations="translations" pos="356 724" stroke="black" type="label" width="93.322" height="7.468" depth="4.86" valign="baseline" style="math">Sat(\mathcal{P}_{\geq \frac{1}{2}}(a \U (b \wedge c)))</text>
-<text transformations="translations" pos="356 696" stroke="black" type="label" width="43.185" height="7.473" depth="2.49" valign="baseline" style="math">= \{ s_0 , s_1\}</text>
-<text matrix="1 0 0 1 -142.368 187.738" transformations="translations" pos="316 504" stroke="black" type="label" width="73.56" height="7.473" depth="2.49" valign="baseline" style="math">Sat(c) = \{s_1, s_4\}</text>
-<text matrix="1 0 0 1 -65.1065 0.997724" transformations="translations" pos="240 804" stroke="black" type="label" width="179.702" height="7.473" depth="2.49" valign="baseline" style="math">Sat(\Phi) = \{s_1, s_4\} \cup \{s_0, s_1\} = \{s_0, s_1, s_4\}</text>
 </page>
 </ipe>
