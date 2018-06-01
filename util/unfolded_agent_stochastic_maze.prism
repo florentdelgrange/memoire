@@ -1,0 +1,38 @@
+mdp
+
+module unfolded_agent_stochastic_maze
+
+s: [0..11] init 0;
+v_move: [0..21] init 0;
+
+[a0_0] s=0 -> 0.8 : (s'=1) & (v_move'=min(v_move+1, 21)) + 0.2 : (s'=2) & (v_move'=min(v_move+1, 21));
+[a0_1] s=0 -> 0.2 : (s'=1) & (v_move'=min(v_move+1, 21)) + 0.8 : (s'=2) & (v_move'=min(v_move+1, 21));
+[a1_0] s=1 -> 1.0 : (s'=3) & (v_move'=min(v_move+1, 21));
+[a2_0] s=2 -> 1.0 : (s'=4) & (v_move'=min(v_move+4, 21));
+[a3_0] s=3 -> 0.9 : (s'=5) & (v_move'=min(v_move+1, 21)) + 0.1 : (s'=6) & (v_move'=min(v_move+1, 21));
+[a3_1] s=3 -> 0.3333333333333333 : (s'=5) & (v_move'=min(v_move+1, 21)) + 0.3333333333333333 : (s'=6) & (v_move'=min(v_move+1, 21)) + 0.3333333333333333 : (s'=7) & (v_move'=min(v_move+1, 21));
+[a3_2] s=3 -> 0.1 : (s'=6) & (v_move'=min(v_move+1, 21)) + 0.9 : (s'=7) & (v_move'=min(v_move+1, 21));
+[a4_0] s=4 -> 0.1 : (s'=8) & (v_move'=min(v_move+1, 21)) + 0.9 : (s'=9) & (v_move'=min(v_move+1, 21));
+[a4_1] s=4 -> 0.1 : (s'=8) & (v_move'=min(v_move+1, 21)) + 0.9 : (s'=10) & (v_move'=min(v_move+1, 21));
+[a4_2] s=4 -> 0.8 : (s'=8) & (v_move'=min(v_move+1, 21)) + 0.1 : (s'=9) & (v_move'=min(v_move+1, 21)) + 0.1 : (s'=10) & (v_move'=min(v_move+1, 21));
+[a5_0] s=5 -> 1.0 : (s'=4) & (v_move'=min(v_move+10, 21));
+[a6_0] s=6 -> 1.0 : (s'=8) & (v_move'=min(v_move+1, 21));
+[a7_0] s=7 -> 1.0 : (s'=0) & (v_move'=min(v_move+1, 21));
+[a8_0] s=8 -> 1.0 : (s'=11) & (v_move'=min(v_move+1, 21));
+[a9_0] s=9 -> 1.0 : (s'=0) & (v_move'=min(v_move+4, 21));
+[a10_0] s=10 -> 1.0 : (s'=3) & (v_move'=min(v_move+10, 21));
+[a11_0] s=11 -> 1.0 : (s'=8) & (v_move'=min(v_move+1, 21));
+
+endmodule
+
+label "square_1_1" = s=0;
+label "square_1_2" = s=1;
+label "square_2_1" = s=2;
+label "square_1_3" = s=3;
+label "square_4_3" = s=4;
+label "square_1_4" = s=5;
+label "square_2_3" = s=6;
+label "square_1_2_bis" = s=7;
+label "T_move" = (s=8 | s=11) & v_move <= 20;
+label "square_4_2" = s=9;
+label "square_5_3" = s=10;

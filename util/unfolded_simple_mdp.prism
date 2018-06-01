@@ -1,0 +1,17 @@
+mdp
+
+module unfolded_simple_mdp
+
+s: [0..2] init 0;
+v_weights: [0..9] init 0;
+v_test: [0..15] init 0;
+
+[a0_0] s=0 -> 0.5 : (s'=1) & (v_weights'=min(v_weights+3, 9)) & (v_test'=min(v_test+10, 15)) + 0.5 : (s'=2) & (v_weights'=min(v_weights+3, 9)) & (v_test'=min(v_test+10, 15));
+[a1_0] s=1 -> 1.0 : (s'=0) & (v_weights'=min(v_weights+2, 9)) & (v_test'=min(v_test+8, 15));
+[a2_0] s=2 -> 1.0 : (s'=0) & (v_weights'=min(v_weights+2, 9)) & (v_test'=min(v_test+8, 15));
+[a2_1] s=2 -> 1.0 : (s'=2) & (v_weights'=min(v_weights+5, 9)) & (v_test'=min(v_test+1, 15));
+
+endmodule
+
+label "T_weights" = (s=1) & v_weights <= 8;
+label "T_test" = (s=1) & v_test <= 14;
