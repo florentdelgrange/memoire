@@ -1,0 +1,106 @@
+\chapter*{Conclusion}
+\addcontentsline{toc}{chapter}{Conclusion}
+\markboth{Conclusion}{Conclusion}
+
+\section*{Summary}
+\addcontentsline{toc}{section}{Summary}
+
+This thesis presented many decision problems related to the minimisation of costs to reach one or multiple sets of target states in MDPs.
+In order to solve these problems, we presented algorithms allowing to build optimal strategies satisfying them.
+A summary of the results for each problem is depicted in Table \ref{results-conclusion}.\\
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{Problem}                                                                                                       & \textbf{Decision time}                           & \multicolumn{3}{c|}{\textbf{Satisfying strategy}} \\ \cline{3-5}
+                                                                                                                       &                                                  & \textit{type}   & \textit{memory}   & \textit{optimal}     \\ \hline
+\SR{}                                                                                                 & P($\mathcal{M}$)                                 & pure            & memoryless        & yes         \\ \hline
+\SSPE{}                                                                                               & P($\mathcal{M}$)                                 & pure            & memoryless        & yes         \\ \hline
+\SSPP{}                                                                                               & P($\mathcal{M}$) $\cdot$ P$_{ps}$($\ell$)        & pure            & P$_{ps}$($\ell$)  & yes         \\ \hline
+\SPG{}                                                                                                & P($\mathcal{M}$)                                 & pure            & memoryless        & yes         \\ \hline
+\SSPWE{}                                                                                              & P($\mathcal{M}$) $\cdot$ P$_{ps}$($\ell$)        & pure            & P$_{ps}$($\ell$)  & yes         \\ \hline
+\begin{tabular}[c]{@{}c@{}}\MOSR{}\\ (absorbing target states)\end{tabular}                           & P($\mathcal{M}$)                                 & randomised      & memoryless        & $\epsilon$  \\ \hline
+\MOSR{}                                                                                               & P($\mathcal{M}$) $\cdot$ E($\mathcal{Q}$)        & randomised      & E($\mathcal{Q}$)  & $\epsilon$  \\ \hline
+\begin{tabular}[c]{@{}c@{}}\SSPPQ{}\\ (unique set of target states\\ + single dimension)\end{tabular} & P($\mathcal{M}$) $\cdot$ P$_{ps}$($\ell_{\max}$) & randomised      & P$_{ps}$($\ell$)  & $\epsilon$  \\ \hline
+\SSPPQ{}                                                                                              & P($\mathcal{M}$) $\cdot$ E($\mathcal{Q}$)        & randomised      & E($\mathcal{Q}$)  & $\epsilon$  \\ \hline
+\end{tabular}
+\caption{Results of problems approached in the thesis. P($x$), E($x$) and P$_{ps}$($x$) respectively denote polynomial, exponential and
+ pseudo-polynomial time in parameter $x$. The symbol $\mathcal{M}$ denotes the size of the model, $\ell$ denotes a cost threshold, and $\mathcal{Q}$ denotes the query size. The optimal strategy column describes if it is possible to get an optimal satisfying strategy with the same time complexity that the decision time for a given problem. Moreover, the value $\epsilon$ denotes that it is possible to have an $\epsilon$-approximation of an optimal strategy.}
+\label{results-conclusion}
+\end{table}
+
+
+We saw that verifying reachability, persistence, and repeated reachability properties in an MDP requires to solve an \SR{} problem, which consists in deciding the existence of a strategy allowing to reach a set of target states with a probability threshold.
+Such a problem can be solved in polynomial time in the size of the model, by linear programming or with an iterative approximation approach called value iteration.
+%Optimal pure strategies satisfying such properties can be built in polynomial time in the size of the model and do not require memory, except for the constrained bounded-step reachability, in which case the size of the memory is linear in the number of bounded steps required
+\\
+
+By considering cost of paths, we first assumed actions of MDPs having a single-dimension weight, and we saw that the \SSPE{} problem, consisting in deciding the existence of a strategy ensuring good expected cost-to-target, can be decided in polynomial time in the size of the model, by linear programming or with the value iteration approach.
+% Optimal pure strategies satisfying such a property can be built in polynomial time and do not require memory.
+%Then, we have seen that deciding the existence of a strategy ensuring a
+Then, we saw that verifying a cost-bounded property in any MDP
+%can be decided in pseudo-polynomial time in the size of the model and in the length of the cost threshold.
+requires to solve an \SSPP{} problem, consisting in deciding the existence of a strategy allowing to reach a set of target states with a cost bounded and with a probability threshold.
+The resolution of this problem requires to build an unfolding of the model up to the cost threshold, leading a pseudo-polynomial time in the size of the model and in the length of this cost threshold.\\
+% Optimal pure strategies satisfying such properties can therefore be computed in pseudo-polynomial time and additionally requires pseudo-polynomial memory. \\
+
+Afterwards, we presented the \SPG{} problem, consisting in deciding the existence of a strategy allowing to guarantee a worst case threshold (in terms of cost) to reach a set of target states.
+Inspired by a turn-based two-player game approach, we saw that this problem
+can be solved by dynamic programming, without unfolding the model.
+%can be decided in polynomial time in the size of the model by dynamic programming and optimal memoryless pure strategies satisfying this problem can be built in polynomial time in the size of the model and do not require memory.
+This allowed us to present the multi-objective \SSPWE{} problem, consisting in deciding the existence of a strategy offering a worst case guarantee of reaching a set of target states while ensuring a good expectation to reach this set of target states.
+A solution to this problem was approached by unfolding the MDP up to the worst case threshold, and limiting its state space to the attractor of the set of target states for which cost of paths has not exceeded the worst case threshold.\\
+% Therefore, the problem can be decided in pseudo-polynomial time in the size of the model and in the length of the worst case cost threshold.
+% Optimal pure strategies satisfying it can be built in pseudo-polynomial time and require pseudo-polynomial memory.\\
+
+Then, we presented the \MOSR{} problem, consisting in deciding the existence of a strategy satisfying multiple reachability to multiple set of target states, with multiple probability thresholds.
+Such a problem induces compromises between satisfying strategies, and we defined the notion of Pareto curve, allowing to deal with these compromises.
+Indeed, according to a given multi-objective problem, each point of this Pareto curve is actually linked to a (Pareto-)optimal strategy satisfying the problem.
+We saw that in the case where all target states are absorbing, the problem can be decided in polynomial time in the size of the model by linear programming.
+% and a randomised strategy satisfying the problem can be built in polynomial time and does not require memory.
+Furthermore, building Pareto-optimal strategies for the problem can be done by enumerating vertices of the Pareto curve, that can be $\epsilon$-approximated in polynomial time in the model and in $\frac{1}{\epsilon}$.
+Based on these results, we approached the general case, where all the targets states are not necessarily absorbing, by exponentially increasing the size of the state space of the MDP, according to the number of reachability properties to satisfy, and by considering the maximal end components of this modified MDP.
+%It followed that the problem can be decided in polynomial time in the size of the model, but exponential time in the number of reachability properties.
+%A randomised satisfying strategy can thus be built in exponential time and requires exponential memory, while
+In that case, an $\epsilon$-approximation of the Pareto curve can be built in polynomial time in the size of the model and $\frac{1}{\epsilon}$, but in exponential time in the number of reachability properties.\\
+
+For the last problem, we have considered multi-dimensional MDPs, where actions have multiple weights.
+We approached the \SSPPQ{} problem, consisting in deciding the existence of a strategy allowing to satisfy multiple percentile queries.
+Each of these queries consists in reaching a set of target states with a cost bounded on a given dimension and with a probability threshold.
+We approached the problem by unfolding the MDP up to the highest cost threshold, on all its dimensions, necessarily leading to an exponential time decision, and by solving then an \MOSR{} problem for the target states in this unfolding.
+The results for absorbing target states in the \MOSR{} problem allowed to improve this exponential time to a pseudo-polynomial time in the size of the model and in the length of the highest cost threshold for simultaneously single-dimension and single-target queries.\\
+
+Finally, we introduced a modern model checker called Storm, allowing to model-check Markov decision processes, and supporting all the problems presented in this thesis.
+We presented some input languages allowing to encode MDPs in Storm, and the probabilistic branching time logic of Storm, allowing to express properties to verify and query a given MDP.
+
+\subsection*{Future work}
+\addcontentsline{toc}{section}{Future work}
+  \subsubsection*{Other cost measures}
+    In this thesis, we have considered cost of paths in MDPs with the truncated sum function (i.e., $\TS$), that is perfectly suited for variations of the shortest path problem in MDPs.
+    There actually are many other measures:
+    \begin{itemize}
+      \item the \textit{discounted sum}, modelling that short-term costs are more important than long-term ones \cite{DBLP:journals/fmsd/RandourRS17},
+      \item the \textit{mean-payoff}, describing the long-run average cost per executed action in a path \cite{DBLP:journals/corr/BruyereFRR13},
+      \item etc.
+    \end{itemize}
+    It should be interesting to consider them and study multi-objective problems related to these measures.
+  \subsubsection*{\textbf{Game-based abstraction}}
+  It is possible to reduce the size of MDPs by stochastic two-player game-based abstraction for a given reachability, or expected cost-to-target problem \cite{DBLP:journals/fmsd/KattenbeltKNP10}.
+  It could be useful to consider such abstraction techniques for multi-objective problems.
+
+  \subsubsection*{\textbf{Reinforcement learning for strategies}}
+     Multiple machine learning techniques have been presented in  \cite{10.1007/978-3-319-11936-6_8} to improve performance by avoiding an exhaustive exploration of the state space, yielding precise lower and upper bounds to verify required properties.
+    Again, it could be interesting to investigate the use of related techniques to verify multi-objective properties in Markov decision processes.
+
+  \subsubsection*{\textbf{Reward-epoch model}}
+    In order to optimise the time
+    complexity for the multi-objective problems requiring
+    an unfolding, a way to avoid this unfolding have been introduced in \cite{10.1007/978-3-319-89963-3_19} by only looking at interesting states of the unfolding (intuitively, the model is implicitly unfolded along reward epochs, and the regularities of a modification of the MDP, called epoch-model of the MDP, are exploited).
+    It is actually the method used in Storm to verify multi-objective cost-bounded properties in a given MDP.
+
+  \subsubsection*{\textbf{Storm}}
+    Moreover, as Storm is open-source, we can enrich this model checker with
+    new algorithms.
+    Indeed, for instance, the exploration and abstraction engines (cf. Section \ref{engines}) do not support yet\footnote{ in the version of Storm 1.2.0} the multi-objective problems.

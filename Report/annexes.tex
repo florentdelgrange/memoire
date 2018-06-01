@@ -1,11 +1,19 @@
+%	\chapter*{Appendix}
+%	\addcontentsline{toc}{chapter}{Appendix}
+%	\markboth{Appendix}{Appendix}
+%	\renewcommand{\thechapter}{\Alph{chapter}}
+%	\refstepcounter{chapter}
+%	\refstepcounter{section}
+%	\refstepcounter{subsection}
+%	%\setcounter{section}{0}
+\appendix
 \chapter*{Appendix}
 \addcontentsline{toc}{chapter}{Appendix}
 \markboth{Appendix}{Appendix}
-\renewcommand{\thechapter}{\Alph{chapter}}
-\stepcounter{chapter}
 \setcounter{chapter}{1}
 
 \section{Systems of linear equations}
+\textit{The definitions of this section are inspired of \cite{PMC}.}
 \subsection{Reachability in a Markov Chain}\label{app-reach}
 Let $\mathcal{M} = (S, \Delta, w, AP, L)$ be an MC, $s \in S$ be a state of $\mathcal{M}$ and $T \subseteq S$ be a set of target states in $\mathcal{M}$.
 We say that \textit{$s$ is not connected to $T$} if and only if, for all $\pi = s_0s_1\dots \in Paths(s)$ and for all $k \in \mathbb{N}$, $s_k \not\in T$.
@@ -61,7 +69,7 @@ Resolving the cost bounded reachability by the threshold $\ell$ from $s$ to $T$ 
 
 \section{Linear programs}\label{LP-app}
 \subsection{Stochastic reachability problem}\label{app-sr}
-Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be an MDP and $T \subseteq S$ be a set of target states of $\mathcal{M}$. Let $\alpha \in [0, 1]$ be a probability threshold.  We will build an optimal strategy $\sigma$ for the SR problem. Indeed, we will compute through an LP $\max_{\sigma} \mathbb{P}_s^\sigma (\Diamond T) = \mathbb{P}_s^{\max}(\Diamond T)$ for all $s \in S$. If $\mathbb{P}_s^\sigma(\Diamond T) = \mathbb{P}_s^{\max}(\Diamond T) \geq \alpha$, $\sigma$
+Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be an MDP and $T \subseteq S$ be a set of target states of $\mathcal{M}$. Let $\alpha \in [0, 1]$ be a probability threshold.  We will build an optimal strategy $\sigma$ for the SR problem \cite{PMC}. Indeed, we will compute through an LP $\max_{\sigma} \mathbb{P}_s^\sigma (\Diamond T) = \mathbb{P}_s^{\max}(\Diamond T)$ for all $s \in S$. If $\mathbb{P}_s^\sigma(\Diamond T) = \mathbb{P}_s^{\max}(\Diamond T) \geq \alpha$, $\sigma$
 is \textit{optimal} for the
 SR problem from $s$ to $T$. Otherwise, no strategy satisfying the SR problem exist. Let $S_{=1}$ be a subset of states such that $T \subseteq S_{=1}\subseteq \{s \in S \; | \; \mathbb{P}^{\max}_s(\Diamond T) = 1$\}
 and $(x_s)_{s \in S} \subseteq [0, 1]^{|S|}$
@@ -139,7 +147,7 @@ from all states $s \in S$ of $\mathcal{M}$.
 We thus first compute $\min_{\sigma}\mathbb{E}^\sigma_s(\Diamond T) = \mathbb{E}^{\min}_s(\Diamond T)$, for all $s \in S$.
 Let $\ell \in \mathbb{N}$ be a cost threshold.
  If $\mathbb{E}_s^\sigma(\Diamond T) \leq \ell$, $\sigma$ satisfies the
-\SSPE{} problem for the state $s$. Otherwise, no strategy satisfying the \SSPE{} problem exist.
+\SSPE{} problem \cite{DBLP:journals/corr/RandourRS14a} for the state $s$. Otherwise, no strategy satisfying the \SSPE{} problem exist.
 Let $S_{=1} = \{ s \in S \; | \; \mathbb{P}^{\max}_s(\Diamond T) = 1 \}$ be the set of states that reach $T$ with a maximum probability one and $(x_s)_{s \in S}$ be a vector for the following LP:
 		\[ \max \sum_{s \in S_{=1}} x_s \]
 		subject to the constraints \\
@@ -166,7 +174,7 @@ We can now build an optimal pure memoryless strategy $\sigma$ that minimises the
 
 \section{Stochastic shortest path percentile problem}
 \label{sspp-appendix}
-We solve an \SSPP{} problem with the following algorithm:
+We solve an \SSPP{} problem \cite{DBLP:journals/corr/RandourRS14a} with the following algorithm:
 \begin{algorithm}
 \caption{Solving the \SSPP{} problem}
 \label{sspp-algo}
@@ -193,8 +201,10 @@ We solve an \SSPP{} problem with the following algorithm:
 \end{algorithmic}
 \end{algorithm}
 
-\addtocounter{chapter}{1}
-\setcounter{section}{0}
+\refstepcounter{chapter}
+%\addtocounter{chapter}{1}
+%\setcounter{section}{0}
+%\refstepcounter{section}
 \section{Bellman equation system for minimal expected cost-to-target} \label{bellman2}
   Let $\mathcal{M}$ be a finite MDP with state space $S$ and with a probability transition function $\Delta$, $s \in S$ be a state of $\mathcal{M}$, $T \subseteq S$ be a subset of target states, and
 	$S_{=1} = \{s \in S \; | \; \mathbb{P}^{\max}_s(\Diamond T) = 1 \}$.
@@ -207,8 +217,10 @@ We solve an \SSPP{} problem with the following algorithm:
   \end{itemize}
 The linear program defined in Appendix \ref{app-sspe} is actually derived from this equation system.
 
-\addtocounter{chapter}{1}
-\setcounter{section}{0}
+\refstepcounter{chapter}
+%\addtocounter{chapter}{1}
+%\setcounter{section}{0}
+%\refstepcounter{section}
 \section{Prism to Jani format using Storm}\label{prism2jani}
 Let $\mathcal{M}$ be the MDP defined as follows in the Prism language:
 \lstinputlisting[language={Prism},

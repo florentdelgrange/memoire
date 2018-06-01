@@ -1,0 +1,15 @@
+\begin{abstract}
+
+Markov decision processes (MDPs, for short) are systems widely used to model both stochastic and nondeterministic situations, requiring to optimise costs to achieve a goal.
+In this thesis, we begin by presenting algorithms that synthesise strategies allowing to reach a set of target states in an MDP while ensuring a good expected cost-to-target, or ensuring high probability to reach this set with a cost bounded.
+\\Then, we introduce probabilistic-rewards computation tree logic (PRCTL, for short), a probabilistic branching time logic, allowing to express reachability, expectation, cost-bounded reachability, persistence, and repeated reachability properties.
+We present the related algorithms to build strategies to verify such properties in MDPs.
+\\Afterwards, we introduce a way to build strategies ensuring a worst case guarantee (in terms of cost) to reach a set of target states, and we approach then three multi-objective decision problems.
+The first consists in deciding the existence of a strategy ensuring good expectation under an acceptable worst case.
+The second is about deciding the existence of a strategy ensuring simultaneously multiple reachability properties in an MDP.
+The third is finally about deciding the existence of a strategy ensuring simultaneously multiple cost-bounded reachability properties in a multi-dimensional MDP, i.e., an MDP with multiple cost dimensions.
+For these last two problems, an analysis of trade-offs between satisfying strategies is preferred, and we present the notion of Pareto curve to deal with this approach.
+\par Finally, we present the tool Storm, a modern model checker able to deal with multi-objective problems.
+
+\keywords{Markov decision processes, model checking, multi-objective, stochastic systems, shortest path} % Write down at least 3 Keywords
+\end{abstract}

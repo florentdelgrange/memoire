@@ -1187,6 +1187,11 @@ We make all states $s^* \in S \setminus (C \cup T)$ absorbing, i.e., we replace 
 by a unique action $\alpha_{s^*}$ such that $\Delta(s^*, \alpha_{s^*}, s^*) = 1$.
 Then, we compute $\mathbb{P}^{\max}_s(\Diamond_{\leq \ell}\, T)$ in this modified MDP and we build the linked strategy, corresponding to the optimal strategy built for the \SSPP{} problem for the state $s$, the subset of target states $T$, the cost threshold $\ell$, and an arbitrary probability threshold (cf. Theorem \ref{sspp-thm}).
 
+\begin{remark}[\textit{Value iteration for the minimal expected cost-to-target}]
+  The equation system in Appendix \ref{bellman2} suggests an approximation technique, called value iteration to compute the minimal expected cost-to-target in an MDP.
+  This value iteration technique can be defined in a similar way as for maximising the probability to reach this target (cf. Theorem \ref{bellman1}).
+\end{remark}
+
 \begin{remark}[\textit{PRCTL model checking and \SSPE{} problem}]
   Let $\mathcal{M}$ be an MDP with state space $S$ and atomic proposition space $AP$, $s \in S$, $\ell \in \mathbb{N}$, and $\Phi$ be a PRCTL state formula over $AP$,
   verify $s \models \mathcal{E}^{\min}_{\leq \ell}(\Phi)$ is equivalent to solve the \SSPE{} problem for the state $s$, the cost threshold $\ell$ and the subset of target states $Sat(\Phi)$.

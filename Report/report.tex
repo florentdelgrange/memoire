@@ -42,6 +42,7 @@
 \usepackage{dsfont}
 \usepackage{mathtools}
 \usepackage{empheq}
+\usepackage{abstract}
 
 \allowdisplaybreaks % allows \align or \flalign to bu cut on different pages
 
@@ -129,6 +130,8 @@
 \renewcommand{\algorithmicforall}{\textbf{for all}}
 \renewcommand{\algorithmiccomment}[1]{\hfill \textit{\footnotesize(* ~#1 *)}}
 
+\renewcommand{\abstractnamefont}{\normalfont\Large\bfseries}
+
 \DeclareCaptionFormat{algor}{\textbf{#1#2}#3}
 \DeclareCaptionStyle{algori}{singlelinecheck=off,format=algor,labelsep=space}
 \captionsetup[algorithm]{style=algori}
@@ -198,6 +201,7 @@ innerleftmargin=20pt,
 font={\fontsize{40}{50}\selectfont}
 }
 
+
 \setlength{\headheight}{0pt}
 
 \pagestyle{fancy}
@@ -249,6 +253,9 @@ font={\fontsize{40}{50}\selectfont}
 \newpage%
 \if@twocolumn\hbox{}\newpage\fi\fi\fi}
 \makeatother
+
+% Abstract
+\def\keywords#1{\begin{center}{\bf Keywords}\\{#1}\end{center}} %
 
 \begin{document}
 
@@ -310,7 +317,25 @@ $\quad$ Mickael Randour
   \null
   \newpage
 \endgroup
-\tableofcontents
+\include{abtract}
+
+\begingroup
+  \thispagestyle{empty}
+  \null
+  \newpage
+\endgroup
+
+%\pagenumbering{gobble}
+%\shipout\null
+\begin{flushright}
+{\Large \textbf{Acknowledgements}} \\
+\end{flushright}
+
+\noindent Firstly, I would especially like to thank my directors and guides, Véronique Bruyère and Mickael Randour for their valuable advices and support.\\
+Then, I would like to thank everyone who accompanied me during my studies at the University of Mons, my Professors, my family, and my classmates and friends, especially Arman Davidyan, Semih Locqueneux, Jeremy Gheysen, Martin Lempereur, Dimitri Waelkens, Clément Tamines, and Aline Goeminne, with whom I shared and overcame all these trials and events leading to the graduation.\\
+Finally, I particularly thank Carolane Gerbehaye for her immeasurable support.
+\thispagestyle{empty}
+
 \clearpage % end title page
 \begingroup
   \thispagestyle{empty}
@@ -318,11 +343,21 @@ $\quad$ Mickael Randour
   \newpage
 \endgroup
 
+
+\tableofcontents
+  \clearpage % end title page
+  \begingroup
+    \thispagestyle{empty}
+    \null
+    \newpage
+  \endgroup
+
 \include{introduction}
 \include{preliminaries}
 \include{model-checking}
 \include{multi-objective-synthesis}
 \include{storm-overview}
+\include{conclusion}
 
 \bibliographystyle{alpha}
 \bibliography{bib}
