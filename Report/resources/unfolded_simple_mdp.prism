@@ -8,8 +8,7 @@ s: [0..2] init 0;
 v: [0..l+1] init 0;
 
 [beta] s=0 -> 0.5: (s'=1) & (v'=min(v+3, l+1)) + 0.5: (s'=2) & (v'=min(v+3, l+1));
-[gamma] s=1 -> 1.0: (s'=0) & (v'=min(v+2, l+1));
-[gamma] s=2 -> 1.0: (s'=0) & (v'=min(v+2, l+1));
+[gamma] (s=1 | s=2) -> 1.0: (s'=0) & (v'=min(v+2, l+1));
 [alpha] s=2 -> 1.0: (s'=2) & (v'=min(v+5, l+1));
 
 endmodule

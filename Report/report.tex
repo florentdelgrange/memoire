@@ -43,6 +43,8 @@
 \usepackage{mathtools}
 \usepackage{empheq}
 
+\allowdisplaybreaks % allows \align or \flalign to bu cut on different pages
+
 %\usepackage{kpfonts}
 %\usepackage[explicit]{titlesec}
 
@@ -80,6 +82,8 @@
 \newcommand\SSPWE{\textnormal{\sffamily SSP-WE}}
 \newcommand\SSPPQ{\textnormal{\sffamily SSP-PQ}}
 \newcommand\MEC{\textnormal{\sffamily MEC}}
+\newcommand\BSCC{\textnormal{\sffamily BSCC}}
+\newcommand\Attr{\textnormal{\sffamily Attr}}
 
 \newcommand{\BigWedge}{\mathord{\adjustbox{valign=B,totalheight=.6\baselineskip}{$\bigwedge$}}}
 
@@ -131,13 +135,25 @@
 
 %\cxset{style7}
 % Theorem style
+\newtheoremstyle{mystyle}%                % Name
+  {}%                                     % Space above
+  {}%                                     % Space below
+  {\itshape}%                                     % Body font
+  {}%                                     % Indent amount
+  {\bfseries}%                            % Theorem head font
+  {.}%                                    % Punctuation after theorem head
+  { }%                                    % Space after theorem head, ' ', or \newline
+  {\thmname{#1}\thmnumber{ #2}\thmnote{ (#3)}}%                                     % Theorem head spec (can be left empty, meaning `normal')
+
+\newtheorem{lemma}{Lemma}[chapter]
+
+\theoremstyle{mystyle}
   \newtheorem{theorem}{Theorem}[chapter]
-  \newtheorem{lemma}{Lemma}[chapter]
   \newtheorem{corollary}{Corollary}[chapter]
 
-  \newenvironment{proof2}{\paragraph{\normalfont \textit{Proof:}}}{\hfill$\square$}
+\newenvironment{proof2}{\paragraph{\normalfont \textit{Proof:}}}{\hfill$\square$}
 
-  \theoremstyle{definition}%{3pt}{3pt}{\slshape}{}{\bfseries}{.}{.5em}{}
+\theoremstyle{definition}%{3pt}{3pt}{\slshape}{}{\bfseries}{.}{.5em}{}
   \newtheorem{definition}{Definition}[chapter]
   \newtheorem{property}{Property}[chapter]
   \newtheorem*{notations}{Notations}
@@ -301,12 +317,8 @@ $\quad$ Mickael Randour
   \null
   \newpage
 \endgroup
-% \include{intro}
-% \include{chapter_cc}
-% \include{classification1M}
-% \include{validation}
-% \include{conclusion}
 
+\include{introduction}
 \include{preliminaries}
 \include{model-checking}
 \include{multi-objective-synthesis}

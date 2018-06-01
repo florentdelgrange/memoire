@@ -1,0 +1,38 @@
+\chapter*{Introduction}
+\addcontentsline{toc}{chapter}{Introduction}
+\markboth{Introduction}{Introduction}
+
+\textit{Markov decision processes} are \textit{stochastic systems}, allowing to model situations requiring both decision making and probabilistic behaviour.
+Such systems have many applications, including economy, communication, biology, security, machine learning, and many others.
+These systems consist of states, actions, and transition probabilities.
+On entering a state, an action has to be nondeterministically chosen.
+Once this action is chosen, the next state is determined following a probability distribution associated with the current state and the action chosen.
+\textit{Strategies} allow to solve nondeterminism, prescribing each action to choose.
+In this thesis, we present many problems for Markov decision processes and describe how to build strategies satisfying these problems.
+Choosing an action may induce \textit{multiple} costs, and a natural questioning is about how to minimise such costs to reach one or more states starting from a given state in the system. \\
+
+In Chapter \ref{preliminaries}, we formally define some concepts of probability theory, what are \textit{Markov chains}, essential to understand the probabilistic behaviour of Markov decision processes, and we present fundamental concepts and reachability problems in these stochastic systems.
+Next, we formally define what are Markov decision processes, strategies, and we present
+ two variants of the \textit{stochastic shortest path problem}.
+ Indeed, in a first time, we assume actions having a unique \textit{weight dimension}.
+As Markov decision processes model stochastic situations, a strategy cannot ensure to reach some target states with a fixed cost.
+This problem cannot therefore be considered as a classical shortest path problem in a graph.
+The two problems we present consist in deciding the existence of a strategy offering good \textit{expected cost-to-target}, or good \textit{cost bounded reachability probability}.
+Instances of these problems are, e.g., respectively deciding if there exists a strategy for a node in a wireless sensor network allowing to deliver a message to another node with an expected time of $t_1$ time units, or deliver this message within $t_2$ time units with high probability.\\
+
+Then, in Chapter \ref{model-checking-chapter}, we present some algorithms, allowing to build strategies in order to \textit{model-check} Markov decision processes.
+\textit{Model checking} is about verifying that properties hold in a system.
+In order to do that in Markov decision processes, we present a probabilistic branching time logic, called \textit{probabilistic computation tree logic}, which is appropriate to express a large class of properties such as reachability, persistence, and repeated reachability.
+Instances of such properties are, e.g.,
+reaching some target states avoiding some ``bad" states in a limit number of step or with a cost bounded, with high probability, or always visiting ``safe" states with high probability.
+We additionally extend this logic to support costs, allowing to describe expected cost-to-target and cost bounded reachability properties.\\
+
+Afterwards, in Chapter \ref{multi-objective-chapter}, considering that actions have multiple \textit{weight dimensions},
+we present some \textit{multi-objectives} problems, consisting in deciding the existence of strategies satisfying \textit{simultaneously} multiple sub-problems, possibly conflicting, requiring the analysis of \textit{trade-offs}.
+For instance, it could be interesting for a node in a wireless sensor network to deliver a message within $t$ time units with high probability, while having high probability of low energy consumption.
+We also present how to build strategies for other type of multi-objective problems, such as ensuring good expected cost-to-target while almost surely ensuring to reach the targets with a cost bounded.
+For instance, it could be interesting for the node in the wireless sensor network to have a strategy that \textit{guarantees} to deliver a message within $t$ time units while offering good expected time to deliver this message.\\
+
+Finally, in Chapter \ref{storm-chapter}, we present a modern model-checker, called Storm \cite{storm1}.
+In addition to be able to classically model-check any Markov decision process with a language based on probabilistic computation tree logic,
+this model checker has the particularity of supporting \textit{multi-objective model checking}.

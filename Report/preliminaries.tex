@@ -1,7 +1,8 @@
 \chapter{Preliminaries} \label{preliminaries}
 \textit{This chapter refers to (and summarises) my Master project \cite{Flo2017}. Concepts, theorems and definitions are essentially inspired by the chapter ten of the book ``Principles of model checking'' \cite{PMC}, the chapter ``Model checking probabilistic systems'' of the course named ``Formal verification of computer systems'' of Mickael Randour \cite{MRV} as well as the article ``Variations on the stochastic shortest path problem'' \cite{DBLP:journals/corr/RandourRS14a} by Mickael Randour et al.} \\
 
-Before studying different multi-objective problems in \textit{Markov decision
+Before studying different %multi-objective
+problems in \textit{Markov decision
 processes} and defining optimal \textit{strategies} referring to such problems, we introduce some fundamental concepts. We are interested in the cost of \textit{paths} of Markov decision processes as well as the probability to reach some states in these models.
 %These measurements cannot be computed without defining a probability measure on events formed with these paths.
 To do that, we need to define a proper \textit{probability measure} on \textit{events} formed with these paths.
@@ -11,9 +12,9 @@ Indeed, these stochastic models are essential to define such a probability measu
 \section{Markov chains}
 Markov chains are models describing evolutions of stochastic systems.
 %The particularity of such systems is that each state inside these models can go to its successors following a probability distribution.
-The particularity of such a model is that it evolves from any state to one of its successors following a probability distribution.
+The particularity of such a system is that it evolves from any state to one of its successors following a probability distribution.
 %That yields that a Markov chain being in a state and evolving to another one only depends on this state.
-Thus, to go from a state to another in a Markov chain only depends on the current state of the system.
+Thus, going from a state to another in a Markov chain only depends on the current state of the system.
 \begin{definition}[\textbf{Discrete-time Markov chain}]
   A \textit{(weighted) discrete-time Markov chain} (MC, for short) is a stochastic model defined by a tuple $\mathcal{M}=(S, \Delta, w, AP, L)$ where
 	\begin{itemize}
@@ -29,7 +30,7 @@ Thus, to go from a state to another in a Markov chain only depends on the curren
 	\end{itemize}
 \end{definition}
 
-We assume that MCs considered in this document are \textit{finite}, i.e., have finite state space.
+We assume that all MCs considered in this document are \textit{finite}, i.e., have finite state space.
 
 \begin{remark}[\textit{Natural labelling}]
   $AP$ and $L$ are used for \textit{model checking} and can sometimes be omitted. In that case, we consider that $AP = S$ and $L$ is the natural labelling of each state, i.e., for all $s \in S$, $L(s) = \{s\}$.
@@ -184,7 +185,7 @@ are interested in the cost of paths to reach $T$. To compute this cost, we use t
 			\infty & \quad \text{else.}
 		\end{cases}
 	\]
-  We define the truncated sum of finite paths starting from $s$ in the same way.
+  We define the truncated sum on finite paths starting from $s$ in the same way.
 \end{definition}
 With this function, it is now possible to introduce the concept of
 expected cost-to-target as well as
@@ -238,8 +239,8 @@ The last concept that we define in MCs is the cost-bounded reachability.
   \]
 \end{definition}
 The event $\{\pi \in Paths(s) \; | \; \TS^T(\pi) \leq \ell \}$ is actually measurable: it corresponds to a countable union of cylinder sets formed by prefixes of paths for which the truncated sum is less than or equal to $\ell$.%, i.e., $\{ \pi \in \Diamond T \; | \; \TS^T(\pi) \leq l \}$.
-\begin{theorem}[\bfseries\itshape Probability of the cost-bounded reachability] \label{cost-bounded-thm}
-  The probability of the cost bounded reachability to a set of target states $T \subseteq S$ from a state $s \in S$ can be computed in pseudo-polynomial time\footnote{\textit{pseudo-polynomial time} in the length of the threshold value means that the time complexity is exponential in its encoding.}in the size of $\mathcal{M}$ and in the length of $\ell$.
+\begin{theorem}[\textbf{\textit{Probability of the cost-bounded reachability}}] \label{cost-bounded-thm}
+  The probability of the cost bounded reachability to a set of target states $T \subseteq S$ from a state $s \in S$ can be computed in pseudo-polynomial time\footnote{\textit{pseudo-polynomial time in the length of the threshold value} means that the time complexity is exponential in its encoding}in the size of $\mathcal{M}$ and in the length of $\ell$.
 \end{theorem}
 
 Intuitively, we unfold $\mathcal{M}$ by recording in each state the cost of the
@@ -280,7 +281,7 @@ When this action is chosen, the system evolves following the probability distrib
     \item $L: S \rightarrow 2^{AP}$ is a labeling function.
 	\end{itemize}
 \end{definition}
-We assume that MDPs considered in this document are \textit{finite}, i.e., have finite state space.
+We assume that all MDPs considered in this document are \textit{finite}, i.e., have finite state space.
 
 \begin{remark}[\textit{Natural labelling}]
   Again, $AP$ and $L$ can be omitted. In that case, we consider that $AP=S$ and $L$ is the natural labelling of each state, i.e., for all states $s \in S$, $L(s) = \{s\}$.
@@ -437,10 +438,11 @@ for all states $s, s' \in S$ and for all modes $q, q' \in Q$ of the strategy,
   %Assume that $\sigma$ is initialised in mode $m_0$.
   %Once $\sigma$ reads the state $s_1$ or $s_2$ in $\mathcal{M}$, the next action function chooses the action $\gamma$ and remains in mode $m_0$.
   Assume we start in state $s_0$ in $\mathcal{M}$, the strategy is thus initialised in mode $m_0$.
-  Once $\sigma$ reads $s_0$, the next action function chooses the action $\beta$ and $\sigma$ goes to mode $m_1$ while $\mathcal{M}$ goes from $s_0$ to $s_1$ or $s_2$ with probability $\frac{1}{2}$. Assume $\mathcal{M}$ makes a transition from $s_0$ to $s_2$.
+  Once $\sigma$ reads $s_0$, the next action function chooses the action $\beta$ and $\sigma$ goes to mode $m_1$ while $\mathcal{M}$ goes from $s_0$ to $s_1$ or $s_2$ with probability $\frac{1}{2}$.
+  Assume that $\mathcal{M}$ makes a transition from $s_0$ to $s_2$.
   In that case, the strategy reads then $s_2$, the next action function chooses the action $\alpha$, and $\sigma$ comes back to mode $m_0$.
-  Following the probability transition function of $\mathcal{M}$, as $\alpha$ is chosen, the system loops and stays in state $s_2$. Thus, $s_2$ is read by $\sigma$, the next action function chooses $\gamma$, and $\sigma$ stays in mode $m_0$ while the system comes back to state $s_0$.
-  \par Thus, the strategy simply consists in choosing once $\alpha$ when the system enters in the state $s_2$, and choosing $\gamma$ just after that, to return to the state $s_0$. The MC induced by the product of $\mathcal{M}$ by $\sigma$ is given in Figure
+  Following the probability transition function of $\mathcal{M}$, as $\alpha$ is chosen, the system loops and stays in state $s_2$. Then, $s_2$ is read by $\sigma$, the next action function chooses $\gamma$, and $\sigma$ stays in mode $m_0$ while the system comes back to state $s_0$.
+  \par So, the strategy simply consists in choosing once $\alpha$ when the system enters in the state $s_2$, and choosing $\gamma$ just after that, to return to the state $s_0$. The MC induced by the product of $\mathcal{M}$ by $\sigma$ is given in Figure
   \ref{inducedMC}.
   \begin{figure}[H]
     \centering
@@ -529,7 +531,7 @@ This solution is used to build an optimal memoryless strategy for the problem (c
 Finally, the last problem that we present in this chapter is the
 \textit{stochastic shortest path percentile} problem. For this problem, we
 are interested in deciding if there exists a strategy allowing to reach a set of target states with
-a bounded cost and with a high probability.
+a bounded cost and with high probability.
 
 \begin{definition}[\textbf{\SSPP{} problem}]\label{sspp-def}
   Let $\mathcal{M}$ be an MDP with state space $S$, $s \in S$ be a state of

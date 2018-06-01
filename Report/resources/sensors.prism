@@ -1,0 +1,35 @@
+mdp
+
+module simple_wireless_sensor_network
+
+s: [0..3] init 0;
+
+[alpha0] s=0 -> 1 : (s'=1);
+[alpha1] s=0 -> 1 : (s'=2);
+[alpha2] s=1 -> 1 : (s'=3);
+[alpha3] s=2 -> 0.125 : (s'=0) + 0.875 : (s'=3);
+[alpha4] s=3 -> 1 : (s'=0);
+
+endmodule
+
+label "active" = s=0;
+label "sleep" = s=3;
+label "waiting_ACK" = s=1 | s=2;
+label "intermediate_sending" = s=1;
+label "direct_sending" = s=2;
+
+rewards "time"
+  [alpha0] true : 2;
+  [alpha1] true : 2;
+  [alpha2] true : 6;
+  [alpha3] true : 2;
+  [alpha4] true : 10;
+endrewards
+
+rewards "energy"
+  [alpha0] true : 196;
+  [alpha1] true : 294;
+  [alpha2] true : 100;
+  [alpha3] true : 100;
+  [alpha4] true : 20;
+endrewards

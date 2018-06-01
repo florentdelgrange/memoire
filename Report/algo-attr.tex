@@ -1,32 +1,29 @@
-\begin{algorithm}[H]
+\begin{algorithm}[h!]
 \caption{Computing the matrix of safe actions $\mathbb{A}$}
 \label{safe-actions-algorithm}
 \begin{algorithmic}[1]
 \REQUIRE{
-		$\mathcal{M}_{\ell_1} = (S_{\ell_1}, A_{\ell_1}, \Delta, w, AP, L)$, the unfolding of an MDP $\mathcal{M}$ up to $\ell_1$, and
+		$\mathcal{M}_{\ell_1} = (S_{\ell_1}, A_{\ell_1}, \Delta_{\ell_1}, w, AP, L)$, the unfolding of an MDP $\mathcal{M}$ up to $\ell_1$, and
 		$T_{\ell_1} \subseteq S$, a subset of target states in this unfolding.
 	}
 \ENSURE{
-	The safe action matrix $\mathbb{A}$
+	The matrix of safe actions $\mathbb{A}$
 }
 \STATE $\mathbb{A} \leftarrow $ {\sffamily initialise} a matrix of size $|S| \times \ell_1$ with $\emptyset$ \label{attr1}
 \FOR{$(s, v) \in S_{\ell_1} \setminus \{s_\bot\}$}
   \STATE $\mathbb{A}(s, v) \leftarrow A_{\ell_1}(s, v)$ \label{attr3}
 \ENDFOR
 \STATE $U \gets \{ s_\bot \}$ \label{attr4}
-\COMMENT{$U$ is the set of ``bad states''}
-\WHILE{$U \neq \emptyset$}
+\WHILE{$U \neq \emptyset$}\label{attr14}
 	\STATE $R \gets U$ \label{attr5}
 	\WHILE{$R \neq \emptyset$}\label{attr13}
 		\STATE {\sffamily let} $(s', v') \in R$
-		\COMMENT{let $(s', v')$ be a bad state of $\mathcal{M}_{\ell_1}$}
 		\STATE $U \gets U \setminus \{(s', v') \}$ \label{attr6}
 		\STATE $R \gets R \setminus \{(s', v') \}$\label{attr7}
-		\COMMENT{``mark'' $(s', v')$ as visited}
     \IF{$(s', v') \not\in T_{\ell_1}$}
   		\FORALL{$((s, v), \alpha) \in Pred((s', v'))$ such that $\alpha \in \mathbb{A}(s, v)$} \label{attr8}
   			\STATE $\mathbb{A}(s, v) \leftarrow \mathbb{A}(s, v) \setminus \alpha$\label{attr9}
-  			\IF{$\mathbb{A}(s, v) = \emptyset$}
+  			\IF{$\mathbb{A}(s, v) = \emptyset$}\label{attr15}
   				\STATE $U \gets U \cup \{ (s, v) \}$ \label{attr10}
   			\ENDIF
   		\ENDFOR

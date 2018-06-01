@@ -129,49 +129,7 @@ We build $\sigma$ in this way: let $s \in S$ be a state of $\mathcal{M}$ and $\m
 	\sigma(s) = \alpha \;\; \text{such that } \alpha \in \mathbb{A}(s)
 \]
 
-Furthermore, we can optimise computations to get the optimal solution of this LP by choosing the largest subset $S_{=1}$, i.e., $S_{=1}=\{s\in S \; | \; \mathbb{P}^{\max}_s(\Diamond T) = 1\}$, with the following algorithm:
-
-\begin{algorithm}[H]
-\caption{Build the largest subset $S_{=1}$}
-\label{prMax1}
-\begin{algorithmic}[1]
-\REQUIRE{
-		$\mathcal{M} = (S, A, \Delta, w, AP, L)$, an MDP, and
-		$T \subseteq S$, a subset of target states.
-	}
-\ENSURE{
-	The set of states $s$ of $\mathcal{M}$ for which
-		$\mathbb{P}_{s}^{\max} (\Diamond T)= 1$.
-}
-\STATE $U \gets \{ s \in S \; | \; s \text{ is not connected to } T \text{ in } G^\mathcal{M}\}$
-\COMMENT{$U$ is the set of ``bad states''}
-\WHILE{$U \neq \emptyset$}
-	\STATE $R \gets U$
-	\WHILE{$R \neq \emptyset$}
-		\STATE Let $u \in R$
-		\COMMENT{let $u$ be a bad state}
-		\STATE $R \gets R \setminus \{u \}$
-		\COMMENT{mark $u$ as visited}
-		\FORALL{$(s, \alpha) \in Pred(u)$ such that $s \not\in U \cup T$}
-			\STATE remove $\alpha$ from $A(s)$
-			\COMMENT{remove all ingoing edges of $u$}
-			\IF{$A(s) = \emptyset$}
-				\STATE $R \gets R \cup \{s\}$
-				\COMMENT{\scriptsize for any enabled action, $s$ is always connected to a bad state}
-				\STATE $U \gets U \cup \{s\}$
-				\COMMENT{thus, $s$ is marked as bad state}
-			\ENDIF
-		\ENDFOR
-		\STATE remove $u$ and its outgoing edges in $\mathcal{M}$
-	\ENDWHILE
-	\STATE $U \gets \{ s \in S \setminus U \; | \; s \text{ is not connected to } T \text{ in } G^\mathcal{M} \}$
-	\COMMENT{\scriptsize update the set of bad states}
-\ENDWHILE
-\RETURN the remaining states
-\end{algorithmic}
-\end{algorithm}
-
-This algorithm is exact and polynomial in the size of $\mathcal{M}$ (cf. \cite{PMC}).
+%Furthermore, we can optimise computations to get the optimal solution of this LP by choosing the largest subset $S_{=1}$, i.e., $S_{=1}=\{s\in S \; | \; \mathbb{P}^{\max}_s(\Diamond T) = 1\}$, with the following algorithm:
 
 \subsection{Stochastic shortest path expectation problem}\label{app-sspe}
 Let $\mathcal{M}=(S, A, \Delta, w, AP, L)$ be an MDP and $T \subseteq S$ be a set
@@ -256,7 +214,7 @@ Let $\mathcal{M}$ be the MDP defined as follows in the Prism language:
 \lstinputlisting[language={Prism},
     rulesepcolor=\color{black}, rulecolor=\color{black}, breaklines=true,
     breakatwhitespace=true, firstnumber=1, firstline=1, lastline=25]{resources/simple_mdp.prism}
-$\mathcal{M}$ is actually the MDP of the figure \ref{prism-simple}.
+$\mathcal{M}$ is actually the MDP of Figure \ref{prism-simple}.
 Storm allows to convert this model to Jani with the following command :
 {\scriptsize
 \begin{verbatim}

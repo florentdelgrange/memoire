@@ -1,0 +1,204 @@
+%\documentclass[
+%  %a4paper,
+%  %BCOR=15mm,
+%  %DIV=13,
+%  %openright,
+%  ]{scrbook}
+\documentclass[11pt, twoside]{report}
+
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage[utf8]{inputenc}
+\usepackage[francais]{babel}
+\usepackage{anyfontsize}
+\usepackage{adjustbox}
+\usepackage{graphicx}
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{xcolor,fix-cm}
+\usepackage{fancyhdr}
+\usepackage{tabularx}
+\usepackage{lmodern}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{tikz}
+\usepackage{caption}
+\usepackage[most]{tcolorbox}
+\usepackage{hyperref}
+\usepackage{fancybox}
+\usepackage{cite}
+\usepackage{bbm}
+\usepackage{subcaption}
+\usepackage[format=plain, font=it,labelfont={bf,it}, textfont=it]{caption}
+\usepackage{cprotect}
+\usepackage{wrapfig}
+\usepackage{setspace}
+%\usepackage{kpfonts}
+%\usepackage[explicit]{titlesec}
+
+\usepackage[a4paper,width=150mm,top=0mm,bottom=35mm]{geometry}
+
+\let\tmp\oddsidemargin
+\let\oddsidemargin\evensidemargin
+\let\evensidemargin\tmp
+\reversemarginpar
+
+\include{chapter_style3}
+%\cxset{style7}
+
+  % Theorem style
+% \theoremstyle{definition}%{3pt}{3pt}{\slshape}{}{\bfseries}{.}{.5em}{}
+% \newtheorem{definition}{Définition}[chapter]
+% \newtheorem{theorem}{Théorème}[chapter]
+% \newtheorem{lemma}{Lemme}[chapter]
+% \newtheorem*{notation}{Notation}
+% \newtheorem*{notations}{Notations}
+% \newtheorem{propriete}{Propriété}[chapter]
+% \newtheorem*{proprietes}{Propriétés}
+% \newtheorem{proposition}{Proposition}[chapter]
+% \newtheorem{corollaire}{Corollaire}[chapter]
+% \theoremstyle{remark}
+% \newtheorem{example}{Exemple}[chapter]
+% \newtheorem{remark}{Remarque}[chapter]
+
+% Itemize
+\renewcommand\labelitemi{\tiny$\bullet$}
+
+\newcommand{\umonslogo}{\includegraphics[width=0.25\linewidth]{UMONS.pdf} \hfill                     \includegraphics[width=0.25\linewidth]{UMONS_FS.jpg}
+                       %\includegraphics[scale=.04]{Nokia_wordmark.png}
+                       }
+
+\definecolor{umons-red}{RGB}{168, 0, 57}
+\definecolor{umons-turquoise}{RGB}{0, 171, 204}
+\definecolor{umons-gray}{RGB}{150, 150, 150}
+\definecolor{bordeaux}{HTML}{7b002c}
+\definecolor{Nokia}{HTML}{1C4499}
+
+\include{box_style}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.3mm}\\} % Defines a new command for the horizontal lines, change thickness here
+
+\mdfdefinestyle{l3style}{%
+leftmargin=0pt,
+backgroundcolor=bordeaux,
+fontcolor=white,
+linewidth=0pt,
+innertopmargin=20pt,
+innerbottommargin=20pt,
+innerleftmargin=20pt,
+font={\fontsize{35}{45}\selectfont}
+}
+
+\setlength{\headheight}{15pt}
+
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{ \markboth{#1}{} }
+\renewcommand{\sectionmark}[1]{ \markright{#1} }
+
+\fancypagestyle{plain}{ %
+  \fancyhf{} % remove everything
+  \fancyfoot[RO]{\nouppercase{\leftmark} $\quad | \quad$ \thepage}
+  \fancyfoot[LE]{\thepage $\quad | \quad $ \nouppercase{\rightorleftmark}}
+  \renewcommand{\headrulewidth}{0pt} % remove lines as well
+  \renewcommand{\footrulewidth}{0.5pt}
+}
+\fancypagestyle{headings}{ %
+  \fancyhf{} % remove everything
+  \fancyfoot[RO]{\nouppercase{\leftmark} $\quad | \quad$ \thepage}
+  \fancyfoot[LE]{\thepage $\quad | \quad $ \nouppercase{\rightorleftmark}}
+  \renewcommand{\headrulewidth}{0pt} % remove lines as well
+  \renewcommand{\footrulewidth}{0.5pt}
+}
+
+\fancypagestyle{title}{ %
+  \fancyhf{} % remove everything
+  \fancyfoot[CO,CE]{\vspace{0.025\linewidth}\normalsize Année académique $2017$-$2018$}
+  \renewcommand{\headrulewidth}{0pt} % remove lines as well
+  \renewcommand{\footrulewidth}{0pt}
+}
+
+\makeatletter
+\newcommand{\rightorleftmark}{%
+  \begingroup\protected@edef\x{\rightmark}%
+  \ifx\x\@empty
+    \endgroup\leftmark
+  \else
+    \endgroup\rightmark
+  \fi}
+\makeatother
+
+\pagestyle{headings}
+\clearpage
+%\setcounter{page}{0}
+\begin{document}
+
+\thispagestyle{title}
+{\fontfamily{qpl}\selectfont
+\begin{mdframed}[style=l3style]
+\huge Université de Mons
+\end{mdframed}
+}
+
+\begin{adjustbox}{minipage=.6\textwidth,center}
+Faculté des Sciences\par
+Département d'informatique \par
+Service d'informatique théorique
+%\hfill --- David Carlisle
+\end{adjustbox}
+
+\vspace{4em}
+\vspace{1em}
+% \begin{center}
+% \includegraphics[scale=.6]{resources/tornado}
+% \end{center}
+
+{\fontfamily{qpl}\selectfont
+\vspace{0.3em}
+\begin{mdframed}[style=l3style]
+Synthèse multi-objectif\\dans les processus\\décisionnels de Markov
+%\vspace{-0.8em} \\\vspace{-0.8em}\HRule % Defines a new command for the horizontal lines, change thickness here
+%{\Large Rapport de stage}
+\end{mdframed}
+}
+\umonslogo
+
+\vspace{3em}
+
+
+\vspace{.3\linewidth}
+%\vspace{.1\linewidth}
+\begin{adjustbox}{minipage=.6\textwidth,right}
+%\Large
+\large
+\begin{flushright}
+\textit{Mémoire réalisé par} Florent Delgrange \textit{pour l'obtention du diplôme en Sciences Informatiques}\par
+\end{flushright}
+\textit{Directeurs : } \par $\quad$ Véronique Bruyère et \par
+$\quad$ Mickael Randour
+\end{adjustbox}
+\clearpage % end title page
+
+\newgeometry{top=25mm}
+\begingroup
+  \pagestyle{empty}
+  \null
+  \newpage
+\endgroup
+\tableofcontents
+\clearpage % end title page
+\begingroup
+  \thispagestyle{empty}
+  \null
+  \newpage
+\endgroup
+% \include{intro}
+% \include{chapter_cc}
+% \include{classification1M}
+% \include{validation}
+% \include{conclusion}
+
+\bibliographystyle{plain}
+\bibliography{bib}
+
+% \include{annexes}
+\end{document}
