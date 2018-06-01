@@ -1,6 +1,6 @@
 mdp
 
-module simple_mdp
+module classic
 
 s: [0..2] init 0;
 
@@ -12,11 +12,16 @@ s: [0..2] init 0;
 endmodule
 
 label "T" = s=1;
-label "a" = s=0;
-label "b" = s=1;
+label "G" = s=2;
 
 rewards "weights"
   [alpha] true : 5;
   [beta] true : 3;
   [gamma] true : 2;
+endrewards
+
+rewards "test"
+  [alpha] true : 1;
+  [beta] true : 10;
+  [gamma] true : 8;
 endrewards

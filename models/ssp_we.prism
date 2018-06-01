@@ -1,0 +1,18 @@
+mdp
+
+module sspwe
+
+s: [0..1] init 0;
+
+[alpha] s=0 -> 0.5 : (s'=0) + 0.5 : (s'=1);
+[beta] s=0 -> 1 : (s'=1);
+[beta] s=1 -> 1 : (s'=1);
+
+endmodule
+
+label "T" = s=1;
+
+rewards "weights"
+  [alpha] true : 1;
+  [beta] true : 5;
+endrewards

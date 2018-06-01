@@ -1,0 +1,23 @@
+mdp
+
+const int l = 8;
+
+module classic
+
+s: [0..2] init 0;
+v: [0..l+1] init 0;
+
+[beta] s=0 -> 0.5 : (s'=1) & (v'=min(v+3, l+1)) + 0.5 : (s'=2)&(v'=min(v+3, l+1));
+[gamma] s=1 -> 1 : (s'=0) & (v'=min(v+2, l+1));
+[alpha] s=2 -> 1 : (s'=2) & (v'=min(v+5, l+1));
+[gamma] s=2 -> 1 : (s'=0) & (v'=min(v+2, l+1));
+
+endmodule
+
+label "T" = (s=1 & v<=8);
+
+rewards "weights"
+  [alpha] true : 5;
+  [beta] true : 3;
+  [gamma] true : 2;
+endrewards

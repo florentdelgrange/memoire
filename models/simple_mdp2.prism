@@ -5,9 +5,8 @@ module simple_mdp
 s: [0..2] init 0;
 
 [beta] s=0 -> 0.5 : (s'=1) + 0.5 : (s'=2);
-[gamma] s=1 -> 1 : (s'=0);
+[gamma] s=1 | s=2 -> 1 : (s'=0);
 [alpha] s=2 -> 1 : (s'=2);
-[gamma] s=2 -> 1 : (s'=0);
 
 endmodule
 
